@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#blockchain
+/artifacts
+/cache
+
+# uploads
+/uploads
+
+# solidity coverage
+coverage.json
+
+MetaCourt_Project_Documentation.docx
+MetaCourt_Project_Documentation.txt
+CLAUDE.md
+AGENTS.md
