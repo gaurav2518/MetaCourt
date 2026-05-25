@@ -5,7 +5,7 @@ const UserSchema = new Schema<IUser>({
   name:             { type: String, required: true, trim: true },
   email:            { type: String, required: true, unique: true, lowercase: true, trim: true },
   passwordHash:     { type: String, required: true },
-  role:             { type: String, enum: ["complainant","opposite_party","juror","admin"], default: "complainant" },
+  role:             { type: String, enum: ["user","juror","admin"], default: "user" },
   walletAddress:    { type: String, default: null },
   reputationScore:  { type: Number, default: 100, min: 0, max: 200 },
   isVerifiedJuror:  { type: Boolean, default: false },

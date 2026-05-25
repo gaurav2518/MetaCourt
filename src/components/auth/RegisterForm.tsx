@@ -1,17 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ROLES } from "@/constants";
-import RoleSelector from "./RoleSelector";
-
-type RegisterRole =
-	(typeof ROLES)["COMPLAINANT"] | (typeof ROLES)["OPPOSITE_PARTY"];
+import { useState } from "react";
 
 type RegisterFormValues = {
 	name: string;
 	email: string;
 	password: string;
-	role: RegisterRole;
 };
 
 type RegisterFormProps = {
@@ -19,23 +13,6 @@ type RegisterFormProps = {
 	isSubmitting?: boolean;
 	className?: string;
 };
-
-const ROLE_OPTIONS: Array<{
-	value: RegisterRole;
-	title: string;
-	description: string;
-}> = [
-	{
-		value: "complainant",
-		title: "Complainant",
-		description: "File complaints, track cases, and review final decisions.",
-	},
-	{
-		value: "opposite_party",
-		title: "Opposite Party",
-		description: "Respond to complaints and upload your defense evidence.",
-	},
-];
 
 export default function RegisterForm({
 	onSubmit,
@@ -46,18 +23,10 @@ export default function RegisterForm({
 		name: "",
 		email: "",
 		password: "",
-		role: ROLES.COMPLAINANT,
 	});
 	const [showPassword, setShowPassword] = useState(false);
 
-	const selectedRole = useMemo(
-		() => ROLE_OPTIONS.find((option) => option.value === values.role),
-		[values.role]
-	);
-
-	const handleChange = (
-		event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-	) => {
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
 		setValues((current) => ({
 			...current,
@@ -89,7 +58,7 @@ export default function RegisterForm({
 								Create your secure MetaCourt account.
 							</h2>
 							<p className="max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
-								Register as a complainant or opposite party to access the complaint workflow, receive case updates, and keep your activity tied to a verified account.
+								Register to access the complaint workflow, receive case updates, and keep your activity tied to a verified account.
 							</p>
 						</div>
 					</div>
@@ -182,17 +151,6 @@ export default function RegisterForm({
 							</label>
 						</div>
 
-						<RoleSelector
-							value={values.role}
-							onChange={(role) =>
-								setValues((current) => ({
-									...current,
-									role,
-								}))
-							}
-							disabled={isSubmitting}
-						/>
-
 						<button
 							type="submit"
 							disabled={isSubmitting}
@@ -202,7 +160,7 @@ export default function RegisterForm({
 						</button>
 
 						<div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-5 text-slate-500">
-							By continuing, you agree that your account will be used only for the role selected above. Current selection: <span className="font-semibold text-slate-700">{selectedRole?.title}</span>.
+							By continuing, you agree that your account will be created with a standard user role. Juror elevation is admin-controlled.
 						</div>
 					</form>
 				</section>

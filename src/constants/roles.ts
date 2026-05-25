@@ -1,6 +1,5 @@
 export const ROLES = {
-  COMPLAINANT: "complainant",
-  OPPOSITE_PARTY: "opposite_party",
+  USER: "user",
   JUROR: "juror",
   ADMIN: "admin",
 } as const;

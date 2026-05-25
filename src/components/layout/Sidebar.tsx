@@ -14,14 +14,12 @@ type NavItem = {
 type RoleValue = (typeof ROLES)[keyof typeof ROLES];
 
 const NAV_ITEMS: Record<RoleValue, NavItem[]> = {
-  [ROLES.COMPLAINANT]: [
+  [ROLES.USER]: [
     { label: "Dashboard", href: "/complainant" },
     { label: "File Complaint", href: "/complainant/file" },
     { label: "My Cases", href: "/complainant/cases" },
-  ],
-  [ROLES.OPPOSITE_PARTY]: [
-    { label: "Dashboard", href: "/opposite-party" },
-    { label: "Complaints Against Me", href: "/opposite-party/cases" },
+    { label: "Cases Against Me", href: "/opposite-party/cases" },
+    { label: "Apply for Juror", href: "/apply-juror" },
   ],
   [ROLES.JUROR]: [
     { label: "Dashboard", href: "/juror" },
@@ -33,13 +31,13 @@ const NAV_ITEMS: Record<RoleValue, NavItem[]> = {
     { label: "Dashboard", href: "/admin" },
     { label: "Complaints", href: "/admin/complaints" },
     { label: "Users", href: "/admin/users" },
-    { label: "Jurors", href: "/admin/jurors" },
+    { label: "Juror Applications", href: "/admin/jurors" },
+    { label: "Analytics", href: "/admin/analytics" },
   ],
 };
 
 const ROLE_LABELS: Record<RoleValue, string> = {
-  [ROLES.COMPLAINANT]: "Complainant",
-  [ROLES.OPPOSITE_PARTY]: "Opposite Party",
+  [ROLES.USER]: "User",
   [ROLES.JUROR]: "Juror",
   [ROLES.ADMIN]: "Admin",
 };

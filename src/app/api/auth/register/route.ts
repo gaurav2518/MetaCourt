@@ -6,7 +6,7 @@ import { hashPassword, signToken } from "@/lib/auth";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { name, email, password, role } = await req.json();
+    const { name, email, password } = await req.json();
     if (!name || !email || !password) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       name,
       email,
       passwordHash,
-      role: role || "complainant",
+      role: "user",
     });
     const token = signToken({
       userId: user._id.toString(),
