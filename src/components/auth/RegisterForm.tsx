@@ -1,52 +1,72 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
-type RegisterFormValues = {
-	name: string;
-	email: string;
-	password: string;
-};
+
+const registerSchema = z.object({
+	name: z.string().min(2, "Name must be at least 2 characters"),
+	email: z.string().email("Enter a valid email address"),
+	password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 type RegisterFormProps = {
-	onSubmit?: (values: RegisterFormValues) => void | Promise<void>;
-	isSubmitting?: boolean;
 	className?: string;
 };
 
-export default function RegisterForm({
-	onSubmit,
-	isSubmitting = false,
-	className = "",
-}: RegisterFormProps) {
-	const [values, setValues] = useState<RegisterFormValues>({
-		name: "",
-		email: "",
-		password: "",
-	});
+export default function RegisterForm({ className = "" }: RegisterFormProps) {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+	const {
+		register,
+		handleSubmit,
+		setError,
+		formState: { errors, isSubmitting },
+	} = useForm<RegisterFormValues>({
+		resolver: zodResolver(registerSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			password: "",
+		},
+	});
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-		setValues((current) => ({
-			...current,
-			[name]: value,
-		}));
-	};
+	const submitRegister = async (values: RegisterFormValues) => {
+		try {
+			const res = await fetch("/api/auth/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(values),
+			});
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+			const data = await res.json().catch(() => ({}));
+			if (!res.ok) {
+				throw new Error(data?.message || "Registration failed");
+			}
 
-		if (onSubmit) {
-			await onSubmit(values);
+			router.push("/complainant");
+		} catch (error) {
+			setError("root", {
+				type: "manual",
+				message: error instanceof Error ? error.message : "Registration failed",
+			});
 		}
 	};
 
 	return (
-		<div className={`relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-1 shadow-2xl shadow-black/30 ${className}`}>
-			<div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(99,102,241,0.18),_transparent_32%),linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(2,6,23,0.92))]" />
+		<div className={`relative isolate overflow-hidden rounded-4xl border border-white/10 bg-slate-950/90 p-1 shadow-2xl shadow-black/30 ${className}`}>
+			<div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.18),transparent_32%),linear-gradient(135deg,rgba(15,23,42,0.98),rgba(2,6,23,0.92))]" />
 
-			<div className="grid gap-0 overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 text-white backdrop-blur-xl lg:grid-cols-[1.15fr_0.85fr]">
+			<div className="grid gap-0 overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-white backdrop-blur-xl lg:grid-cols-[1.15fr_0.85fr]">
 				<section className="relative flex flex-col justify-between gap-10 p-8 sm:p-10 lg:p-12">
 					<div className="space-y-4">
 						<span className="inline-flex w-fit items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.28em] text-cyan-200">
@@ -80,7 +100,7 @@ export default function RegisterForm({
 				</section>
 
 				<section className="bg-white px-6 py-8 text-slate-900 sm:px-8 sm:py-10 lg:px-10">
-					<form className="space-y-5" onSubmit={handleSubmit}>
+					<form className="space-y-5" onSubmit={handleSubmit(submitRegister)}>
 						<div className="space-y-1">
 							<h3 className="text-2xl font-semibold tracking-tight text-slate-950">
 								Register your account
@@ -91,50 +111,35 @@ export default function RegisterForm({
 						</div>
 
 						<div className="space-y-4">
-							<label className="block">
-								<span className="mb-2 block text-sm font-medium text-slate-700">Full name</span>
-								<input
-									type="text"
-									name="name"
-									value={values.name}
-									onChange={handleChange}
-									placeholder="Enter your full name"
-									className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:bg-white focus:ring-4 focus:ring-cyan-500/10"
-									autoComplete="name"
-									disabled={isSubmitting}
-									required
-								/>
-							</label>
+							<Input
+								id="register-name"
+								label="Full name"
+								placeholder="Enter your full name"
+								{...register("name")}
+								error={errors.name?.message}
+								disabled={isSubmitting}
+							/>
 
-							<label className="block">
-								<span className="mb-2 block text-sm font-medium text-slate-700">Email address</span>
-								<input
-									type="email"
-									name="email"
-									value={values.email}
-									onChange={handleChange}
-									placeholder="you@example.com"
-									className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:bg-white focus:ring-4 focus:ring-cyan-500/10"
-									autoComplete="email"
-									disabled={isSubmitting}
-									required
-								/>
-							</label>
+							<Input
+								id="register-email"
+								type="email"
+								label="Email address"
+								placeholder="you@example.com"
+								{...register("email")}
+								error={errors.email?.message}
+								disabled={isSubmitting}
+							/>
 
-							<label className="block">
-								<span className="mb-2 block text-sm font-medium text-slate-700">Password</span>
+							<div>
+								<label className="mb-2 block text-sm font-medium text-slate-700">Password</label>
 								<div className="relative">
-									<input
+									<Input
+										id="register-password"
 										type={showPassword ? "text" : "password"}
-										name="password"
-										value={values.password}
-										onChange={handleChange}
 										placeholder="Create a strong password"
-										className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-24 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:bg-white focus:ring-4 focus:ring-cyan-500/10"
-										autoComplete="new-password"
+										{...register("password")}
+										error={errors.password?.message}
 										disabled={isSubmitting}
-										required
-										minLength={8}
 									/>
 									<button
 										type="button"
@@ -145,19 +150,17 @@ export default function RegisterForm({
 										{showPassword ? "Hide" : "Show"}
 									</button>
 								</div>
-								<p className="mt-2 text-xs text-slate-500">
-									Use at least 8 characters for a safer login.
-								</p>
-							</label>
+								<p className="mt-2 text-xs text-slate-500">Use at least 8 characters for a safer login.</p>
+							</div>
 						</div>
 
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							className="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-600 via-sky-600 to-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition hover:scale-[1.01] hover:shadow-cyan-600/30 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-70"
-						>
+						<Button type="submit" isLoading={isSubmitting} className="w-full">
 							{isSubmitting ? "Creating account..." : "Create account"}
-						</button>
+						</Button>
+
+						{errors.root?.message && (
+							<p className="text-sm text-rose-600">{errors.root.message}</p>
+						)}
 
 						<div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-5 text-slate-500">
 							By continuing, you agree that your account will be created with a standard user role. Juror elevation is admin-controlled.

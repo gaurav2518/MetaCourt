@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { ROLES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
+import { X } from "lucide-react";
 
 type NavItem = {
   label: string;
@@ -13,43 +14,46 @@ type NavItem = {
 
 type RoleValue = (typeof ROLES)[keyof typeof ROLES];
 
-const NAV_ITEMS: Record<RoleValue, NavItem[]> = {
-  [ROLES.USER]: [
-    { label: "Dashboard", href: "/complainant" },
-    { label: "File Complaint", href: "/complainant/file" },
-    { label: "My Cases", href: "/complainant/cases" },
-    { label: "Cases Against Me", href: "/opposite-party/cases" },
-    { label: "Apply for Juror", href: "/apply-juror" },
-  ],
-  [ROLES.JUROR]: [
-    { label: "Dashboard", href: "/juror" },
-    { label: "Assigned Cases", href: "/juror/cases" },
-    { label: "History", href: "/juror/history" },
-    { label: "Reputation", href: "/juror/reputation" },
-  ],
-  [ROLES.ADMIN]: [
-    { label: "Dashboard", href: "/admin" },
-    { label: "Complaints", href: "/admin/complaints" },
-    { label: "Users", href: "/admin/users" },
-    { label: "Juror Applications", href: "/admin/jurors" },
-    { label: "Analytics", href: "/admin/analytics" },
-  ],
-};
-
 const ROLE_LABELS: Record<RoleValue, string> = {
   [ROLES.USER]: "User",
   [ROLES.JUROR]: "Juror",
   [ROLES.ADMIN]: "Admin",
 };
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
   const navItems = useMemo(() => {
-    if (!user?.role) return [];
-    return NAV_ITEMS[user.role as RoleValue] ?? [];
-  }, [user?.role]);
+    if (!user) return [];
+
+    if (user.role === ROLES.ADMIN) {
+      return [
+        { label: "All Complaints", href: "/admin/complaints" },
+        { label: "Users", href: "/admin/users" },
+        { label: "Juror Applications", href: "/admin/jurors" },
+        { label: "Analytics", href: "/admin" },
+      ];
+    }
+
+    const items = [
+      { label: "My Cases", href: "/complainant" },
+      { label: "Cases Against Me", href: "/opposite-party" },
+    ];
+
+    if (user.role === ROLES.JUROR) {
+      items.push(
+        { label: "Assigned Cases", href: "/juror" },
+        { label: "Voting History", href: "/juror/history" },
+        { label: "Reputation", href: "/juror/reputation" }
+      );
+    } else {
+      // user.role === ROLES.USER
+      items.push({ label: "Apply for Juror", href: "/complainant/apply-juror" });
+    }
+
+    return items;
+  }, [user]);
 
   const roleLabel = user?.role
     ? ROLE_LABELS[user.role as RoleValue] ?? user.role.replace("_", " ")
@@ -60,16 +64,28 @@ export default function Sidebar() {
   return (
     <aside className="flex h-full w-72 flex-col border-r border-white/10 bg-slate-950 text-white">
       <div className="border-b border-white/10 px-6 py-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
-            M
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
+              M
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold tracking-tight">MetaCourt</h1>
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+                {roleLabel}
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight">MetaCourt</h1>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-              {roleLabel}
-            </p>
-          </div>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10 lg:hidden"
+              aria-label="Close sidebar menu"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         <p className="mt-4 text-sm leading-6 text-slate-400">
@@ -128,4 +144,4 @@ export default function Sidebar() {
       </div>
     </aside>
   );
-}
+}
