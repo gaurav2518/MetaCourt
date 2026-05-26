@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import connectDB from '@/lib/mongodb';
 import { requireAuth} from '@/middleware/auth';
+import { ROLES } from '@/constants/roles';
 import {generateCaseId } from '@/lib/utils';
 import {CATEGORIES} from '@/constants/categories';
 
@@ -135,6 +136,58 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "Failed to file complaint" },
+      { status: 500 }
+    );
+  }
+}
+
+
+export async function GET(req: Request) {
+  try {
+    await connectDB();
+
+    const user = await requireAuth();
+    const userId = user.userId;
+
+    const { searchParams } = new URL(req.url);
+    const as = searchParams.get("as");
+
+    let filter = {};
+
+    if (user.role === ROLES.ADMIN) {
+      filter = {};
+    } else if (user.role === ROLES.JUROR) {
+      filter = { assignedJurors: userId };
+    } else {
+      if (as === "complainant") {
+        filter = { complainantId: userId };
+      } else if (as === "opposite_party") {
+        filter = { "oppositeParty.userId": userId };
+      } else {
+        filter = {
+          $or: [
+            { complainantId: userId },
+            { "oppositeParty.userId": userId },
+          ],
+        };
+      }
+    }
+
+    const complaints = await Complaint.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("evidence")
+      .populate("complainantId", "name")
+      .populate("oppositeParty.userId", "name")
+      .lean();
+
+    return NextResponse.json({ complaints }, { status: 200 });
+  } catch (error) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    return NextResponse.json(
+      { message: "Failed to fetch complaints" },
       { status: 500 }
     );
   }
