@@ -20,7 +20,7 @@ export default function Button({
 	...rest
 }: ButtonProps) {
 	const base =
-		"inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed";
+		"inline-flex cursor-pointer items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60";
 
 	const variants: Record<Variant, string> = {
 		primary:

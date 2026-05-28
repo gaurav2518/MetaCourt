@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 			<input
 				ref={ref}
 				id={id}
-				className={`w-full rounded-2xl border px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-500/10 ${
+				className={`w-full rounded-2xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-500/10 dark:text-white ${
 					error ? "border-rose-500 bg-rose-50" : "border-slate-200 bg-white"
 				}`}
 				aria-describedby={error ? `${id}-error` : helperText ? `${id}-help` : undefined}

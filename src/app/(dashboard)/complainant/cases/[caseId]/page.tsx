@@ -17,6 +17,7 @@ export default function CaseDetailPage() {
   const { fetchComplaint } = useComplaints();
   const [complaint, setComplaint] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -57,6 +58,25 @@ export default function CaseDetailPage() {
         ];
 
   const oppositeResponse = (complaint as any).oppositeResponse ?? (complaint.oppositeParty?.response ?? null);
+
+  async function handleShare() {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: complaint.title,
+          text: `Complaint case ${complaint.caseId}`,
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Case link copied to clipboard.");
+      }
+    } catch {
+      setShareMessage("Sharing was canceled or not available.");
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -104,9 +124,12 @@ export default function CaseDetailPage() {
             <Card.Body>
               <h4 className="text-sm font-semibold text-white">Case actions</h4>
               <div className="mt-3 flex flex-col gap-2">
-                <Button variant="ghost">Share</Button>
-                <Button variant="ghost">Appeal</Button>
+                <Button variant="ghost" onClick={handleShare}>Share</Button>
+                <Button variant="ghost" disabled title="Appeal flow is not wired yet">
+                  Appeal
+                </Button>
               </div>
+              {shareMessage && <p className="mt-3 text-xs text-slate-400">{shareMessage}</p>}
             </Card.Body>
           </Card>
         </aside>
