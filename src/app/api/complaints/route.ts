@@ -10,6 +10,9 @@ import {CATEGORIES} from '@/constants/categories';
 import Complaint from "@/models/Complaint";
 import Evidence from "@/models/Evidence";
 
+import { generateComplaintHash } from "@/lib/hash";
+import { getContract } from "@/lib/web3";
+
 const complaintSchema = z.object({
   title: z.string().min(3, "Title is required").max(200),
   description: z.string().min(10, "Description is required").max(5000),
@@ -108,6 +111,30 @@ export async function POST(req: Request) {
     complaint.evidence = evidenceDocs.map((evidence) => evidence._id);
 
     await complaint.save();
+
+    try{
+      const complaintHash = generateComplaintHash({
+        caseId: complaint.caseId,
+        title: complaint.title,
+        description: complaint.description,
+        category: complaint.category,
+        complainantId: complaint.complainantId.toString(),
+        createdAt: complaint.createdAt
+      });
+
+      const contract = getContract();
+
+      const tx = await contract.fileCase(complaint.caseId, complaintHash);
+
+      await tx.wait();
+
+      complaint.complaintHash = complaintHash;
+      complaint.blockchainTxHash = tx.hash;
+
+      await complaint.save();
+    }catch (blockchainError) {
+      console.error("Blockchain registration failed: ", blockchainError);
+    }
 
     return NextResponse.json(
       {
