@@ -23,11 +23,14 @@ const ROLE_LABELS: Record<RoleValue, string> = {
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const normalizedRole = (user?.role === "complainant" ? ROLES.USER : user?.role) as RoleValue | undefined;
 
   const navItems = useMemo(() => {
     if (!user) return [];
 
-    if (user.role === ROLES.ADMIN) {
+    const role = normalizedRole as RoleValue;
+
+    if (role === ROLES.ADMIN) {
       return [
         { label: "All Complaints", href: "/admin/complaints" },
         { label: "Users", href: "/admin/users" },
@@ -36,27 +39,28 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       ];
     }
 
-    const items = [
+    // Always show the two base links for complainants/users and jurors.
+    const items: NavItem[] = [
       { label: "My Cases", href: "/complainant" },
       { label: "Cases Against Me", href: "/opposite-party" },
     ];
 
-    if (user.role === ROLES.JUROR) {
+    if (role === ROLES.JUROR) {
       items.push(
         { label: "Assigned Cases", href: "/juror" },
         { label: "Voting History", href: "/juror/history" },
         { label: "Reputation", href: "/juror/reputation" }
       );
-    } else {
-      // user.role === ROLES.USER
+    } else if (role === ROLES.USER) {
+      // Regular users can apply to be jurors
       items.push({ label: "Apply for Juror", href: "/complainant/apply-juror" });
     }
 
     return items;
-  }, [user]);
+  }, [user?.role, normalizedRole]);
 
-  const roleLabel = user?.role
-    ? ROLE_LABELS[user.role as RoleValue] ?? user.role.replace("_", " ")
+  const roleLabel = normalizedRole
+    ? ROLE_LABELS[normalizedRole as RoleValue] ?? normalizedRole.replace("_", " ")
     : "Guest";
 
   const hasNavItems = navItems.length > 0;
@@ -66,7 +70,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       <div className="border-b border-white/10 px-6 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
               M
             </div>
             <div>
@@ -144,4 +148,4 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       </div>
     </aside>
   );
-}
+}
