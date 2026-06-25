@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_19-06eb85878c6d6634bc15c0dca501c08420be814a",
+  "solcVersion": "0.8.19",
+  "solcLongVersion": "0.8.19+commit.7dd6d404",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/MetaCourt.sol": "project/contracts/MetaCourt.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "paris",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/MetaCourt.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\ncontract MetaCourt {\r\n    struct Case {\r\n        string caseId;\r\n        string complaintHash;\r\n        uint256 validVotes;\r\n        uint256 invalidVotes;\r\n        uint256 needsEvidenceVotes;\r\n        bool isDecided;\r\n        string decision;\r\n        uint256 filedAt;\r\n        uint256 decidedAt;\r\n    }\r\n\r\n    address public owner;\r\n\r\n    mapping(string => Case) private cases;\r\n    mapping(string => bool) private caseExistsMap;\r\n\r\n    string[] private allCaseIds;\r\n\r\n    event CaseFiled(string indexed caseId, string complaintHash, uint256 timestamp);\r\n    event VoteCast(string indexed caseId, string vote, uint256 timestamp);\r\n    event DecisionReached(string indexed caseId, string decision, uint256 timestamp);\r\n\r\n    modifier onlyOwner() {\r\n        require(msg.sender == owner, \"Not authorized\");\r\n        _;\r\n    }\r\n\r\n    modifier caseExists(string memory caseId) {\r\n        require(caseExistsMap[caseId], \"Case does not exist\");\r\n        _;\r\n    }\r\n\r\n    modifier notDecided(string memory caseId) {\r\n        require(!cases[caseId].isDecided, \"Case already decided\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n    }\r\n\r\n    function fileCase(\r\n        string memory caseId,\r\n        string memory complaintHash\r\n    ) public onlyOwner {\r\n        require(!caseExistsMap[caseId], \"Case already exists\");\r\n        require(bytes(caseId).length > 0, \"Case ID required\");\r\n        require(bytes(complaintHash).length > 0, \"Complaint hash required\");\r\n\r\n        cases[caseId] = Case({\r\n            caseId: caseId,\r\n            complaintHash: complaintHash,\r\n            validVotes: 0,\r\n            invalidVotes: 0,\r\n            needsEvidenceVotes: 0,\r\n            isDecided: false,\r\n            decision: \"pending\",\r\n            filedAt: block.timestamp,\r\n            decidedAt: 0\r\n        });\r\n\r\n        caseExistsMap[caseId] = true;\r\n        allCaseIds.push(caseId);\r\n\r\n        emit CaseFiled(caseId, complaintHash, block.timestamp);\r\n    }\r\n\r\n    function castVote(\r\n        string memory caseId,\r\n        string memory vote\r\n    ) public onlyOwner caseExists(caseId) notDecided(caseId) {\r\n        bytes32 voteHash = keccak256(bytes(vote));\r\n\r\n        if (voteHash == keccak256(bytes(\"valid\"))) {\r\n            cases[caseId].validVotes++;\r\n        } else if (voteHash == keccak256(bytes(\"invalid\"))) {\r\n            cases[caseId].invalidVotes++;\r\n        } else if (voteHash == keccak256(bytes(\"needs_evidence\"))) {\r\n            cases[caseId].needsEvidenceVotes++;\r\n        } else {\r\n            revert(\"Invalid vote option\");\r\n        }\r\n\r\n        emit VoteCast(caseId, vote, block.timestamp);\r\n    }\r\n\r\n    function finalizeDecision(\r\n        string memory caseId\r\n    ) public onlyOwner caseExists(caseId) notDecided(caseId) {\r\n        Case storage c = cases[caseId];\r\n\r\n        if (\r\n            c.validVotes > c.invalidVotes &&\r\n            c.validVotes > c.needsEvidenceVotes\r\n        ) {\r\n            c.decision = \"valid\";\r\n        } else if (\r\n            c.invalidVotes > c.validVotes &&\r\n            c.invalidVotes > c.needsEvidenceVotes\r\n        ) {\r\n            c.decision = \"invalid\";\r\n        } else if (\r\n            c.needsEvidenceVotes > c.validVotes &&\r\n            c.needsEvidenceVotes > c.invalidVotes\r\n        ) {\r\n            c.decision = \"needs_evidence\";\r\n        } else {\r\n            c.decision = \"tied\";\r\n        }\r\n\r\n        c.isDecided = true;\r\n        c.decidedAt = block.timestamp;\r\n\r\n        emit DecisionReached(caseId, c.decision, block.timestamp);\r\n    }\r\n\r\n    function getCase(\r\n        string memory caseId\r\n    ) public view caseExists(caseId) returns (Case memory) {\r\n        return cases[caseId];\r\n    }\r\n\r\n    function getCaseCount() public view returns (uint256) {\r\n        return allCaseIds.length;\r\n    }\r\n}"
+      }
+    }
+  }
+}

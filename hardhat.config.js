@@ -1,20 +1,24 @@
-// hardhat.config.js
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config({ path: ".env.local" });
+import hardhatEthers from "@nomicfoundation/hardhat-ethers";
+import hardhatIgnitionEthers from "@nomicfoundation/hardhat-ignition-ethers";
+import { defineConfig } from "hardhat/config";
 
-module.exports = {
-  solidity: "0.8.19",
-  networks: {
-    sepolia: {
-      url: process.env.NEXT_PUBLIC_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY]
+export default defineConfig({
+  plugins: [hardhatEthers, hardhatIgnitionEthers],
+  solidity: {
+    profiles: {
+      default: {
+        version: "0.8.19",
+      },
     },
-    localhost: {
-      url: "http://127.0.0.1:8545"
-    }
   },
   paths: {
-    sources: "./contracts",
-    artifacts: "./src/contracts/artifacts"  // puts ABI inside src
-  }
-};
+    artifacts: "src/contracts/artifacts",
+  },
+  networks: {
+    localhost: {
+      type: "http",
+      chainType: "l1",
+      url: "http://127.0.0.1:8545",
+    },
+  },
+});
