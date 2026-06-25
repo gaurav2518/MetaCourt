@@ -2,6 +2,8 @@
 pragma solidity ^0.8.19;
 
 contract MetaCourt {
+    string public constant VERSION = "1.0.0";
+
     struct Case {
         string caseId;
         string complaintHash;
