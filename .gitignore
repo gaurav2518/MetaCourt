@@ -44,6 +44,8 @@ next-env.d.ts
 #blockchain
 /artifacts
 /cache
+src/contracts/artifacts/build-info/
+src/contracts/artifacts/**/*.dbg.json
 
 # uploads
 /uploads
