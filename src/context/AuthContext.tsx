@@ -1,13 +1,19 @@
 "use client";
 
 import React, { createContext, useState, useEffect } from "react";
+import { JUROR_LEVELS } from "@/constants/jurorLevels";
 
 type AuthUser = {
   id: string;
+  _id?: string;
   name: string;
   email: string;
   role: string;
   isBanned: boolean;
+  reputationScore?: number;
+  jurorLevel?: (typeof JUROR_LEVELS)[keyof typeof JUROR_LEVELS];
+  correctVotes?: number;
+  totalVotes?: number;
 };
 
 type LoginCredentials = { email: string; password: string };
