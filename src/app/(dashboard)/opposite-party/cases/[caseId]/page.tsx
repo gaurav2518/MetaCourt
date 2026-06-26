@@ -9,6 +9,7 @@ import EvidenceUpload from "@/components/complaint/EvidenceUpload";
 import TimelineTracker from "@/components/complaint/TimelineTracker";
 import ComplaintStatus from "@/components/complaint/ComplaintStatus";
 import Button from "@/components/ui/Button";
+import HashProof from "@/components/blockchain/HashProof";
 
 export default function OppositePartyCasePage() {
   const params = useParams();
@@ -206,7 +207,7 @@ export default function OppositePartyCasePage() {
           }
         />
       </div>
-
+      <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
       {complaint.status === "decided" && (
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold">Final Decision</h2>

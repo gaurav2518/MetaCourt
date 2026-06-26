@@ -9,6 +9,7 @@ import EvidenceViewer from "@/components/complaint/EvidenceViewer";
 import TimelineTracker from "@/components/complaint/TimelineTracker";
 import BlockchainBadge from "@/components/complaint/BlockchainBadge";
 import { useComplaints } from "@/hooks/useComplaints";
+import HashProof from "@/components/blockchain/HashProof";
 
 export default function CaseDetailPage() {
   const params = useParams();
@@ -116,8 +117,10 @@ export default function CaseDetailPage() {
             )}
           </section>
         </div>
+        
 
         <aside className="space-y-4">
+          <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
           <TimelineTracker events={timeline} />
 
           <Card className="p-4">
