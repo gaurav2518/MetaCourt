@@ -5,3 +5,4 @@ export * from "./decisions";
 export * from "./jurorLevels";
 export * from "./vote";
 export * from "./contract";
+export * from "./priority";
