@@ -18,9 +18,14 @@ type ComplaintSummary = {
 type Props = {
   complaints: ComplaintSummary[];
   isLoading?: boolean;
+  viewBasePath?: string;
 };
 
-export default function ComplaintTable({ complaints, isLoading = false }: Props) {
+export default function ComplaintTable({
+  complaints,
+  isLoading = false,
+  viewBasePath = "/complainant/cases",
+}: Props) {
   const columns: TableColumn<ComplaintSummary>[] = [
     { key: "caseId", label: "Case", headerClassName: "w-2/12", render: (item) => item.caseId },
     { key: "title", label: "Title", headerClassName: "w-6/12", render: (item) => item.title },
@@ -32,7 +37,7 @@ export default function ComplaintTable({ complaints, isLoading = false }: Props)
       headerClassName: "w-1/12",
       render: (item) => (
         <div className="flex items-center gap-2">
-          <Link href={`/complainant/cases/${item.caseId}`}>
+          <Link href={`${viewBasePath}/${item.caseId}`}>
             <Button variant="ghost">View</Button>
           </Link>
         </div>

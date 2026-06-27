@@ -9,9 +9,14 @@ import {CATEGORIES} from '@/constants/categories';
 
 import Complaint from "@/models/Complaint";
 import Evidence from "@/models/Evidence";
+import User from "@/models/User";
 
 import { generateComplaintHash } from "@/lib/hash";
 import { getContract } from "@/lib/web3";
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 const complaintSchema = z.object({
   title: z.string().min(3, "Title is required").max(200),
@@ -189,12 +194,46 @@ export async function GET(req: Request) {
       if (as === "complainant") {
         filter = { complainantId: userId };
       } else if (as === "opposite_party") {
-        filter = { "oppositeParty.userId": userId };
+        const dbUser = await User.findById(userId).select("email").lean();
+
+        if (!dbUser?.email) {
+          return NextResponse.json({ complaints: [] }, { status: 200 });
+        }
+
+        const emailRegex = new RegExp(`^${escapeRegex(dbUser.email)}$`, "i");
+
+        await Complaint.updateMany(
+          {
+            "oppositeParty.email": emailRegex,
+            $or: [
+              { "oppositeParty.userId": null },
+              { "oppositeParty.userId": { $exists: false } },
+            ],
+          },
+          {
+            $set: {
+              "oppositeParty.userId": userId,
+            },
+          }
+        );
+
+        filter = {
+          $or: [
+            { "oppositeParty.userId": userId },
+            { "oppositeParty.email": emailRegex },
+          ],
+        };
       } else {
+        const dbUser = await User.findById(userId).select("email").lean();
+        const emailFilter = dbUser?.email
+          ? { "oppositeParty.email": new RegExp(`^${escapeRegex(dbUser.email)}$`, "i") }
+          : null;
+
         filter = {
           $or: [
             { complainantId: userId },
             { "oppositeParty.userId": userId },
+            ...(emailFilter ? [emailFilter] : []),
           ],
         };
       }

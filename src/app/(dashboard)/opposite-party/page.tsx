@@ -67,7 +67,10 @@ export default function OppositePartyDashboardPage() {
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       {!loading && !error && (
-        <ComplaintTable complaints={displayComplaints} />
+        <ComplaintTable
+          complaints={displayComplaints}
+          viewBasePath="/opposite-party/cases"
+        />
       )}
     </div>
   );
