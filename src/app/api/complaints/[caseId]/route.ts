@@ -16,9 +16,39 @@ export async function GET(
   try {
     await connectDB();
 
-    const user = await requireAuth();
-
     const { caseId } = await params;
+    let user: any = null;
+
+    try {
+      user = await requireAuth();
+    }catch(error) {
+      if (error instanceof Error && error.message !== "UNAUTHORIZED"){
+        throw error;
+      }
+    }
+
+    if(!user) {
+      const publicComplaint = await Complaint.findOne({ caseId })
+      .select(
+        "caseId title category status decision complaintHash blockchainTxHash decidedAt createdAt"
+      )
+      .lean();
+
+      if(!publicComplaint) {
+        return NextResponse.json(
+          {message: "Complaint not found"},
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          complaint: publicComplaint,
+          relationship: "public"
+        },
+        { status: 200 }
+      );
+    }
 
     const complaint = await Complaint.findOne({ caseId })
       .populate("evidence")
