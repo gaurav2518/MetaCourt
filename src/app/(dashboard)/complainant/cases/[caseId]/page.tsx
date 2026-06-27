@@ -10,6 +10,7 @@ import TimelineTracker from "@/components/complaint/TimelineTracker";
 import BlockchainBadge from "@/components/complaint/BlockchainBadge";
 import { useComplaints } from "@/hooks/useComplaints";
 import HashProof from "@/components/blockchain/HashProof";
+import { QRCodeCanvas } from "qrcode.react";
 
 export default function CaseDetailPage() {
   const params = useParams();
@@ -79,6 +80,21 @@ export default function CaseDetailPage() {
     }
   }
 
+  function downloadQrCode() {
+    const canvas = document.getElementById("case-qr-code") as HTMLCanvasElement | null;
+
+    if (!canvas) return;
+
+    const pngUrl = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+
+    const link = document.createElement("a");
+    link.href = pngUrl;
+    link.download = `${complaint.caseId}-qr.png`;
+    link.click();
+  }
+
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
@@ -121,6 +137,33 @@ export default function CaseDetailPage() {
 
         <aside className="space-y-4">
           <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
+          <Card className="p-4">
+    <Card.Body>
+          <h4 className="text-sm font-semibold text-white">
+            Public Verification QR
+          </h4>
+
+          <p className="mt-2 text-xs text-slate-400">
+            Scan this QR code to open the public blockchain verification page.
+          </p>
+
+          <div className="mt-4 inline-block rounded-2xl bg-white p-4">
+            <QRCodeCanvas
+              id="case-qr-code"
+              value={`${window.location.origin}/case/${complaint.caseId}`}
+              size={180}
+            />
+          </div>
+
+          <Button
+            variant="ghost"
+            onClick={downloadQrCode}
+            className="mt-4 w-full"
+          >
+            Download QR PNG
+          </Button>
+        </Card.Body>
+    </Card>
           <TimelineTracker events={timeline} />
 
           <Card className="p-4">
