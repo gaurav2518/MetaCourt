@@ -70,7 +70,7 @@ export default function AdminJurorsPage() {
         subtitle="Review applications and monitor verified jurors."
       />
 
-      <div className="rounded-2xl border bg-white p-2 shadow-sm">
+      <div className="rounded-2xl border bg-white p-2 text-slate-900 shadow-sm">
         <button
           type="button"
           onClick={() => setActiveTab("pending")}
@@ -110,7 +110,7 @@ export default function AdminJurorsPage() {
             return (
               <div
                 key={application._id}
-                className="rounded-2xl border bg-white p-5 shadow-sm"
+                className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                   <div>
@@ -175,7 +175,7 @@ export default function AdminJurorsPage() {
       )}
 
       {activeTab === "active" && (
-        <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>

@@ -78,7 +78,7 @@ export default function AdminUsersPage() {
         subtitle="Manage users, roles, and account status."
       />
 
-      <div className="flex flex-wrap gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 shadow-sm">
         <input
           type="text"
           placeholder="Search by name or email..."
@@ -108,7 +108,7 @@ export default function AdminUsersPage() {
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border bg-white p-8 text-center">
+        <div className="rounded-2xl border bg-white p-8 text-center text-slate-900">
           Loading users...
         </div>
       ) : (
