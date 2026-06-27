@@ -50,7 +50,7 @@ export default function CasesChart({
   );
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm">
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Cases Analytics</h2>

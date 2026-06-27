@@ -46,17 +46,17 @@ export default function OppositePartyDashboardPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
           <p className="text-sm text-slate-500">Cases Against Me</p>
           <p className="mt-2 text-3xl font-semibold">{totalCases}</p>
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
           <p className="text-sm text-slate-500">Responded</p>
           <p className="mt-2 text-3xl font-semibold">{responded}</p>
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
           <p className="text-sm text-slate-500">Pending Response</p>
           <p className="mt-2 text-3xl font-semibold">{pendingResponse}</p>
         </div>

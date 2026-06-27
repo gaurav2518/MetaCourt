@@ -147,7 +147,7 @@ export default function CaseDetailPage() {
             Scan this QR code to open the public blockchain verification page.
           </p>
 
-          <div className="mt-4 inline-block rounded-2xl bg-white p-4">
+          <div className="mt-4 inline-block rounded-2xl bg-white p-4 text-slate-900">
             <QRCodeCanvas
               id="case-qr-code"
               value={`${window.location.origin}/case/${complaint.caseId}`}

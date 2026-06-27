@@ -99,7 +99,7 @@ export default function OppositePartyCasePage() {
         subtitle={`Case ID: ${complaint.caseId}`}
       />
 
-      <div className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Complaint Details</h2>
           <ComplaintStatus status={complaint.status} />
@@ -134,12 +134,12 @@ export default function OppositePartyCasePage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold">Complainant Evidence</h2>
         <EvidenceViewer files={complaint.evidence || []} />
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <h2 className="text-lg font-semibold">Defense Response</h2>
 
         {hasResponded ? (
@@ -194,7 +194,7 @@ export default function OppositePartyCasePage() {
         )}
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold">Status Timeline</h2>
         <TimelineTracker
           events={
@@ -209,7 +209,7 @@ export default function OppositePartyCasePage() {
       </div>
       <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
       {complaint.status === "decided" && (
-        <div className="rounded-2xl border bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
           <h2 className="text-lg font-semibold">Final Decision</h2>
           <p className="mt-2 text-slate-700 capitalize">
             Decision: {complaint.decision?.replace("_", " ")}

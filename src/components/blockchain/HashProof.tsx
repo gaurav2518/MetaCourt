@@ -64,7 +64,7 @@ export default function HashProof({
   }
 
   return (
-    <div className="space-y-4 rounded-2xl border bg-white p-5 shadow-sm">
+    <div className="space-y-4 rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
       <div>
         <p className="text-sm font-medium text-slate-700">SHA-256 Hash</p>
 
@@ -76,7 +76,7 @@ export default function HashProof({
           <button
             type="button"
             onClick={copyHash}
-            className="shrink-0 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium"
+            className="shrink-0 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium text-slate-900"
           >
             Copy
           </button>

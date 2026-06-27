@@ -28,7 +28,7 @@ export default function StatsOverview({
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm"
         >
           <p className="text-sm text-slate-500">{stat.label}</p>
           <p className="mt-2 text-3xl font-semibold text-slate-900">

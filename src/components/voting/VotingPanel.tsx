@@ -79,7 +79,7 @@ export default function VotingPanel({
   ];
 
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
       <div className="flex gap-2 border-b pb-3">
         {["details", "evidence", "response"].map((tab) => (
           <button

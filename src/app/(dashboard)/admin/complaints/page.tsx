@@ -88,6 +88,22 @@ export default function AdminComplaintsPage() {
     }
   }
 
+  async function updateComplaintStatus(caseId: string, nextStatus: string) {
+    const res = await fetch(`/api/complaints/${caseId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: nextStatus,
+      }),
+    });
+
+    if (res.ok) {
+      loadComplaints();
+    }
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -95,7 +111,7 @@ export default function AdminComplaintsPage() {
         subtitle="Review, filter, assign jurors, and finalize complaints."
       />
 
-      <div className="grid gap-3 rounded-2xl border bg-white p-4 shadow-sm md:grid-cols-4">
+      <div className="grid gap-3 rounded-2xl border bg-white p-4 text-slate-900 shadow-sm md:grid-cols-4">
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -151,7 +167,7 @@ export default function AdminComplaintsPage() {
           Loading complaints...
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-500">
               <tr>
@@ -184,7 +200,24 @@ export default function AdminComplaintsPage() {
                         View
                       </Link>
 
-                      {complaint.status === STATUS.UNDER_REVIEW && (
+                      {complaint.status === STATUS.PENDING && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateComplaintStatus(
+                              complaint.caseId,
+                              STATUS.UNDER_REVIEW
+                            )
+                          }
+                          className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800"
+                        >
+                          Start Review
+                        </button>
+                      )}
+
+                      {[STATUS.PENDING, STATUS.UNDER_REVIEW].includes(
+                        complaint.status
+                      ) && (
                         <button
                           type="button"
                           onClick={() => setSelectedCaseId(complaint.caseId)}

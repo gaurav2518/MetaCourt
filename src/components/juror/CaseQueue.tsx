@@ -34,7 +34,7 @@ export default function CaseQueue({ cases }: CaseQueueProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
       {sortedCases.map((item) => (
         <div
           key={item.caseId}

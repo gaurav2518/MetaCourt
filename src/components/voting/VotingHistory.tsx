@@ -14,7 +14,7 @@ export default function VotingHistory({ votes }: VotingHistoryProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
       <table className="w-full text-left text-sm">
         <thead className="bg-slate-50 text-slate-500">
           <tr>

@@ -42,7 +42,7 @@ export default function UserTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm">
       <table className="w-full text-left text-sm">
         <thead className="bg-slate-50 text-slate-500">
           <tr>
@@ -147,7 +147,7 @@ export default function UserTable({
             type="button"
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
-            className="rounded-lg border bg-white px-3 py-1.5 text-sm disabled:opacity-50"
+            className="rounded-lg border bg-white px-3 py-1.5 text-sm text-slate-900 disabled:opacity-50"
           >
             Previous
           </button>
@@ -156,7 +156,7 @@ export default function UserTable({
             type="button"
             disabled={page >= totalPages}
             onClick={() => onPageChange(page + 1)}
-            className="rounded-lg border bg-white px-3 py-1.5 text-sm disabled:opacity-50"
+            className="rounded-lg border bg-white px-3 py-1.5 text-sm text-slate-900 disabled:opacity-50"
           >
             Next
           </button>

@@ -12,7 +12,7 @@ export default function WalletConnect() {
 
   if (walletAddress) {
     return (
-      <div className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-sm">
+      <div className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-sm text-slate-900">
         <span className="font-mono text-slate-700">
           {truncateAddress(walletAddress)}
         </span>

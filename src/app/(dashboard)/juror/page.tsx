@@ -64,7 +64,7 @@ export default function JurorDashboardPage() {
 
 function StatCard({ title, value }: { title: string; value: number }) {
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
       <p className="text-sm text-slate-500">{title}</p>
       <p className="mt-2 text-3xl font-semibold text-slate-900">{value}</p>
     </div>

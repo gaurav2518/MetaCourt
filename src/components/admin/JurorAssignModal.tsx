@@ -102,7 +102,7 @@ export default function JurorAssignModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-5">
-      <div className="w-full max-w-3xl rounded-2xl bg-white shadow-xl">
+      <div className="w-full max-w-3xl rounded-2xl bg-white text-slate-900 shadow-xl">
         <div className="border-b p-6">
           <h2 className="text-xl font-semibold">
             Assign Jurors
@@ -115,6 +115,12 @@ export default function JurorAssignModal({
 
         <div className="max-h-[420px] overflow-y-auto p-6">
           <div className="space-y-3">
+            {sortedJurors.length === 0 && (
+              <div className="rounded-xl border border-dashed p-5 text-sm text-slate-500">
+                No verified jurors are available. Approve juror applications before assigning this case.
+              </div>
+            )}
+
             {sortedJurors.map((juror) => (
               <label
                 key={juror._id}

@@ -25,7 +25,7 @@ export default function VoteResult({
   txHash,
 }: VoteResultProps) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border bg-white p-6 text-slate-900 shadow-sm">
       <p className="text-sm text-slate-500">Final Decision</p>
 
       <div
