@@ -33,7 +33,7 @@ export async function GET() {
         title: complaint?.title ?? "Unknown case",
         vote: vote.vote,
         finalDecision,
-        reputationChange: isDecided ? (matchedDecision ? 5 : -3) : 0,
+        reputationChange: isDecided ? (matchedDecision ? 2 : -1) : 0,
         txHash: vote.blockchainTxHash,
         createdAt: vote.createdAt,
       };

@@ -7,7 +7,7 @@ const UserSchema = new Schema<IUser>({
   passwordHash:     { type: String, required: true },
   role:             { type: String, enum: ["user","juror","admin"], default: "user" },
   walletAddress:    { type: String, default: null },
-  reputationScore:  { type: Number, default: 100, min: 0, max: 200 },
+  reputationScore:  { type: Number, default: 100, min: 0, max: 250 },
   isVerifiedJuror:  { type: Boolean, default: false },
   jurorLevel:       { type: String, enum: ["junior","senior","master"], default: "junior" },
   totalVotes:       { type: Number, default: 0 },
