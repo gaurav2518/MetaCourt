@@ -41,6 +41,9 @@ export default function AdminComplaintDetailPage() {
   const [complaint, setComplaint] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [repairingHash, setRepairingHash] = useState(false);
+  const [repairMessage, setRepairMessage] = useState("");
+  const [repairError, setRepairError] = useState("");
 
   async function loadComplaint() {
     try {
@@ -65,6 +68,39 @@ export default function AdminComplaintDetailPage() {
   useEffect(() => {
     if (caseId) loadComplaint();
   }, [caseId]);
+
+  async function storeHashOnChain() {
+    try {
+      setRepairingHash(true);
+      setRepairMessage("");
+      setRepairError("");
+
+      const res = await fetch("/api/blockchain/store-hash", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          caseId: complaint.caseId,
+          complaintHash: complaint.complaintHash || undefined,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to store hash on-chain");
+      }
+
+      setComplaint(data.complaint ?? complaint);
+      setRepairMessage(`Blockchain transaction recorded: ${data.txHash}`);
+    } catch (err) {
+      setRepairError(
+        err instanceof Error ? err.message : "Failed to store hash on-chain"
+      );
+    } finally {
+      setRepairingHash(false);
+    }
+  }
 
   const timelineEvents = useMemo<TimelineEvent[]>(() => {
     if (!complaint) return [];
@@ -204,11 +240,48 @@ export default function AdminComplaintDetailPage() {
 
       <section className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
         <TimelineTracker events={timelineEvents} />
-        <HashProof
-          caseId={complaint.caseId}
-          complaintHash={complaint.complaintHash}
-          blockchainTxHash={complaint.blockchainTxHash}
-        />
+        <div className="space-y-4">
+          <HashProof
+            caseId={complaint.caseId}
+            complaintHash={complaint.complaintHash}
+            blockchainTxHash={complaint.blockchainTxHash}
+          />
+
+          {!complaint.blockchainTxHash && (
+            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5 text-amber-50">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-sm font-semibold">
+                    Blockchain Registration Needed
+                  </h2>
+                  <p className="mt-1 text-sm text-amber-100/80">
+                    Store this complaint hash on-chain if automatic filing did
+                    not complete.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={storeHashOnChain}
+                  disabled={repairingHash}
+                  className="rounded-xl bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {repairingHash ? "Storing..." : "Store Hash"}
+                </button>
+              </div>
+
+              {repairMessage && (
+                <p className="mt-3 break-all text-sm text-green-200">
+                  {repairMessage}
+                </p>
+              )}
+
+              {repairError && (
+                <p className="mt-3 text-sm text-rose-200">{repairError}</p>
+              )}
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
