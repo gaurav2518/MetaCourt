@@ -188,55 +188,53 @@ export async function GET(req: Request) {
 
     if (user.role === ROLES.ADMIN) {
       filter = {};
+    } else if (as === "complainant") {
+      filter = { complainantId: userId };
+    } else if (as === "opposite_party") {
+      const dbUser = await User.findById(userId).select("email").lean();
+
+      if (!dbUser?.email) {
+        return NextResponse.json({ complaints: [] }, { status: 200 });
+      }
+
+      const emailRegex = new RegExp(`^${escapeRegex(dbUser.email)}$`, "i");
+
+      await Complaint.updateMany(
+        {
+          "oppositeParty.email": emailRegex,
+          $or: [
+            { "oppositeParty.userId": null },
+            { "oppositeParty.userId": { $exists: false } },
+          ],
+        },
+        {
+          $set: {
+            "oppositeParty.userId": userId,
+          },
+        }
+      );
+
+      filter = {
+        $or: [
+          { "oppositeParty.userId": userId },
+          { "oppositeParty.email": emailRegex },
+        ],
+      };
     } else if (user.role === ROLES.JUROR) {
       filter = { assignedJurors: userId };
     } else {
-      if (as === "complainant") {
-        filter = { complainantId: userId };
-      } else if (as === "opposite_party") {
-        const dbUser = await User.findById(userId).select("email").lean();
+      const dbUser = await User.findById(userId).select("email").lean();
+      const emailFilter = dbUser?.email
+        ? { "oppositeParty.email": new RegExp(`^${escapeRegex(dbUser.email)}$`, "i") }
+        : null;
 
-        if (!dbUser?.email) {
-          return NextResponse.json({ complaints: [] }, { status: 200 });
-        }
-
-        const emailRegex = new RegExp(`^${escapeRegex(dbUser.email)}$`, "i");
-
-        await Complaint.updateMany(
-          {
-            "oppositeParty.email": emailRegex,
-            $or: [
-              { "oppositeParty.userId": null },
-              { "oppositeParty.userId": { $exists: false } },
-            ],
-          },
-          {
-            $set: {
-              "oppositeParty.userId": userId,
-            },
-          }
-        );
-
-        filter = {
-          $or: [
-            { "oppositeParty.userId": userId },
-            { "oppositeParty.email": emailRegex },
-          ],
-        };
-      } else {
-        const dbUser = await User.findById(userId).select("email").lean();
-        const emailFilter = dbUser?.email
-          ? { "oppositeParty.email": new RegExp(`^${escapeRegex(dbUser.email)}$`, "i") }
-          : null;
-
-        filter = {
-          $or: [
-            { complainantId: userId },
-            { "oppositeParty.userId": userId },
-            ...(emailFilter ? [emailFilter] : []),
-          ],
-        };
-      }
+      filter = {
+        $or: [
+          { complainantId: userId },
+          { "oppositeParty.userId": userId },
+          ...(emailFilter ? [emailFilter] : []),
+        ],
+      };
     }
 
     const complaints = await Complaint.find(filter)
