@@ -2,6 +2,18 @@
 
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
+import Modal from "@/components/ui/Modal";
+
+type JurorCase = {
+  _id: string;
+  caseId: string;
+  title: string;
+  status: string;
+  category: string;
+  decision?: string;
+  votingDeadline?: string;
+  createdAt?: string;
+};
 
 export default function AdminJurorsPage() {
   const [activeTab, setActiveTab] = useState<"pending" | "active">("pending");
@@ -9,6 +21,10 @@ export default function AdminJurorsPage() {
   const [jurors, setJurors] = useState<any[]>([]);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedJuror, setSelectedJuror] = useState<any | null>(null);
+  const [jurorCases, setJurorCases] = useState<JurorCase[]>([]);
+  const [casesLoading, setCasesLoading] = useState(false);
+  const [casesError, setCasesError] = useState("");
 
   async function loadApplications() {
     const res = await fetch("/api/admin/jurors?status=pending");
@@ -53,6 +69,37 @@ export default function AdminJurorsPage() {
       setNote("");
       loadData();
     }
+  }
+
+  async function openJurorCases(juror: any) {
+    try {
+      setSelectedJuror(juror);
+      setJurorCases([]);
+      setCasesError("");
+      setCasesLoading(true);
+
+      const jurorId = juror._id || juror.id;
+      const res = await fetch(`/api/admin/jurors/cases?jurorId=${jurorId}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to fetch juror cases");
+      }
+
+      setJurorCases(data.cases || []);
+    } catch (error) {
+      setCasesError(
+        error instanceof Error ? error.message : "Failed to fetch juror cases"
+      );
+    } finally {
+      setCasesLoading(false);
+    }
+  }
+
+  function closeJurorCases() {
+    setSelectedJuror(null);
+    setJurorCases([]);
+    setCasesError("");
   }
 
   useEffect(() => {
@@ -184,6 +231,7 @@ export default function AdminJurorsPage() {
                 <th className="p-4">Reputation</th>
                 <th className="p-4">Level</th>
                 <th className="p-4">Case Count</th>
+                <th className="p-4">Actions</th>
               </tr>
             </thead>
 
@@ -195,6 +243,15 @@ export default function AdminJurorsPage() {
                   <td className="p-4">{juror.reputationScore ?? 100}</td>
                   <td className="p-4 capitalize">{juror.jurorLevel}</td>
                   <td className="p-4">{juror.activeCaseCount ?? "-"}</td>
+                  <td className="p-4">
+                    <button
+                      type="button"
+                      onClick={() => openJurorCases(juror)}
+                      className="rounded-lg border px-3 py-1.5 text-xs font-medium"
+                    >
+                      View Cases
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -207,6 +264,60 @@ export default function AdminJurorsPage() {
           )}
         </div>
       )}
+
+      <Modal
+        isOpen={Boolean(selectedJuror)}
+        onClose={closeJurorCases}
+        title={selectedJuror ? `${selectedJuror.name}'s Cases` : "Juror Cases"}
+        className="max-w-3xl"
+      >
+        {casesLoading && (
+          <p className="text-sm text-slate-400">Loading assigned cases...</p>
+        )}
+
+        {casesError && (
+          <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-200">
+            {casesError}
+          </div>
+        )}
+
+        {!casesLoading && !casesError && jurorCases.length === 0 && (
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-slate-400">
+            No assigned cases found for this juror.
+          </div>
+        )}
+
+        {!casesLoading && jurorCases.length > 0 && (
+          <div className="overflow-hidden rounded-2xl border border-white/10">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-white/5 text-slate-400">
+                <tr>
+                  <th className="p-3">Case</th>
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Decision</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jurorCases.map((item) => (
+                  <tr key={item._id} className="border-t border-white/10">
+                    <td className="p-3 font-medium text-white">
+                      {item.caseId}
+                    </td>
+                    <td className="p-3 text-slate-300">{item.title}</td>
+                    <td className="p-3 capitalize text-slate-300">
+                      {item.status?.replace("_", " ")}
+                    </td>
+                    <td className="p-3 capitalize text-slate-300">
+                      {item.decision ?? "pending"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
