@@ -194,7 +194,7 @@ export default function AdminComplaintsPage() {
                   <td className="p-4">
                     <div className="flex flex-wrap gap-2">
                       <Link
-                        href={`/complainant/cases/${complaint.caseId}`}
+                        href={`/admin/complaints/${complaint.caseId}`}
                         className="rounded-lg border px-3 py-1.5 text-xs font-medium"
                       >
                         View
