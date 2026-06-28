@@ -4,12 +4,25 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import PageHeader from "@/components/layout/PageHeader";
+import AddEvidencePanel from "@/components/complaint/AddEvidencePanel";
 import EvidenceViewer from "@/components/complaint/EvidenceViewer";
 import EvidenceUpload from "@/components/complaint/EvidenceUpload";
 import TimelineTracker from "@/components/complaint/TimelineTracker";
 import ComplaintStatus from "@/components/complaint/ComplaintStatus";
 import Button from "@/components/ui/Button";
 import HashProof from "@/components/blockchain/HashProof";
+import type { UploadedEvidenceFile } from "@/hooks/useUpload";
+
+function normalizeEvidence(files: any[] = []): UploadedEvidenceFile[] {
+  return files.map((file) => ({
+    url: file.url ?? file.fileUrl ?? "",
+    publicId:
+      file.publicId ?? file.public_id ?? file._id?.toString() ?? file.fileUrl,
+    fileType: file.fileType ?? "document",
+    fileName: file.fileName ?? "uploaded-file",
+    fileSize: file.fileSize ?? 0,
+  }));
+}
 
 export default function OppositePartyCasePage() {
   const params = useParams();
@@ -20,6 +33,7 @@ export default function OppositePartyCasePage() {
   const [counterEvidence, setCounterEvidence] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState("");
 
   async function fetchComplaint() {
@@ -74,6 +88,28 @@ export default function OppositePartyCasePage() {
     }
   }
 
+  async function claimCase() {
+    try {
+      setClaiming(true);
+      setError("");
+
+      const res = await fetch(`/api/complaints/${caseId}/link-opposite-party`, {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to claim case");
+      }
+
+      setComplaint(data.complaint);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setClaiming(false);
+    }
+  }
+
   useEffect(() => {
     fetchComplaint();
   }, [caseId]);
@@ -91,6 +127,9 @@ export default function OppositePartyCasePage() {
   }
 
   const hasResponded = Boolean(complaint.defenseStatement);
+  const complainantEvidence = normalizeEvidence(complaint.evidence || []);
+  const defenseEvidence = normalizeEvidence(complaint.defenseEvidence || []);
+  const isLinkedToAccount = Boolean(complaint.oppositeParty?.userId);
 
   return (
     <div className="space-y-6">
@@ -98,6 +137,26 @@ export default function OppositePartyCasePage() {
         title={complaint.title}
         subtitle={`Case ID: ${complaint.caseId}`}
       />
+
+      {!isLinkedToAccount && (
+        <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5 text-cyan-50">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm">
+              This complaint matches your email. Claim it to link it to your
+              account before responding.
+            </p>
+
+            <Button
+              type="button"
+              onClick={claimCase}
+              isLoading={claiming}
+              disabled={claiming}
+            >
+              Claim Case
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -136,7 +195,7 @@ export default function OppositePartyCasePage() {
 
       <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold">Complainant Evidence</h2>
-        <EvidenceViewer files={complaint.evidence || []} />
+        <EvidenceViewer files={complainantEvidence} />
       </div>
 
       <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
@@ -155,7 +214,14 @@ export default function OppositePartyCasePage() {
               </p>
             </div>
 
-            <EvidenceViewer files={complaint.defenseEvidence || []} />
+            <EvidenceViewer files={defenseEvidence} />
+
+            <AddEvidencePanel
+              caseId={complaint.caseId}
+              title="Add More Defense Evidence"
+              helperText="Attach extra defense evidence after your response."
+              onAdded={fetchComplaint}
+            />
           </div>
         ) : (
           <div className="mt-4 space-y-4">
@@ -186,7 +252,11 @@ export default function OppositePartyCasePage() {
               type="button"
               onClick={submitDefense}
               isLoading={submitting}
-              disabled={submitting || defenseStatement.trim().length < 10}
+              disabled={
+                submitting ||
+                !isLinkedToAccount ||
+                defenseStatement.trim().length < 10
+              }
             >
               Submit Defense
             </Button>

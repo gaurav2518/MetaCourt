@@ -4,13 +4,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import AddEvidencePanel from "@/components/complaint/AddEvidencePanel";
 import ComplaintStatus from "@/components/complaint/ComplaintStatus";
 import EvidenceViewer from "@/components/complaint/EvidenceViewer";
 import TimelineTracker from "@/components/complaint/TimelineTracker";
 import BlockchainBadge from "@/components/complaint/BlockchainBadge";
 import { useComplaints } from "@/hooks/useComplaints";
 import HashProof from "@/components/blockchain/HashProof";
+import type { UploadedEvidenceFile } from "@/hooks/useUpload";
 import { QRCodeCanvas } from "qrcode.react";
+
+function normalizeEvidence(files: any[] = []): UploadedEvidenceFile[] {
+  return files.map((file) => ({
+    url: file.url ?? file.fileUrl ?? "",
+    publicId:
+      file.publicId ?? file.public_id ?? file._id?.toString() ?? file.fileUrl,
+    fileType: file.fileType ?? "document",
+    fileName: file.fileName ?? "uploaded-file",
+    fileSize: file.fileSize ?? 0,
+  }));
+}
 
 export default function CaseDetailPage() {
   const params = useParams();
@@ -21,23 +34,27 @@ export default function CaseDetailPage() {
   const [loading, setLoading] = useState(true);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-
+  async function loadComplaint() {
     if (!caseId) return;
 
     setLoading(true);
 
-    fetchComplaint(caseId)
-      .then((res) => {
-        if (mounted) setComplaint(res.complaint ?? null);
-      })
-      .catch(() => {
-        if (mounted) setComplaint(null);
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+    try {
+      const res = await fetchComplaint(caseId);
+      setComplaint(res.complaint ?? null);
+    } catch {
+      setComplaint(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted) {
+      void loadComplaint();
+    }
 
     return () => {
       mounted = false;
@@ -48,7 +65,7 @@ export default function CaseDetailPage() {
 
   if (!complaint) return <div className="text-sm text-rose-400">Complaint not found.</div>;
 
-  const evidence = (complaint as any).evidence ?? [];
+  const evidence = normalizeEvidence((complaint as any).evidence ?? []);
 
   // Build a minimal timeline from known fields if no history provided
   const timeline =
@@ -119,6 +136,13 @@ export default function CaseDetailPage() {
           </Card>
 
           <EvidenceViewer files={evidence} />
+
+          <AddEvidencePanel
+            caseId={complaint.caseId}
+            title="Add More Evidence"
+            helperText="Attach extra complainant evidence after filing."
+            onAdded={loadComplaint}
+          />
 
           <section>
             <h3 className="mb-2 text-sm font-semibold text-white">Opposite party response</h3>
