@@ -15,9 +15,13 @@ type ComplaintCardProps = {
     category?: string;
     createdAt?: string;
   };
+  viewBasePath?: string;
 };
 
-export default function ComplaintCard({ complaint }: ComplaintCardProps) {
+export default function ComplaintCard({
+  complaint,
+  viewBasePath = "/complainant/cases",
+}: ComplaintCardProps) {
   const { caseId, title, description, status, category, createdAt } = complaint;
 
   return (
@@ -39,7 +43,7 @@ export default function ComplaintCard({ complaint }: ComplaintCardProps) {
               <ComplaintStatus status={status} />
             </div>
 
-            <Link href={`/complainant/cases/${caseId}`} className="w-full">
+            <Link href={`${viewBasePath}/${caseId}`} className="w-full">
               <Button variant="secondary" className="w-full">View</Button>
             </Link>
           </div>
