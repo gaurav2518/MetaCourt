@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Scale, ShieldCheck } from "lucide-react";
 
@@ -83,8 +84,20 @@ export default function ApplyJurorPage() {
 
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-200">
-            <Scale className="h-6 w-6" />
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]">
+              <Scale className="h-6 w-6" />
+            </div>
+
+            <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+              <Image
+                src="/Juror_Verification_Badge.png"
+                alt="Juror verification badge"
+                fill
+                sizes="64px"
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <h2 className="mt-5 text-lg font-semibold text-white">

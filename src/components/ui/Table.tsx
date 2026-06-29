@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
+import Image from "next/image";
 
 export interface TableColumn<T> {
 	key: string;
@@ -105,10 +106,14 @@ export default function Table<T extends Record<string, any>>({
 									emptyStateComponent
 								) : (
 									<div className="flex flex-col items-center justify-center space-y-3">
-										<div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/5 bg-white/2 text-slate-500">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-												<path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-											</svg>
+										<div className="relative h-20 w-20 overflow-hidden rounded-lg border border-white/5 bg-white/2">
+											<Image
+												src="/Empty_State_Illustration.png"
+												alt=""
+												fill
+												sizes="80px"
+												className="object-cover"
+											/>
 										</div>
 										<p className="text-slate-400 font-medium">{emptyStateMessage}</p>
 									</div>
