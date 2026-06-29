@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -171,16 +171,6 @@ export default function ComplaintForm() {
 		router.push(`/complainant/cases/${complaint.caseId}`);
 	});
 
-	function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
-		if (currentStep < 2) {
-			event.preventDefault();
-			void goNext();
-			return;
-		}
-
-		void submitComplaint(event);
-	}
-
 	const isBusy = loading || isSubmitting;
 
 	return (
@@ -255,7 +245,7 @@ export default function ComplaintForm() {
 					</div>
 				</div>
 
-				<form onSubmit={handleFormSubmit} className="space-y-6">
+				<form onSubmit={(event) => event.preventDefault()} className="space-y-6">
 					{currentStep === 0 && (
 						<div className="grid gap-5">
 							<Input
@@ -381,7 +371,12 @@ export default function ComplaintForm() {
 									<ChevronRight className="ml-2 h-4 w-4" />
 								</Button>
 							) : (
-								<Button type="submit" isLoading={isBusy} disabled={isBusy}>
+								<Button
+									type="button"
+									onClick={() => void submitComplaint()}
+									isLoading={isBusy}
+									disabled={isBusy}
+								>
 									Submit complaint
 								</Button>
 							)}
