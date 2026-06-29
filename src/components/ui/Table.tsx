@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import Image from "next/image";
+import { FileSearch, Scale } from "lucide-react";
 
 export interface TableColumn<T> {
 	key: string;
@@ -105,17 +105,21 @@ export default function Table<T extends Record<string, any>>({
 								{emptyStateComponent ? (
 									emptyStateComponent
 								) : (
-									<div className="flex flex-col items-center justify-center space-y-3">
-										<div className="relative h-20 w-20 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
-											<Image
-												src="/Empty_State_Illustration.png"
-												alt=""
-												fill
-												sizes="80px"
-												className="object-cover"
-											/>
+									<div className="mx-auto flex max-w-sm flex-col items-center justify-center">
+										<div className="relative flex h-24 w-24 items-center justify-center">
+											<div className="absolute inset-0 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-secondary)]" />
+											<div className="absolute inset-3 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)]" />
+											<div className="absolute left-2 top-6 h-3 w-3 rounded-full bg-[var(--color-gold)]/70" />
+											<div className="absolute bottom-5 right-2 h-2 w-2 rounded-full bg-[var(--color-accent-primary)]/80" />
+											<div className="relative flex h-14 w-14 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-primary)]">
+												<FileSearch className="h-7 w-7" />
+												<Scale className="absolute -right-2 -top-2 h-5 w-5 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-1 text-[var(--color-gold)]" />
+											</div>
 										</div>
-										<p className="font-medium text-[var(--color-text-secondary)]">{emptyStateMessage}</p>
+										<p className="mt-4 font-medium text-[var(--color-text-primary)]">{emptyStateMessage}</p>
+										<p className="mt-1 text-xs leading-5 text-[var(--color-text-muted)]">
+											New case activity will appear here once records are available.
+										</p>
 									</div>
 								)}
 							</td>
