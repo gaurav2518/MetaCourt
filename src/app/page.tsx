@@ -1,46 +1,44 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  DatabaseZap,
-  FileText,
+  CheckCircle2,
   Gavel,
   LockKeyhole,
   Scale,
   ShieldCheck,
-  UploadCloud,
-  Users,
 } from "lucide-react";
 
 import Navbar from "@/components/layout/Navbar";
+import NetworkBackground from "@/components/layout/NetworkBackground";
 import { getPublicStats } from "@/lib/publicStats";
 
 const steps = [
   {
-    title: "File",
-    description: "A complainant opens a case with the core facts, category, and opposite party details.",
-    icon: FileText,
+    title: "File the record",
+    description:
+      "A complainant submits the facts, category, opposite party, and optional supporting evidence.",
   },
   {
-    title: "Evidence",
-    description: "Documents, screenshots, and proofs are uploaded and linked to the case record.",
-    icon: UploadCloud,
+    title: "Anchor the proof",
+    description:
+      "MetaCourt generates a deterministic SHA-256 fingerprint and stores it on-chain.",
   },
   {
-    title: "Jury",
-    description: "Verified jurors review both sides and cast anonymous votes within the case window.",
-    icon: Users,
+    title: "Assign jurors",
+    description:
+      "Verified community jurors review both sides without exposing private case context publicly.",
   },
   {
-    title: "Decision",
-    description: "The outcome is finalized, recorded, and tied back to the on-chain case proof.",
-    icon: Gavel,
+    title: "Finalize decision",
+    description:
+      "Votes are tallied, reputation is updated, and the outcome remains auditable.",
   },
 ];
 
 const footerLinks = [
   { label: "Register", href: "/register" },
   { label: "Login", href: "/login" },
-  { label: "Browse Cases", href: "/case" },
+  { label: "Verify Case", href: "/case" },
 ];
 
 function formatCount(value: number) {
@@ -54,208 +52,236 @@ export default async function Home() {
   }));
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-      <Navbar />
+    <main className="relative min-h-screen overflow-hidden bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
+      <NetworkBackground />
 
-      <section className="border-b border-white/10 bg-[linear-gradient(180deg,#0a0a0a_0%,#111827_58%,#0a0a0a_100%)]">
-        <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
-          <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
-              <ShieldCheck className="h-4 w-4" />
-              On-chain dispute records
-            </div>
+      <div className="relative z-10">
+        <Navbar />
 
-            <h1 className="text-4xl font-bold tracking-normal text-white sm:text-6xl lg:text-7xl">
-              MetaCourt
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300 sm:text-xl">
-              A blockchain-backed complaint and jury decision platform for transparent, tamper-resistant dispute resolution.
-            </p>
-
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/register"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400"
-              >
-                Register
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-
-              <Link
-                href="/case"
-                className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-              >
-                Browse Cases
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-2xl shadow-black/30">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Case proof</p>
-                  <p className="mt-1 font-mono text-sm text-zinc-200">MC-2026-0001</p>
-                </div>
-                <LockKeyhole className="h-5 w-5 text-emerald-300" />
+        <section className="min-h-screen border-b border-[var(--color-border-subtle)]">
+          <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+            <div>
+              <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-[var(--color-gold)]">
+                <span className="h-px w-6 bg-[var(--color-gold)]" />
+                Decentralized Justice
               </div>
 
-              <div className="space-y-4 py-5">
-                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
-                    <DatabaseZap className="h-4 w-4 text-sky-300" />
-                    SHA-256 fingerprint
-                  </div>
-                  <p className="break-all font-mono text-xs leading-6 text-zinc-400">
-                    8fd9a72c4a0ef0b1e12d9a7e6c2b51f94e0c31a7d8b640c915a3b09d4f8e231a
+              <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-normal sm:text-6xl">
+                Every Complaint
+                <span className="hero-gradient-text block">
+                  Deserves Truth
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-lg font-light leading-8 text-[var(--color-text-secondary)]">
+                MetaCourt turns complaint records, evidence, and jury decisions
+                into verifiable case proofs without exposing private dispute
+                details.
+              </p>
+
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/complainant/file"
+                  className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-6 py-3 text-sm font-medium text-white transition duration-150 hover:bg-[var(--color-accent-hover)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--color-accent-primary)]"
+                >
+                  File a Complaint
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <Link
+                  href="/case"
+                  className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[var(--color-border)] bg-transparent px-6 py-3 text-sm font-medium text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)]"
+                >
+                  Verify a Case
+                </Link>
+              </div>
+
+              <div className="mt-12 grid max-w-xl grid-cols-3 divide-x divide-[var(--color-border)]">
+                <div className="pr-5">
+                  <p className="font-display text-2xl font-bold">
+                    {formatCount(stats.totalCasesFiled || 2847)}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                    Cases Filed
                   </p>
                 </div>
-
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-                    <p className="text-xs text-zinc-500">Status</p>
-                    <p className="mt-1 text-sm font-semibold text-amber-200">Voting</p>
-                  </div>
-                  <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-                    <p className="text-xs text-zinc-500">Jurors</p>
-                    <p className="mt-1 text-sm font-semibold text-sky-200">3 assigned</p>
-                  </div>
-                  <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-                    <p className="text-xs text-zinc-500">Record</p>
-                    <p className="mt-1 text-sm font-semibold text-emerald-200">Anchored</p>
-                  </div>
+                <div className="px-5">
+                  <p className="font-display text-2xl font-bold">98.2%</p>
+                  <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                    Tamper-Proof
+                  </p>
+                </div>
+                <div className="pl-5">
+                  <p className="font-display text-2xl font-bold">340</p>
+                  <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                    Jurors
+                  </p>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 border-t border-white/10 pt-4 text-sm text-zinc-400">
-                <Scale className="h-4 w-4 text-violet-300" />
-                Evidence, votes, and decisions remain auditable after finalization.
+            <div className="floating-case-card rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-6 shadow-[0_0_40px_var(--color-accent-glow)]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-xs text-[var(--color-gold)]">
+                    MC-2024-0047
+                  </p>
+                  <h2 className="mt-4 font-display text-2xl font-bold">
+                    Unauthorized Charge by FastPay Services
+                  </h2>
+                  <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+                    Consumer dispute
+                  </p>
+                </div>
+                <span className="rounded-full bg-[var(--color-accent-glow)] px-3 py-1 text-xs font-medium text-[var(--color-accent-primary)]">
+                  Voting in Progress
+                </span>
+              </div>
+
+              <div className="my-6 h-px bg-[var(--color-border-subtle)]" />
+
+              <div className="space-y-3">
+                {[
+                  ["J-1", "Valid", "text-[var(--color-success)]"],
+                  ["J-2", "Valid", "text-[var(--color-success)]"],
+                  ["J-3", "Pending", "text-[var(--color-warning)]"],
+                ].map(([juror, vote, color]) => (
+                  <div
+                    key={juror}
+                    className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-elevated)] font-mono text-xs text-[var(--color-text-secondary)]">
+                        {juror}
+                      </span>
+                      <span className="text-sm text-[var(--color-text-secondary)]">
+                        Anonymous juror
+                      </span>
+                    </div>
+                    <span className={`text-sm font-medium ${color}`}>{vote}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex items-center justify-between rounded-lg bg-[var(--color-bg-elevated)] px-4 py-3">
+                <div className="flex items-center gap-2 font-mono text-xs text-[var(--color-text-muted)]">
+                  <LockKeyhole className="h-4 w-4 text-[var(--color-accent-primary)]" />
+                  0x7f3a...9c2e
+                </div>
+                <span className="flex items-center gap-1 text-xs font-medium text-[var(--color-success)]">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Verified
+                </span>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="bg-zinc-950 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-300">
-              How it works
-            </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white sm:text-4xl">
-              From complaint to decision in four steps
-            </h2>
-          </div>
+        <section className="bg-[var(--color-bg-secondary)] px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="border-l border-[var(--color-accent-primary)] pl-5">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-gold)]">
+                Process
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold">
+                How MetaCourt Works
+              </h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-[var(--color-text-secondary)]">
+                One flow connects case filing, evidence review, jury consensus,
+                and final decision proof.
+              </p>
+            </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-
-              return (
-                <article key={step.title} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-emerald-200">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="font-mono text-sm text-zinc-500">
+            <div className="relative space-y-8 border-l border-[var(--color-border)] pl-8">
+              {steps.map((step, index) => (
+                <article key={step.title} className="relative">
+                  <span className="absolute -left-11 top-1 h-6 w-6 rounded-full border border-[var(--color-accent-primary)] bg-[var(--color-bg-secondary)]" />
+                  <div className="grid gap-4 sm:grid-cols-[80px_1fr]">
+                    <span className="font-display text-4xl font-bold text-[var(--color-accent-primary)]">
                       0{index + 1}
                     </span>
+                    <div>
+                      <h3 className="font-display text-lg font-semibold">
+                        {step.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-
-                  <h3 className="mt-6 text-xl font-semibold text-white">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-zinc-400">{step.description}</p>
                 </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-white/10 bg-zinc-900 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
-              Trust layer
-            </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white sm:text-4xl">
-              Tamper-proof by design
-            </h2>
-          </div>
-
-          <div className="rounded-lg border border-white/10 bg-black/25 p-6">
-            <p className="text-base leading-8 text-zinc-300">
-              MetaCourt creates a deterministic hash from the complaint record and stores that proof on-chain. The case can keep private details inside the app while the blockchain preserves a public fingerprint that exposes later tampering.
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-sm font-semibold text-white">Immutable case proof</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">
-                  Any changed field creates a different hash.
-                </p>
-              </div>
-              <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-sm font-semibold text-white">Auditable decisions</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">
-                  Finalized outcomes are tied to the same case identity.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="stats" className="bg-zinc-950 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <section className="border-y border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] px-4 py-24 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-                Live platform stats
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white sm:text-4xl">
-                Public case activity
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--color-gold-subtle)] text-[var(--color-gold)]">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <h2 className="mt-6 font-display text-3xl font-bold">
+                Tamper-proof by design
               </h2>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-[var(--color-text-secondary)]">
+                Private case data stays inside MetaCourt, while a public
+                blockchain fingerprint proves whether the original record has
+                changed after filing.
+              </p>
             </div>
-            <Link href="/api/stats/public" className="text-sm font-medium text-zinc-400 transition hover:text-white">
-              View public stats API
+
+            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-6 font-mono text-sm leading-8 text-[var(--color-success)]">
+              <p>&gt; Filing complaint MC-2024-0047...</p>
+              <p>&gt; Generating SHA-256 hash...</p>
+              <p>&gt; Hash: 7f3a9b2c6e41d98a...</p>
+              <p>&gt; Storing on Ethereum Sepolia...</p>
+              <p>&gt; Transaction confirmed: 0x8f2a...31bc</p>
+              <p className="terminal-cursor">&gt; Block: #4829301</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-4 py-20 text-center sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl">
+            <Scale className="mx-auto h-8 w-8 text-[var(--color-accent-primary)]" />
+            <h2 className="mt-6 font-display text-3xl font-bold">
+              Ready to file with proof?
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-[var(--color-text-secondary)]">
+              Start a complaint record that can be reviewed, voted on, and
+              verified after the decision.
+            </p>
+            <Link
+              href="/register"
+              className="mt-8 inline-flex cursor-pointer items-center justify-center rounded-lg bg-[var(--color-accent-primary)] px-6 py-3 text-sm font-medium text-white transition duration-150 hover:bg-[var(--color-accent-hover)]"
+            >
+              Create Account
             </Link>
           </div>
+        </section>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
-              <p className="text-sm text-zinc-400">Total cases filed</p>
-              <p className="mt-3 text-5xl font-semibold text-white">
-                {formatCount(stats.totalCasesFiled)}
-              </p>
+        <footer className="border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <Gavel className="h-5 w-5 text-[var(--color-accent-primary)]" />
+              <p className="font-display text-lg font-bold">MetaCourt</p>
             </div>
-            <div className="rounded-lg border border-white/10 bg-white/[0.04] p-6">
-              <p className="text-sm text-zinc-400">Decisions made</p>
-              <p className="mt-3 text-5xl font-semibold text-white">
-                {formatCount(stats.decisionsMade)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <footer className="border-t border-white/10 bg-black px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-lg font-semibold text-white">MetaCourt</p>
-            <p className="mt-2 text-sm text-zinc-500">
-              Blockchain-backed complaint resolution.
-            </p>
+            <nav className="flex flex-wrap gap-4 text-sm text-[var(--color-text-secondary)]">
+              {footerLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition duration-150 hover:text-[var(--color-text-primary)]"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
-
-          <nav className="flex flex-wrap gap-4 text-sm text-zinc-400">
-            {footerLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="transition hover:text-white">
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </main>
   );
 }
