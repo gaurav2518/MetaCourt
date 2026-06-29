@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #111118;
+  --color-bg-elevated: #1a1a24;
+  --color-border: #2a2a3a;
+  --color-border-subtle: #1e1e2e;
+  --color-accent-primary: #7c3aed;
+  --color-accent-hover: #6d28d9;
+  --color-accent-glow: rgba(124, 58, 237, 0.15);
+  --color-gold: #f59e0b;
+  --color-gold-subtle: rgba(245, 158, 11, 0.1);
+  --color-text-primary: #f1f0ff;
+  --color-text-secondary: #9b99b8;
+  --color-text-muted: #5c5a7a;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-text-primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
+  --font-body: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--color-accent-glow);
+  color: var(--color-text-primary);
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, var(--color-accent-primary), #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-grid-bg {
+  background-color: var(--color-bg-primary);
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.floating-case-card {
+  animation: case-float 4s ease-in-out infinite alternate;
+}
+
+.terminal-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 6px;
+  background: var(--color-success);
+  vertical-align: -0.15em;
+  animation: terminal-blink 1s steps(2, start) infinite;
+}
+
+@keyframes case-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes terminal-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
+  }
 }
