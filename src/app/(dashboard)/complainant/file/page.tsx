@@ -4,8 +4,8 @@ export default function FileComplaintPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-white">File a New Complaint</h1>
-        <p className="mt-1 text-sm text-slate-400">Follow the steps to submit your complaint.</p>
+        <h1 className="font-display text-2xl font-semibold text-[var(--color-text-primary)]">File a New Complaint</h1>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Follow the steps to submit your complaint.</p>
       </header>
 
       <main>

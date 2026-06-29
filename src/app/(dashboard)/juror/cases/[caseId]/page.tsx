@@ -44,11 +44,11 @@ export default function JurorCasePage() {
   }, [caseId]);
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading case...</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Loading case...</p>;
   }
 
   if (!complaint) {
-    return <p className="text-sm text-red-600">Complaint not found.</p>;
+    return <p className="text-sm text-[var(--color-danger)]">Complaint not found.</p>;
   }
 
   const hasVoted = Boolean(votes?.hasVoted);
@@ -64,8 +64,8 @@ export default function JurorCasePage() {
       {!hasVoted && <VotingPanel complaint={complaint} />}
 
       {hasVoted && !isDecided && (
-        <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-green-800">
-          <h2 className="text-lg font-semibold">Vote Submitted</h2>
+        <div className="rounded-xl border border-[rgba(16,185,129,0.25)] bg-[rgba(16,185,129,0.12)] p-6 text-[var(--color-success)]">
+          <h2 className="font-display text-lg font-semibold">Vote Submitted</h2>
           <p className="mt-2 text-sm">
             Your vote has been recorded. Final decision is pending.
           </p>

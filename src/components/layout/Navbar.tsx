@@ -34,17 +34,17 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 							<button
 								type="button"
 								onClick={onToggleSidebar}
-								className="mr-1 rounded-xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10 lg:hidden"
+								className="mr-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-2 text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)] lg:hidden"
 								aria-label="Toggle navigation menu"
 							>
 								<Menu className="h-5 w-5" />
 							</button>
 						)}
 						<div className="space-y-1">
-							<p className="text-xs uppercase tracking-[0.28em] text-slate-400">
+							<p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
 								MetaCourt Workspace
 							</p>
-							<h2 className="text-lg font-semibold tracking-tight text-white">
+							<h2 className="font-display text-lg font-bold tracking-normal text-[var(--color-text-primary)]">
 								Welcome back{user.name ? `, ${user.name}` : ""}
 							</h2>
 						</div>
@@ -52,20 +52,20 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 
 					<div className="flex items-center gap-3">
 						<div className="hidden text-right sm:block">
-							<p className="text-sm font-medium text-white">
+							<p className="text-sm font-medium text-[var(--color-text-primary)]">
 								{user.name ?? "Unknown User"}
 							</p>
-							<p className="text-xs text-slate-400">{roleLabel}</p>
+							<p className="text-xs text-[var(--color-text-muted)]">{roleLabel}</p>
 						</div>
 
-						<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-600 font-semibold text-white shadow-lg shadow-cyan-500/20">
+						<div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-accent-glow)] font-semibold text-[var(--color-accent-primary)]">
 							{(user.name?.[0] ?? "U").toUpperCase()}
 						</div>
 
 						<button
 							type="button"
 							onClick={logout}
-							className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/10"
+							className="inline-flex items-center justify-center rounded-lg border border-[var(--color-border)] bg-transparent px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)]"
 						>
 							Logout
 						</button>
@@ -91,13 +91,13 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 					<div className="flex items-center gap-4">
 						<Link
 							href="/login"
-							className="text-sm font-medium text-slate-300 transition hover:text-white"
+							className="text-sm font-medium text-[var(--color-text-secondary)] transition duration-150 hover:text-[var(--color-text-primary)]"
 						>
 							Log In
 						</Link>
 						<Link
 							href="/register"
-							className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+							className="rounded-lg border border-[var(--color-border)] bg-transparent px-4 py-2 text-sm font-medium text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)]"
 						>
 							Register
 						</Link>

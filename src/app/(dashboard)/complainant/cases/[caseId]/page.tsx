@@ -61,9 +61,9 @@ export default function CaseDetailPage() {
     };
   }, [caseId, fetchComplaint]);
 
-  if (loading) return <div className="text-sm text-slate-400">Loading...</div>;
+  if (loading) return <div className="text-sm text-[var(--color-text-muted)]">Loading...</div>;
 
-  if (!complaint) return <div className="text-sm text-rose-400">Complaint not found.</div>;
+  if (!complaint) return <div className="text-sm text-[var(--color-danger)]">Complaint not found.</div>;
 
   const evidence = normalizeEvidence((complaint as any).evidence ?? []);
 
@@ -116,8 +116,8 @@ export default function CaseDetailPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">{complaint.title}</h1>
-          <p className="mt-1 text-sm text-slate-400">Case ID: {complaint.caseId}</p>
+          <h1 className="font-display text-2xl font-semibold text-[var(--color-text-primary)]">{complaint.title}</h1>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Case ID: {complaint.caseId}</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -133,8 +133,8 @@ export default function CaseDetailPage() {
         <div className="lg:col-span-2 space-y-4">
           <Card className="p-4">
             <Card.Body>
-              <h3 className="text-base font-semibold text-white">Details</h3>
-              <p className="mt-3 text-sm text-slate-400">{complaint.description}</p>
+              <h3 className="font-display text-base font-semibold text-[var(--color-text-primary)]">Details</h3>
+              <p className="mt-3 text-sm text-[var(--color-text-secondary)]">{complaint.description}</p>
             </Card.Body>
           </Card>
 
@@ -148,15 +148,15 @@ export default function CaseDetailPage() {
           />
 
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-white">Opposite party response</h3>
+            <h3 className="mb-2 text-sm font-semibold text-[var(--color-text-primary)]">Opposite party response</h3>
             {oppositeResponse ? (
               <Card className="p-4">
                 <Card.Body>
-                  <p className="text-sm text-slate-200">{oppositeResponse}</p>
+                  <p className="text-sm text-[var(--color-text-secondary)]">{oppositeResponse}</p>
                 </Card.Body>
               </Card>
             ) : (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-400">No response yet from the opposite party.</div>
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 text-sm text-[var(--color-text-muted)]">No response yet from the opposite party.</div>
             )}
           </section>
         </div>
@@ -166,15 +166,15 @@ export default function CaseDetailPage() {
           <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
           <Card className="p-4">
     <Card.Body>
-          <h4 className="text-sm font-semibold text-white">
+          <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">
             Public Verification QR
           </h4>
 
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-[var(--color-text-muted)]">
             Scan this QR code to open the public blockchain verification page.
           </p>
 
-          <div className="mt-4 inline-block rounded-2xl bg-white p-4 text-slate-900">
+          <div className="mt-4 inline-block rounded-lg bg-white p-4 text-black">
             <QRCodeCanvas
               id="case-qr-code"
               value={`${window.location.origin}/case/${complaint.caseId}`}
@@ -195,14 +195,14 @@ export default function CaseDetailPage() {
 
           <Card className="p-4">
             <Card.Body>
-              <h4 className="text-sm font-semibold text-white">Case actions</h4>
+              <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">Case actions</h4>
               <div className="mt-3 flex flex-col gap-2">
                 <Button variant="ghost" onClick={handleShare}>Share</Button>
                 <Button variant="ghost" disabled title="Appeal flow is not wired yet">
                   Appeal
                 </Button>
               </div>
-              {shareMessage && <p className="mt-3 text-xs text-slate-400">{shareMessage}</p>}
+              {shareMessage && <p className="mt-3 text-xs text-[var(--color-text-muted)]">{shareMessage}</p>}
             </Card.Body>
           </Card>
         </aside>

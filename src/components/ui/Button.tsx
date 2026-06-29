@@ -20,15 +20,15 @@ export default function Button({
 	...rest
 }: ButtonProps) {
 	const base =
-		"inline-flex cursor-pointer items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60";
+		"inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-sm font-medium transition duration-150 disabled:cursor-not-allowed disabled:opacity-60";
 
 	const variants: Record<Variant, string> = {
 		primary:
-			"bg-cyan-600 text-white hover:brightness-95 focus:ring-4 focus:ring-cyan-500/20",
+			"bg-[var(--color-accent-primary)] text-white hover:bg-[var(--color-accent-hover)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--color-accent-primary)]",
 		secondary:
-			"bg-white/5 text-white hover:bg-white/10 border border-white/10",
-		danger: "bg-rose-600 text-white hover:brightness-95",
-		ghost: "bg-transparent text-white hover:bg-white/5",
+			"border border-[var(--color-border)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-elevated)]",
+		danger: "bg-[var(--color-danger)] text-white hover:brightness-95",
+		ghost: "bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-elevated)]",
 	};
 
 	const cls = `${base} ${variants[variant]} ${className}`;

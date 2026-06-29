@@ -10,11 +10,11 @@ type VoteResultProps = {
 };
 
 const DECISION_STYLES = {
-  [DECISIONS.VALID]: "bg-green-100 text-green-700",
-  [DECISIONS.INVALID]: "bg-red-100 text-red-700",
-  [DECISIONS.NEEDS_EVIDENCE]: "bg-yellow-100 text-yellow-700",
-  [DECISIONS.TIED]: "bg-slate-100 text-slate-700",
-  [DECISIONS.PENDING]: "bg-slate-100 text-slate-700",
+  [DECISIONS.VALID]: "bg-[rgba(16,185,129,0.12)] text-[var(--color-success)]",
+  [DECISIONS.INVALID]: "bg-[rgba(239,68,68,0.12)] text-[var(--color-danger)]",
+  [DECISIONS.NEEDS_EVIDENCE]: "bg-[rgba(245,158,11,0.12)] text-[var(--color-warning)]",
+  [DECISIONS.TIED]: "bg-[rgba(124,58,237,0.12)] text-[var(--color-accent-primary)]",
+  [DECISIONS.PENDING]: "bg-[rgba(148,163,184,0.12)] text-[var(--color-text-secondary)]",
 };
 
 export default function VoteResult({
@@ -25,8 +25,8 @@ export default function VoteResult({
   txHash,
 }: VoteResultProps) {
   return (
-    <div className="rounded-2xl border bg-white p-6 text-slate-900 shadow-sm">
-      <p className="text-sm text-slate-500">Final Decision</p>
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6 text-[var(--color-text-primary)]">
+      <p className="text-sm text-[var(--color-text-secondary)]">Final Decision</p>
 
       <div
         className={`mt-3 inline-flex rounded-full px-4 py-2 text-lg font-bold capitalize ${
@@ -37,15 +37,15 @@ export default function VoteResult({
       </div>
 
       <div className="mt-6 grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl bg-green-50 p-4 text-green-700">
+        <div className="rounded-lg border border-[rgba(16,185,129,0.18)] bg-[rgba(16,185,129,0.08)] p-4 text-[var(--color-success)]">
           Valid: {valid}
         </div>
 
-        <div className="rounded-xl bg-red-50 p-4 text-red-700">
+        <div className="rounded-lg border border-[rgba(239,68,68,0.18)] bg-[rgba(239,68,68,0.08)] p-4 text-[var(--color-danger)]">
           Invalid: {invalid}
         </div>
 
-        <div className="rounded-xl bg-yellow-50 p-4 text-yellow-700">
+        <div className="rounded-lg border border-[rgba(245,158,11,0.18)] bg-[rgba(245,158,11,0.08)] p-4 text-[var(--color-warning)]">
           Needs Evidence: {needsEvidence}
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function VoteResult({
           href={`https://sepolia.etherscan.io/tx/${txHash}`}
           target="_blank"
           rel="noreferrer"
-          className="mt-5 block break-all font-mono text-xs text-cyan-700 underline"
+          className="mt-5 block break-all font-mono text-xs text-[var(--color-accent-primary)] underline"
         >
           {txHash}
         </a>

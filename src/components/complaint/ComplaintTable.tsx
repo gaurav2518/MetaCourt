@@ -29,7 +29,7 @@ export default function ComplaintTable({
   const columns: TableColumn<ComplaintSummary>[] = [
     { key: "caseId", label: "Case", headerClassName: "w-2/12", render: (item) => item.caseId },
     { key: "title", label: "Title", headerClassName: "w-6/12", render: (item) => item.title },
-    { key: "category", label: "Category", headerClassName: "w-2/12", render: (item) => item.category ?? "—" },
+    { key: "category", label: "Category", headerClassName: "w-2/12", render: (item) => item.category ?? "-" },
     { key: "status", label: "Status", headerClassName: "w-1/12", render: (item) => <ComplaintStatus status={item.status} /> },
     {
       key: "actions",

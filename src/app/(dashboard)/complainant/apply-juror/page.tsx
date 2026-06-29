@@ -83,7 +83,7 @@ export default function ApplyJurorPage() {
       />
 
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]">
               <Scale className="h-6 w-6" />
@@ -100,10 +100,10 @@ export default function ApplyJurorPage() {
             </div>
           </div>
 
-          <h2 className="mt-5 text-lg font-semibold text-white">
+          <h2 className="mt-5 font-display text-lg font-semibold text-[var(--color-text-primary)]">
             What admins review
           </h2>
-          <div className="mt-4 space-y-3 text-sm leading-6 text-slate-400">
+          <div className="mt-4 space-y-3 text-sm leading-6 text-[var(--color-text-secondary)]">
             <p>
               Admins review your reason, relevant experience, and account standing before approving juror access.
             </p>
@@ -112,10 +112,10 @@ export default function ApplyJurorPage() {
             </p>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-emerald-400/15 bg-emerald-400/10 p-4">
+          <div className="mt-6 rounded-lg border border-[rgba(16,185,129,0.25)] bg-[rgba(16,185,129,0.12)] p-4">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="mt-0.5 h-5 w-5 text-emerald-300" />
-              <p className="text-sm leading-6 text-emerald-100">
+              <ShieldCheck className="mt-0.5 h-5 w-5 text-[var(--color-success)]" />
+              <p className="text-sm leading-6 text-[var(--color-success)]">
                 Juror permissions are only activated after admin verification.
               </p>
             </div>
@@ -124,7 +124,7 @@ export default function ApplyJurorPage() {
 
         <form
           onSubmit={submitApplication}
-          className="rounded-2xl border border-white/10 bg-white/5 p-5"
+          className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5"
         >
           <div className="space-y-5">
             <Textarea
@@ -152,19 +152,19 @@ export default function ApplyJurorPage() {
             />
 
             {message && (
-              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+              <div className="rounded-lg border border-[rgba(16,185,129,0.25)] bg-[rgba(16,185,129,0.12)] px-4 py-3 text-sm text-[var(--color-success)]">
                 {message}
               </div>
             )}
 
             {error && (
-              <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+              <div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] px-4 py-3 text-sm text-[var(--color-danger)]">
                 {error}
               </div>
             )}
 
-            <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs leading-5 text-slate-400">
+            <div className="flex flex-col gap-3 border-t border-[var(--color-border)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs leading-5 text-[var(--color-text-muted)]">
                 You can only have one pending juror application at a time.
               </p>
               <Button type="submit" isLoading={isSubmitting}>

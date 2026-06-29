@@ -26,77 +26,77 @@ export default function Badge({
 	const normalized = value?.toLowerCase() || "";
 
 	// Dynamic styling based on normalized value
-	let colorClasses = "border-slate-500/30 bg-slate-500/10 text-slate-300";
+	let colorClasses = "bg-[rgba(92,90,122,0.15)] text-[var(--color-text-secondary)]";
 
 	if (type === "status" || type === "decision" || type === "vote") {
 		switch (normalized) {
 			case "pending":
 			case "appealed":
-				colorClasses = "border-amber-500/30 bg-amber-500/10 text-amber-200 shadow-sm shadow-amber-500/5";
+				colorClasses = "bg-[rgba(245,158,11,0.15)] text-[var(--color-warning)]";
 				break;
 			case "under_review":
-				colorClasses = "border-sky-500/30 bg-sky-500/10 text-sky-200 shadow-sm shadow-sky-500/5";
+				colorClasses = "bg-[rgba(59,130,246,0.15)] text-[var(--color-info)]";
 				break;
 			case "voting":
 			case "tied":
-				colorClasses = "border-purple-500/30 bg-purple-500/10 text-purple-200 shadow-sm shadow-purple-500/5";
+				colorClasses = "bg-[rgba(124,58,237,0.15)] text-[var(--color-accent-primary)]";
 				break;
 			case "decided":
 			case "valid":
-				colorClasses = "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 shadow-sm shadow-emerald-500/5";
+				colorClasses = "bg-[rgba(16,185,129,0.15)] text-[var(--color-success)]";
 				break;
 			case "needs_evidence":
-				colorClasses = "border-amber-500/30 bg-amber-500/10 text-amber-200 shadow-sm shadow-amber-500/5";
+				colorClasses = "bg-[rgba(245,158,11,0.15)] text-[var(--color-warning)]";
 				break;
 			case "rejected":
 			case "invalid":
 			case "closed":
-				colorClasses = "border-rose-500/30 bg-rose-500/10 text-rose-300 shadow-sm shadow-rose-500/5";
+				colorClasses = "bg-[rgba(239,68,68,0.15)] text-[var(--color-danger)]";
 				break;
 			default:
-				colorClasses = "border-slate-500/30 bg-slate-500/10 text-slate-300";
+				colorClasses = "bg-[rgba(92,90,122,0.15)] text-[var(--color-text-secondary)]";
 		}
 	} else if (type === "category") {
 		switch (normalized) {
 			case "consumer":
-				colorClasses = "border-cyan-500/30 bg-cyan-500/10 text-cyan-200";
+				colorClasses = "bg-[rgba(124,58,237,0.15)] text-[var(--color-accent-primary)]";
 				break;
 			case "employment":
-				colorClasses = "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+				colorClasses = "bg-[rgba(16,185,129,0.15)] text-[var(--color-success)]";
 				break;
 			case "service":
-				colorClasses = "border-purple-500/30 bg-purple-500/10 text-purple-200";
+				colorClasses = "bg-[rgba(124,58,237,0.15)] text-[var(--color-accent-primary)]";
 				break;
 			case "government":
-				colorClasses = "border-rose-500/30 bg-rose-500/10 text-rose-300";
+				colorClasses = "bg-[rgba(245,158,11,0.15)] text-[var(--color-gold)]";
 				break;
 			case "academic":
-				colorClasses = "border-blue-500/30 bg-blue-500/10 text-blue-300";
+				colorClasses = "bg-[rgba(59,130,246,0.15)] text-[var(--color-info)]";
 				break;
 			case "other":
 			default:
-				colorClasses = "border-slate-500/30 bg-slate-500/10 text-slate-300";
+				colorClasses = "bg-[rgba(92,90,122,0.15)] text-[var(--color-text-secondary)]";
 		}
 	} else {
 		// Generic heuristics if type isn't specified
 		if (["pending", "appealed", "needs_evidence"].includes(normalized)) {
-			colorClasses = "border-amber-500/30 bg-amber-500/10 text-amber-200";
+			colorClasses = "bg-[rgba(245,158,11,0.15)] text-[var(--color-warning)]";
 		} else if (["under_review"].includes(normalized)) {
-			colorClasses = "border-sky-500/30 bg-sky-500/10 text-sky-200";
+			colorClasses = "bg-[rgba(59,130,246,0.15)] text-[var(--color-info)]";
 		} else if (["voting", "tied", "service"].includes(normalized)) {
-			colorClasses = "border-purple-500/30 bg-purple-500/10 text-purple-200";
+			colorClasses = "bg-[rgba(124,58,237,0.15)] text-[var(--color-accent-primary)]";
 		} else if (["decided", "valid", "employment"].includes(normalized)) {
-			colorClasses = "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+			colorClasses = "bg-[rgba(16,185,129,0.15)] text-[var(--color-success)]";
 		} else if (["rejected", "invalid", "closed", "government"].includes(normalized)) {
-			colorClasses = "border-rose-500/30 bg-rose-500/10 text-rose-300";
+			colorClasses = "bg-[rgba(239,68,68,0.15)] text-[var(--color-danger)]";
 		} else if (["consumer", "academic"].includes(normalized)) {
-			colorClasses = "border-cyan-500/30 bg-cyan-500/10 text-cyan-200";
+			colorClasses = "bg-[rgba(124,58,237,0.15)] text-[var(--color-accent-primary)]";
 		}
 	}
 
 	return (
 		<span
-			className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${colorClasses} ${className}`}
+			className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${colorClasses} ${className}`}
 			{...rest}
 		>
 			{formatValue(value)}

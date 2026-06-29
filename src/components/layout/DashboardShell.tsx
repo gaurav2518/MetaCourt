@@ -22,7 +22,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
 				{/* Mobile Sidebar Overlay Backdrop */}
 				{isMobileSidebarOpen && (
 					<div
-						className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-xs transition-opacity lg:hidden"
+						className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity lg:hidden"
 						onClick={() => setIsMobileSidebarOpen(false)}
 					/>
 				)}

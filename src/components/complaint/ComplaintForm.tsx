@@ -174,31 +174,31 @@ export default function ComplaintForm() {
 	const isBusy = loading || isSubmitting;
 
 	return (
-		<section className="mx-auto w-full max-w-4xl rounded-4xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6 lg:p-8">
-			<div className="space-y-6 rounded-3xl border border-white/10 bg-slate-950/70 p-5 sm:p-6 lg:p-8">
+		<section className="mx-auto w-full max-w-4xl rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 sm:p-6 lg:p-8">
+			<div className="space-y-6 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-secondary)] p-5 sm:p-6 lg:p-8">
 				<div className="space-y-3">
 					<div className="flex items-center justify-between gap-4">
 						<div>
-							<p className="text-xs uppercase tracking-[0.3em] text-cyan-300/80">File a complaint</p>
-							<h1 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+							<p className="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-primary)]">File a complaint</p>
+							<h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-3xl">
 								Start a new case
 							</h1>
 						</div>
 
-						<div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 sm:flex">
-							<FileText className="h-4 w-4 text-cyan-300" />
+						<div className="hidden items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--color-text-secondary)] sm:flex">
+							<FileText className="h-4 w-4 text-[var(--color-accent-primary)]" />
 							Step {currentStep + 1} of {STEPS.length}
 						</div>
 					</div>
 
 					<div className="space-y-3">
-						<div className="flex items-center justify-between gap-3 text-xs font-medium text-slate-400">
+						<div className="flex items-center justify-between gap-3 text-xs font-medium text-[var(--color-text-muted)]">
 							<span>{STEPS[currentStep].title}</span>
 							<span>{Math.round(stepProgress)}% complete</span>
 						</div>
-							<div className="h-2 overflow-hidden rounded-full bg-white/10">
+							<div className="h-2 overflow-hidden rounded-full bg-[var(--color-bg-primary)]">
 							<div
-								className={`h-full rounded-full bg-linear-to-r from-cyan-400 via-sky-400 to-indigo-500 transition-all ${
+								className={`h-full rounded-full bg-[var(--color-accent-primary)] transition-all ${
 									currentStep === 0 ? "w-1/3" : currentStep === 1 ? "w-2/3" : "w-full"
 								}`}
 							/>
@@ -213,22 +213,22 @@ export default function ComplaintForm() {
 							return (
 								<div
 									key={step.id}
-									className={`rounded-2xl border px-4 py-3 transition ${
+									className={`rounded-lg border px-4 py-3 transition ${
 										active
-											? "border-cyan-400/40 bg-cyan-400/10 text-white"
+											? "border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] text-[var(--color-text-primary)]"
 											: completed
-											? "border-emerald-500/30 bg-emerald-500/10 text-emerald-100"
-											: "border-white/10 bg-white/5 text-slate-400"
+											? "border-[rgba(16,185,129,0.30)] bg-[rgba(16,185,129,0.10)] text-[var(--color-success)]"
+											: "border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]"
 									}`}
 								>
 									<div className="flex items-center gap-3">
 										<div
 											className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
 												active
-													? "bg-cyan-400 text-slate-950"
+													? "bg-[var(--color-accent-primary)] text-white"
 													: completed
-													? "bg-emerald-400 text-slate-950"
-													: "bg-white/10 text-slate-300"
+													? "bg-[var(--color-success)] text-white"
+													: "bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)]"
 											}`}
 										>
 											{completed ? <Check className="h-4 w-4" /> : step.id}
@@ -281,7 +281,7 @@ export default function ComplaintForm() {
 
 					{currentStep === 1 && (
 						<div className="space-y-5">
-							<div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-4 py-3 text-sm leading-6 text-cyan-100">
+							<div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-glow)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]">
 								This person will be notified and can respond.
 							</div>
 
@@ -327,7 +327,7 @@ export default function ComplaintForm() {
 
 					{currentStep === 2 && (
 						<div className="space-y-5">
-							<div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-slate-300">
+							<div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]">
 								Optional but recommended. Upload documents, screenshots, or PDFs that support your complaint.
 							</div>
 
@@ -339,19 +339,19 @@ export default function ComplaintForm() {
 							/>
 
 							{errors.evidence && (
-								<p className="text-sm text-rose-300">{errors.evidence.message}</p>
+								<p className="text-sm text-[var(--color-danger)]">{errors.evidence.message}</p>
 							)}
 						</div>
 					)}
 
 					{(complaintError || Object.keys(errors).length > 0) && currentStep === 2 && (
-						<div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+						<div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] px-4 py-3 text-sm text-[var(--color-danger)]">
 							{complaintError || "Please review the highlighted fields before submitting."}
 						</div>
 					)}
 
-					<div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-						<div className="text-xs leading-5 text-slate-400">
+					<div className="flex flex-col gap-3 border-t border-[var(--color-border)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+						<div className="text-xs leading-5 text-[var(--color-text-muted)]">
 							{currentStep === 2
 								? "Review the uploaded evidence and submit the complaint to create a new case."
 								: "Use Back and Next to move through the complaint details."}

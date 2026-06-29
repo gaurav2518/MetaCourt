@@ -111,19 +111,19 @@ export default function AdminComplaintsPage() {
         subtitle="Review, filter, assign jurors, and finalize complaints."
       />
 
-      <div className="grid gap-3 rounded-2xl border bg-white p-4 text-slate-900 shadow-sm md:grid-cols-4">
+      <div className="grid gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 text-[var(--color-text-primary)] md:grid-cols-4">
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search title or case ID"
-          className="rounded-xl border px-4 py-2"
+          className="mc-input"
         />
 
         <select
           aria-label="Filter complaints by status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="rounded-xl border px-4 py-2"
+          className="mc-input"
         >
           <option value="">All Status</option>
           {Object.values(STATUS).map((item) => (
@@ -137,7 +137,7 @@ export default function AdminComplaintsPage() {
           aria-label="Filter complaints by category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded-xl border px-4 py-2"
+          className="mc-input"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map((item) => (
@@ -151,7 +151,7 @@ export default function AdminComplaintsPage() {
           aria-label="Filter complaints by priority"
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
-          className="rounded-xl border px-4 py-2"
+          className="mc-input"
         >
           <option value="">All Priority</option>
           {Object.values(PRIORITY).map((item) => (
@@ -163,13 +163,13 @@ export default function AdminComplaintsPage() {
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border bg-white p-8 text-center text-sm text-slate-500">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-8 text-center text-sm text-[var(--color-text-muted)]">
           Loading complaints...
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
+            <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
               <tr>
                 <th className="p-4">Case ID</th>
                 <th className="p-4">Title</th>
@@ -182,7 +182,7 @@ export default function AdminComplaintsPage() {
 
             <tbody>
               {filteredComplaints.map((complaint) => (
-                <tr key={complaint._id} className="border-t">
+                <tr key={complaint._id} className="border-t border-[var(--color-border-subtle)]">
                   <td className="p-4 font-medium">{complaint.caseId}</td>
                   <td className="p-4">{complaint.title}</td>
                   <td className="p-4 capitalize">{complaint.category}</td>
@@ -195,7 +195,7 @@ export default function AdminComplaintsPage() {
                     <div className="flex flex-wrap gap-2">
                       <Link
                         href={`/admin/complaints/${complaint.caseId}`}
-                        className="rounded-lg border px-3 py-1.5 text-xs font-medium"
+                        className="rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)]"
                       >
                         View
                       </Link>
@@ -209,7 +209,7 @@ export default function AdminComplaintsPage() {
                               STATUS.UNDER_REVIEW
                             )
                           }
-                          className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800"
+                          className="rounded-lg border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.12)] px-3 py-1.5 text-xs font-medium text-[var(--color-warning)]"
                         >
                           Start Review
                         </button>
@@ -221,7 +221,7 @@ export default function AdminComplaintsPage() {
                         <button
                           type="button"
                           onClick={() => setSelectedCaseId(complaint.caseId)}
-                          className="rounded-lg bg-cyan-600 px-3 py-1.5 text-xs font-medium text-white"
+                          className="rounded-lg bg-[var(--color-accent-primary)] px-3 py-1.5 text-xs font-medium text-white"
                         >
                           Assign Jurors
                         </button>
@@ -231,7 +231,7 @@ export default function AdminComplaintsPage() {
                         <button
                           type="button"
                           onClick={() => finalizeComplaint(complaint.caseId)}
-                          className="rounded-lg bg-black px-3 py-1.5 text-xs font-medium text-white"
+                          className="rounded-lg bg-[var(--color-gold)] px-3 py-1.5 text-xs font-medium text-[var(--color-bg-primary)]"
                         >
                           Finalize
                         </button>
@@ -244,7 +244,7 @@ export default function AdminComplaintsPage() {
           </table>
 
           {filteredComplaints.length === 0 && (
-            <div className="p-6 text-center text-sm text-slate-500">
+            <div className="p-6 text-center text-sm text-[var(--color-text-muted)]">
               No complaints found.
             </div>
           )}

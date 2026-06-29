@@ -29,12 +29,12 @@ export default function ComplaintCard({
       <Card.Body>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-lg font-semibold text-white">{title}</h3>
-            {description && <p className="mt-2 text-sm text-slate-400 line-clamp-3">{description}</p>}
+            <h3 className="truncate font-display text-lg font-semibold text-[var(--color-text-primary)]">{title}</h3>
+            {description && <p className="mt-2 text-sm text-[var(--color-text-secondary)] line-clamp-3">{description}</p>}
 
             <div className="mt-3 flex items-center gap-2">
               {category && <Badge value={category} type="category" />}
-              <span className="text-xs text-slate-400">{createdAt ? new Date(createdAt).toLocaleString() : ""}</span>
+              <span className="text-xs text-[var(--color-text-muted)]">{createdAt ? new Date(createdAt).toLocaleString() : ""}</span>
             </div>
           </div>
 

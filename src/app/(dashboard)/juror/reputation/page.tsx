@@ -21,9 +21,9 @@ export default function JurorReputationPage() {
         totalVotes={user?.totalVotes ?? 0}
       />
 
-      <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
             <tr>
               <th className="p-4">Level</th>
               <th className="p-4">Score Range</th>
@@ -33,21 +33,21 @@ export default function JurorReputationPage() {
           </thead>
 
           <tbody>
-            <tr className="border-t">
+            <tr className="border-t border-[var(--color-border-subtle)]">
               <td className="p-4 font-medium">Junior</td>
               <td className="p-4">0 - 149</td>
               <td className="p-4">Can vote on assigned cases</td>
               <td className="p-4">1x</td>
             </tr>
 
-            <tr className="border-t">
+            <tr className="border-t border-[var(--color-border-subtle)]">
               <td className="p-4 font-medium">Senior</td>
               <td className="p-4">150 - 199</td>
               <td className="p-4">Trusted juror with stronger voting weight</td>
               <td className="p-4">2x</td>
             </tr>
 
-            <tr className="border-t">
+            <tr className="border-t border-[var(--color-border-subtle)]">
               <td className="p-4 font-medium">Master</td>
               <td className="p-4">200+</td>
               <td className="p-4">Highest trust level in MetaCourt</td>

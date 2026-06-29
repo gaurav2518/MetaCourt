@@ -82,7 +82,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             </div>
             <div>
               <h1 className="font-display text-lg font-bold tracking-tight">MetaCourt</h1>
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
                 {roleLabel}
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10 lg:hidden"
+              className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-2 text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)] lg:hidden"
               aria-label="Close sidebar menu"
             >
               <X className="h-4 w-4" />
@@ -99,13 +99,13 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
           )}
         </div>
 
-        <p className="mt-4 text-sm leading-6 text-slate-400">
+        <p className="mt-4 text-sm leading-6 text-[var(--color-text-secondary)]">
           Navigate your workspace by role and keep the active section visible at a glance.
         </p>
       </div>
 
       <nav className="flex-1 px-3 py-4">
-        <p className="px-3 pb-2 text-xs font-medium uppercase tracking-[0.24em] text-slate-500">
+        <p className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
           Navigation
         </p>
 
@@ -117,10 +117,10 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`mb-1 flex items-center rounded-2xl px-4 py-3 text-sm font-medium transition ${
+              className={`mb-1 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium transition duration-100 ${
                 active
-                  ? "bg-cyan-500/15 text-cyan-200 ring-1 ring-inset ring-cyan-400/20"
-                  : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  ? "border-l-2 border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]"
+                  : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
               }`}
             >
               {item.label}
@@ -129,25 +129,25 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         })}
 
         {!hasNavItems && (
-          <div className="mx-3 rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-400">
+          <div className="mx-3 rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 text-sm text-[var(--color-text-secondary)]">
             No navigation items available for this role yet.
           </div>
         )}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm font-medium text-white">
+      <div className="border-t border-[var(--color-border)] p-4">
+        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
+          <p className="text-sm font-medium text-[var(--color-text-primary)]">
             {user?.name ?? "Unknown User"}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">
             {user?.email ?? "No email available"}
           </p>
 
           <button
             type="button"
             onClick={logout}
-            className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/15"
+            className="mt-4 inline-flex w-full items-center justify-center rounded-lg border border-[var(--color-border)] bg-transparent px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)]"
           >
             Logout
           </button>

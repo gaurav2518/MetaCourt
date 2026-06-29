@@ -26,20 +26,20 @@ export default function EvidenceViewer({
 	emptyMessage = "No evidence has been uploaded yet.",
 }: EvidenceViewerProps) {
 	return (
-		<section className="space-y-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/20 backdrop-blur-xl sm:p-6">
+		<section className="space-y-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4 sm:p-6">
 			<div className="flex items-end justify-between gap-4">
 				<div>
-					<h3 className="text-base font-semibold text-white">{title}</h3>
-					<p className="mt-1 text-sm leading-6 text-slate-400">Download or review the uploaded evidence files.</p>
+					<h3 className="font-display text-base font-semibold text-[var(--color-text-primary)]">{title}</h3>
+					<p className="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">Download or review the uploaded evidence files.</p>
 				</div>
 
-				<p className="text-xs text-slate-400">
+				<p className="text-xs text-[var(--color-text-muted)]">
 					{files.length} file{files.length === 1 ? "" : "s"}
 				</p>
 			</div>
 
 			{files.length === 0 ? (
-				<div className="rounded-3xl border border-dashed border-white/15 bg-slate-950/40 px-5 py-10 text-center text-sm text-slate-400">
+				<div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg-primary)] px-5 py-10 text-center text-sm text-[var(--color-text-secondary)]">
 					{emptyMessage}
 				</div>
 			) : (
@@ -51,31 +51,31 @@ export default function EvidenceViewer({
 							target="_blank"
 							rel="noreferrer"
 							download={file.fileName}
-							className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 transition hover:border-cyan-400/30 hover:bg-white/5"
+							className="group flex items-start gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3 transition duration-150 hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-bg-elevated)]"
 						>
-							<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 text-slate-200">
+							<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]">
 								{file.fileType === "image" ? (
 									<img src={file.url} alt={file.fileName} className="h-full w-full object-cover" />
 								) : file.fileType === "pdf" ? (
-									<FileText className="h-7 w-7 text-rose-300" />
+									<FileText className="h-7 w-7 text-[var(--color-danger)]" />
 								) : (
-									<ImageIcon className="h-7 w-7 text-slate-300" />
+									<ImageIcon className="h-7 w-7 text-[var(--color-text-secondary)]" />
 								)}
 							</div>
 
 							<div className="min-w-0 flex-1">
 								<div className="flex items-start justify-between gap-3">
 									<div className="min-w-0">
-										<p className="truncate text-sm font-medium text-white">{file.fileName}</p>
-										<p className="mt-1 text-xs text-slate-400">
-											{file.fileType.toUpperCase()} · {formatFileSize(file.fileSize)}
+										<p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{file.fileName}</p>
+										<p className="mt-1 text-xs text-[var(--color-text-muted)]">
+											{file.fileType.toUpperCase()} - {formatFileSize(file.fileSize)}
 										</p>
 									</div>
 
-									<Download className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:text-cyan-300" />
+									<Download className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition group-hover:text-[var(--color-accent-primary)]" />
 								</div>
 
-								<p className="mt-3 text-xs leading-5 text-slate-500 group-hover:text-slate-400">
+								<p className="mt-3 text-xs leading-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)]">
 									Open to preview or download this evidence item.
 								</p>
 							</div>

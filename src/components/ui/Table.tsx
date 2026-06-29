@@ -47,29 +47,29 @@ export default function Table<T extends Record<string, any>>({
 	};
 
 	return (
-		<div className={`w-full overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/40 backdrop-blur-md ${className}`}>
-			<table className="w-full border-collapse text-left text-sm text-slate-300">
+		<div className={`w-full overflow-x-auto ${className}`}>
+			<table className="w-full border-collapse text-left text-sm text-[var(--color-text-secondary)]">
 				<thead>
-					<tr className="border-b border-white/10 bg-white/2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+					<tr className="bg-[var(--color-bg-elevated)] text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
 						{columns.map((col) => {
 							const isSorted = sortKey === col.key;
 							return (
 								<th
 									key={col.key}
 									onClick={() => handleHeaderClick(col)}
-									className={`px-6 py-4 ${col.sortable ? "cursor-pointer select-none hover:text-white transition" : ""} ${col.headerClassName || ""}`}
+									className={`px-4 py-4 ${col.sortable ? "cursor-pointer select-none transition hover:text-[var(--color-text-primary)]" : ""} ${col.headerClassName || ""}`}
 								>
 									<span className="flex items-center gap-1.5">
 										{col.label}
 										{col.sortable && onSort && (
-											<span className="text-slate-500">
+											<span className="text-[var(--color-text-muted)]">
 												{isSorted ? (
 													sortOrder === "asc" ? (
-														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 text-cyan-400">
+														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 text-[var(--color-accent-primary)]">
 															<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
 														</svg>
 													) : (
-														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 text-cyan-400">
+														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 text-[var(--color-accent-primary)]">
 															<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
 														</svg>
 													)
@@ -86,14 +86,14 @@ export default function Table<T extends Record<string, any>>({
 						})}
 					</tr>
 				</thead>
-				<tbody className="divide-y divide-white/5">
+				<tbody className="divide-y divide-[var(--color-border-subtle)]">
 					{isLoading ? (
 						// Skeleton loading state
 						Array.from({ length: 5 }).map((_, rowIndex) => (
-							<tr key={`skeleton-${rowIndex}`} className="animate-pulse bg-white/1">
+							<tr key={`skeleton-${rowIndex}`} className="animate-pulse">
 								{columns.map((col) => (
-									<td key={`skeleton-${rowIndex}-${col.key}`} className="px-6 py-4">
-										<div className="h-4 rounded bg-white/10 w-3/4" />
+									<td key={`skeleton-${rowIndex}-${col.key}`} className="px-4 py-4">
+										<div className="h-4 w-3/4 rounded bg-[var(--color-bg-elevated)]" />
 									</td>
 								))}
 							</tr>
@@ -101,12 +101,12 @@ export default function Table<T extends Record<string, any>>({
 					) : data.length === 0 ? (
 						// Empty state
 						<tr>
-							<td colSpan={columns.length} className="px-6 py-12 text-center">
+							<td colSpan={columns.length} className="px-4 py-12 text-center">
 								{emptyStateComponent ? (
 									emptyStateComponent
 								) : (
 									<div className="flex flex-col items-center justify-center space-y-3">
-										<div className="relative h-20 w-20 overflow-hidden rounded-lg border border-white/5 bg-white/2">
+										<div className="relative h-20 w-20 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
 											<Image
 												src="/Empty_State_Illustration.png"
 												alt=""
@@ -115,7 +115,7 @@ export default function Table<T extends Record<string, any>>({
 												className="object-cover"
 											/>
 										</div>
-										<p className="text-slate-400 font-medium">{emptyStateMessage}</p>
+										<p className="font-medium text-[var(--color-text-secondary)]">{emptyStateMessage}</p>
 									</div>
 								)}
 							</td>
@@ -125,14 +125,14 @@ export default function Table<T extends Record<string, any>>({
 						data.map((item, rowIndex) => (
 							<tr
 								key={item._id || item.id || `row-${rowIndex}`}
-								className="hover:bg-white/2 transition duration-150"
+								className="transition duration-100 hover:bg-[var(--color-bg-elevated)]"
 							>
 								{columns.map((col) => {
 									const cellVal = item[col.key];
 									return (
 										<td
 											key={col.key}
-											className={`px-6 py-4.5 font-medium text-slate-200 ${col.cellClassName || ""}`}
+											className={`px-4 py-4 font-medium text-[var(--color-text-primary)] ${col.cellClassName || ""}`}
 										>
 											{col.render ? col.render(item, rowIndex) : cellVal !== undefined ? String(cellVal) : ""}
 										</td>

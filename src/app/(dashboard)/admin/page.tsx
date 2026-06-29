@@ -62,15 +62,15 @@ export default function AdminDashboardPage() {
   };
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading admin dashboard...</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Loading admin dashboard...</p>;
   }
 
   if (error) {
-    return <p className="text-sm text-red-600">{error}</p>;
+    return <p className="text-sm text-[var(--color-danger)]">{error}</p>;
   }
 
   if (!stats) {
-    return <p className="text-sm text-slate-500">No statistics available.</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">No statistics available.</p>;
   }
 
   return (
@@ -93,9 +93,9 @@ export default function AdminDashboardPage() {
         casesPerDay={stats.casesPerDay}
       />
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm">
-        <p className="text-sm text-slate-500">Pending Juror Applications</p>
-        <p className="mt-2 text-3xl font-semibold text-slate-900">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+        <p className="text-sm text-[var(--color-text-secondary)]">Pending Juror Applications</p>
+        <p className="mt-2 font-display text-3xl font-semibold text-[var(--color-text-primary)]">
           {stats.pendingJurorApplications}
         </p>
       </div>

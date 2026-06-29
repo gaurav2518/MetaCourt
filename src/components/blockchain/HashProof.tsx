@@ -14,14 +14,14 @@ export default function HashProof({
   blockchainTxHash,
 }: HashProofProps) {
   const [verifying, setVerifying] = useState(false);
-  const [verifyStatus, setVerifyStatus] = useState<
-    "success" | "failed" | null
-  >(null);
+  const [verifyStatus, setVerifyStatus] = useState<"success" | "failed" | null>(
+    null
+  );
   const [message, setMessage] = useState("");
 
   if (!blockchainTxHash || !complaintHash) {
     return (
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+      <div className="rounded-lg border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.12)] p-4 text-sm text-[var(--color-warning)]">
         Blockchain registration pending
       </div>
     );
@@ -48,10 +48,10 @@ export default function HashProof({
 
       if (data.storedHash === complaintHash) {
         setVerifyStatus("success");
-        setMessage("Hash verified — complaint unchanged since filing");
+        setMessage("Hash verified - complaint unchanged since filing");
       } else {
         setVerifyStatus("failed");
-        setMessage("Hash mismatch — complaint may have been altered");
+        setMessage("Hash mismatch - complaint may have been altered");
       }
     } catch (error) {
       setVerifyStatus("failed");
@@ -64,19 +64,19 @@ export default function HashProof({
   }
 
   return (
-    <div className="space-y-4 rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
+    <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-5 text-[var(--color-text-primary)]">
       <div>
-        <p className="text-sm font-medium text-slate-700">SHA-256 Hash</p>
+        <p className="mc-label">SHA-256 Hash</p>
 
-        <div className="mt-2 flex items-center gap-2 rounded-xl bg-slate-50 p-3">
-          <code className="break-all font-mono text-xs text-slate-700">
+        <div className="mt-2 flex items-center gap-2 rounded-lg bg-[var(--color-bg-primary)] p-3">
+          <code className="break-all font-mono text-xs text-[var(--color-text-secondary)]">
             {complaintHash}
           </code>
 
           <button
             type="button"
             onClick={copyHash}
-            className="shrink-0 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium text-slate-900"
+            className="shrink-0 rounded-lg border border-[var(--color-border)] bg-transparent px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-elevated)]"
           >
             Copy
           </button>
@@ -84,15 +84,13 @@ export default function HashProof({
       </div>
 
       <div>
-        <p className="text-sm font-medium text-slate-700">
-          Blockchain Transaction
-        </p>
+        <p className="mc-label">Blockchain Transaction</p>
 
         <a
           href={etherscanUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-2 block break-all font-mono text-xs text-cyan-700 underline"
+          className="mt-2 block break-all font-mono text-xs text-[var(--color-accent-primary)] underline"
         >
           {blockchainTxHash}
         </a>
@@ -102,20 +100,20 @@ export default function HashProof({
         type="button"
         onClick={verifyOnChain}
         disabled={verifying}
-        className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+        className="rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--color-accent-hover)] disabled:opacity-60"
       >
         {verifying ? "Verifying..." : "Verify on Chain"}
       </button>
 
       {message && (
         <div
-          className={`rounded-xl p-3 text-sm ${
+          className={`rounded-lg p-3 text-sm ${
             verifyStatus === "success"
-              ? "border border-green-200 bg-green-50 text-green-800"
-              : "border border-red-200 bg-red-50 text-red-800"
+              ? "bg-[rgba(16,185,129,0.15)] text-[var(--color-success)]"
+              : "bg-[rgba(239,68,68,0.15)] text-[var(--color-danger)]"
           }`}
         >
-          {verifyStatus === "success" ? "✅ " : "⚠️ "}
+          {verifyStatus === "success" ? "Verified: " : "Warning: "}
           {message}
         </div>
       )}

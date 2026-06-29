@@ -136,14 +136,14 @@ export default function AdminComplaintDetailPage() {
   }, [complaint]);
 
   if (loading) {
-    return <p className="text-sm text-slate-400">Loading complaint...</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Loading complaint...</p>;
   }
 
   if (error || !complaint) {
     return (
       <div className="space-y-4">
         <PageHeader title="Complaint not found" subtitle={caseId} />
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-5 text-sm text-red-200">
+        <div className="rounded-xl border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] p-5 text-sm text-[var(--color-danger)]">
           {error || "Complaint not found."}
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function AdminComplaintDetailPage() {
         action={
           <Link
             href="/admin/complaints"
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-4 py-2 text-sm font-medium text-[var(--color-text-primary)] transition hover:border-[var(--color-accent-primary)]"
           >
             Back
           </Link>
@@ -169,48 +169,48 @@ export default function AdminComplaintDetailPage() {
       />
 
       <section className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-slate-200">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-secondary)]">
           <div className="flex flex-wrap items-center gap-3">
             <ComplaintStatus status={complaint.status} />
-            <span className="rounded-full border border-white/10 px-3 py-1 text-xs capitalize text-slate-300">
+            <span className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs capitalize text-[var(--color-text-secondary)]">
               {complaint.category}
             </span>
-            <span className="rounded-full border border-white/10 px-3 py-1 text-xs capitalize text-slate-300">
+            <span className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs capitalize text-[var(--color-text-secondary)]">
               {complaint.priority} priority
             </span>
           </div>
 
-          <p className="mt-5 whitespace-pre-wrap text-sm leading-7 text-slate-300">
+          <p className="mt-5 whitespace-pre-wrap text-sm leading-7 text-[var(--color-text-secondary)]">
             {complaint.description}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
-          <h2 className="text-base font-semibold text-white">Case Parties</h2>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-sm text-[var(--color-text-secondary)]">
+          <h2 className="font-display text-base font-semibold text-[var(--color-text-primary)]">Case Parties</h2>
 
           <dl className="mt-4 space-y-3">
             <div>
-              <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <dt className="text-xs uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
                 Complainant
               </dt>
-              <dd className="mt-1 text-white">
+              <dd className="mt-1 text-[var(--color-text-primary)]">
                 {complaint.complainantId?.name ?? "Unknown"}
               </dd>
-              <dd className="text-xs text-slate-400">
+              <dd className="text-xs text-[var(--color-text-muted)]">
                 {complaint.complainantId?.email ?? "No email"}
               </dd>
             </div>
 
             <div>
-              <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <dt className="text-xs uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
                 Opposite Party
               </dt>
-              <dd className="mt-1 text-white">
+              <dd className="mt-1 text-[var(--color-text-primary)]">
                 {complaint.oppositeParty?.userId?.name ??
                   complaint.oppositeParty?.name ??
                   "Not linked"}
               </dd>
-              <dd className="text-xs text-slate-400">
+              <dd className="text-xs text-[var(--color-text-muted)]">
                 {complaint.oppositeParty?.userId?.email ??
                   complaint.oppositeParty?.email ??
                   "No email"}
@@ -218,10 +218,10 @@ export default function AdminComplaintDetailPage() {
             </div>
 
             <div>
-              <dt className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <dt className="text-xs uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
                 Filed
               </dt>
-              <dd className="mt-1 text-white">
+              <dd className="mt-1 text-[var(--color-text-primary)]">
                 {formatDate(complaint.createdAt)}
               </dd>
             </div>
@@ -248,13 +248,13 @@ export default function AdminComplaintDetailPage() {
           />
 
           {!complaint.blockchainTxHash && (
-            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5 text-amber-50">
+            <div className="rounded-xl border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.12)] p-5 text-[var(--color-warning)]">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-sm font-semibold">
+                  <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
                     Blockchain Registration Needed
                   </h2>
-                  <p className="mt-1 text-sm text-amber-100/80">
+                  <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                     Store this complaint hash on-chain if automatic filing did
                     not complete.
                   </p>
@@ -264,28 +264,28 @@ export default function AdminComplaintDetailPage() {
                   type="button"
                   onClick={storeHashOnChain}
                   disabled={repairingHash}
-                  className="rounded-xl bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg bg-[var(--color-gold)] px-4 py-2 text-sm font-semibold text-[var(--color-bg-primary)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {repairingHash ? "Storing..." : "Store Hash"}
                 </button>
               </div>
 
               {repairMessage && (
-                <p className="mt-3 break-all text-sm text-green-200">
+                <p className="mt-3 break-all text-sm text-[var(--color-success)]">
                   {repairMessage}
                 </p>
               )}
 
               {repairError && (
-                <p className="mt-3 text-sm text-rose-200">{repairError}</p>
+                <p className="mt-3 text-sm text-[var(--color-danger)]">{repairError}</p>
               )}
             </div>
           )}
         </div>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-        <h2 className="text-base font-semibold text-white">
+      <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5">
+        <h2 className="font-display text-base font-semibold text-[var(--color-text-primary)]">
           Assigned Jurors
         </h2>
 
@@ -294,22 +294,22 @@ export default function AdminComplaintDetailPage() {
             {complaint.assignedJurors.map((juror: any) => (
               <div
                 key={juror._id ?? juror}
-                className="rounded-xl border border-white/10 bg-slate-950/40 p-4"
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4"
               >
-                <p className="font-medium text-white">
+                <p className="font-medium text-[var(--color-text-primary)]">
                   {juror.name ?? "Assigned juror"}
                 </p>
-                <p className="mt-1 text-xs capitalize text-slate-400">
+                <p className="mt-1 text-xs capitalize text-[var(--color-text-muted)]">
                   {juror.jurorLevel ?? "juror"} level
                 </p>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-[var(--color-text-muted)]">
                   Reputation: {juror.reputationScore ?? 100}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-slate-400">
+          <p className="mt-4 text-sm text-[var(--color-text-muted)]">
             No jurors assigned yet.
           </p>
         )}

@@ -101,14 +101,14 @@ export default function JurorAssignModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-5">
-      <div className="w-full max-w-3xl rounded-2xl bg-white text-slate-900 shadow-xl">
-        <div className="border-b p-6">
-          <h2 className="text-xl font-semibold">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-5 backdrop-blur-sm">
+      <div className="w-full max-w-3xl rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
+        <div className="border-b border-[var(--color-border)] p-6">
+          <h2 className="font-display text-xl font-semibold">
             Assign Jurors
           </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             Select either 3 or 5 verified jurors.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function JurorAssignModal({
         <div className="max-h-[420px] overflow-y-auto p-6">
           <div className="space-y-3">
             {sortedJurors.length === 0 && (
-              <div className="rounded-xl border border-dashed p-5 text-sm text-slate-500">
+              <div className="rounded-lg border border-dashed border-[var(--color-border)] p-5 text-sm text-[var(--color-text-muted)]">
                 No verified jurors are available. Approve juror applications before assigning this case.
               </div>
             )}
@@ -124,7 +124,7 @@ export default function JurorAssignModal({
             {sortedJurors.map((juror) => (
               <label
                 key={juror._id}
-                className="flex cursor-pointer items-center justify-between rounded-xl border p-4 hover:bg-slate-50"
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-[var(--color-border)] p-4 hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-bg-secondary)]"
               >
                 <div className="flex items-center gap-4">
                   <input
@@ -138,7 +138,7 @@ export default function JurorAssignModal({
                       {juror.name}
                     </p>
 
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-[var(--color-text-muted)]">
                       {juror.email}
                     </p>
                   </div>
@@ -152,7 +152,7 @@ export default function JurorAssignModal({
                     </strong>
                   </p>
 
-                  <p className="text-slate-500">
+                  <p className="text-[var(--color-text-muted)]">
                     Active Cases:{" "}
                     {juror.activeCaseCount}
                   </p>
@@ -164,7 +164,7 @@ export default function JurorAssignModal({
           <div className="mt-6">
             <label
               htmlFor="deadline"
-              className="mb-2 block text-sm font-medium"
+              className="mc-label mb-2 block"
             >
               Voting Deadline
             </label>
@@ -175,7 +175,7 @@ export default function JurorAssignModal({
               onChange={(e) =>
                 setDeadline(Number(e.target.value))
               }
-              className="rounded-xl border px-4 py-2"
+              className="mc-input"
             >
               {DEADLINE_OPTIONS.map((day) => (
                 <option key={day} value={day}>
@@ -186,17 +186,17 @@ export default function JurorAssignModal({
           </div>
 
           {error && (
-            <p className="mt-4 text-sm text-red-600">
+            <p className="mt-4 text-sm text-[var(--color-danger)]">
               {error}
             </p>
           )}
         </div>
 
-        <div className="flex justify-end gap-3 border-t p-6">
+        <div className="flex justify-end gap-3 border-t border-[var(--color-border)] p-6">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border px-4 py-2"
+            className="rounded-lg border border-[var(--color-border)] px-4 py-2 text-[var(--color-text-primary)]"
           >
             Cancel
           </button>
@@ -205,7 +205,7 @@ export default function JurorAssignModal({
             type="button"
             disabled={loading}
             onClick={assignJurors}
-            className="rounded-xl bg-black px-5 py-2 text-white disabled:opacity-60"
+            className="rounded-lg bg-[var(--color-accent-primary)] px-5 py-2 text-white disabled:opacity-60"
           >
             {loading ? "Assigning..." : "Assign Jurors"}
           </button>

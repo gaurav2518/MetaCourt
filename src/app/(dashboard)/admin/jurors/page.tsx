@@ -107,7 +107,7 @@ export default function AdminJurorsPage() {
   }, []);
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading juror management...</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Loading juror management...</p>;
   }
 
   return (
@@ -117,14 +117,14 @@ export default function AdminJurorsPage() {
         subtitle="Review applications and monitor verified jurors."
       />
 
-      <div className="rounded-2xl border bg-white p-2 text-slate-900 shadow-sm">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-2 text-[var(--color-text-primary)]">
         <button
           type="button"
           onClick={() => setActiveTab("pending")}
           className={`rounded-xl px-4 py-2 text-sm ${
             activeTab === "pending"
-              ? "bg-black text-white"
-              : "text-slate-600"
+              ? "bg-[var(--color-accent-primary)] text-white"
+              : "text-[var(--color-text-muted)]"
           }`}
         >
           Pending Applications
@@ -135,8 +135,8 @@ export default function AdminJurorsPage() {
           onClick={() => setActiveTab("active")}
           className={`rounded-xl px-4 py-2 text-sm ${
             activeTab === "active"
-              ? "bg-black text-white"
-              : "text-slate-600"
+              ? "bg-[var(--color-accent-primary)] text-white"
+              : "text-[var(--color-text-muted)]"
           }`}
         >
           Active Jurors
@@ -146,7 +146,7 @@ export default function AdminJurorsPage() {
       {activeTab === "pending" && (
         <div className="space-y-4">
           {applications.length === 0 && (
-            <div className="rounded-2xl border bg-white p-6 text-sm text-slate-500">
+            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6 text-sm text-[var(--color-text-muted)]">
               No pending juror applications.
             </div>
           )}
@@ -157,27 +157,27 @@ export default function AdminJurorsPage() {
             return (
               <div
                 key={application._id}
-                className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm"
+                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <h3 className="font-semibold text-slate-900">
+                    <h3 className="font-semibold text-[var(--color-text-primary)]">
                       {applicant?.name}
                     </h3>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-[var(--color-text-muted)]">
                       {applicant?.email}
                     </p>
 
                     <div className="mt-4">
                       <p className="text-sm font-medium">Reason</p>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                         {application.reason}
                       </p>
                     </div>
 
                     <div className="mt-4">
                       <p className="text-sm font-medium">Experience</p>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                         {application.experience || "No experience provided."}
                       </p>
                     </div>
@@ -188,7 +188,7 @@ export default function AdminJurorsPage() {
                       value={note}
                       onChange={(e) => setNote(e.target.value)}
                       placeholder="Optional review note"
-                      className="w-full rounded-xl border px-3 py-2 text-sm"
+                      className="mc-input w-full"
                       rows={3}
                     />
 
@@ -198,7 +198,7 @@ export default function AdminJurorsPage() {
                         onClick={() =>
                           reviewApplication(applicant._id, "approve")
                         }
-                        className="flex-1 rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white"
+                        className="flex-1 rounded-lg bg-[var(--color-success)] px-4 py-2 text-sm font-medium text-white"
                       >
                         Approve
                       </button>
@@ -208,7 +208,7 @@ export default function AdminJurorsPage() {
                         onClick={() =>
                           reviewApplication(applicant._id, "reject")
                         }
-                        className="flex-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white"
+                        className="flex-1 rounded-lg bg-[var(--color-danger)] px-4 py-2 text-sm font-medium text-white"
                       >
                         Reject
                       </button>
@@ -222,9 +222,9 @@ export default function AdminJurorsPage() {
       )}
 
       {activeTab === "active" && (
-        <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
+            <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
               <tr>
                 <th className="p-4">Name</th>
                 <th className="p-4">Email</th>
@@ -237,9 +237,9 @@ export default function AdminJurorsPage() {
 
             <tbody>
               {jurors.map((juror) => (
-                <tr key={juror._id} className="border-t">
+                <tr key={juror._id} className="border-t border-[var(--color-border-subtle)]">
                   <td className="p-4 font-medium">{juror.name}</td>
-                  <td className="p-4 text-slate-600">{juror.email}</td>
+                  <td className="p-4 text-[var(--color-text-secondary)]">{juror.email}</td>
                   <td className="p-4">{juror.reputationScore ?? 100}</td>
                   <td className="p-4 capitalize">{juror.jurorLevel}</td>
                   <td className="p-4">{juror.activeCaseCount ?? "-"}</td>
@@ -247,7 +247,7 @@ export default function AdminJurorsPage() {
                     <button
                       type="button"
                       onClick={() => openJurorCases(juror)}
-                      className="rounded-lg border px-3 py-1.5 text-xs font-medium"
+                      className="rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)]"
                     >
                       View Cases
                     </button>
@@ -258,7 +258,7 @@ export default function AdminJurorsPage() {
           </table>
 
           {jurors.length === 0 && (
-            <div className="p-6 text-center text-sm text-slate-500">
+            <div className="p-6 text-center text-sm text-[var(--color-text-muted)]">
               No active jurors found.
             </div>
           )}
@@ -272,25 +272,25 @@ export default function AdminJurorsPage() {
         className="max-w-3xl"
       >
         {casesLoading && (
-          <p className="text-sm text-slate-400">Loading assigned cases...</p>
+          <p className="text-sm text-[var(--color-text-muted)]">Loading assigned cases...</p>
         )}
 
         {casesError && (
-          <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-200">
+          <div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] p-4 text-sm text-[var(--color-danger)]">
             {casesError}
           </div>
         )}
 
         {!casesLoading && !casesError && jurorCases.length === 0 && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-slate-400">
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-5 text-sm text-[var(--color-text-muted)]">
             No assigned cases found for this juror.
           </div>
         )}
 
         {!casesLoading && jurorCases.length > 0 && (
-          <div className="overflow-hidden rounded-2xl border border-white/10">
+          <div className="overflow-hidden rounded-lg border border-[var(--color-border)]">
             <table className="w-full text-left text-sm">
-              <thead className="bg-white/5 text-slate-400">
+              <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
                 <tr>
                   <th className="p-3">Case</th>
                   <th className="p-3">Title</th>
@@ -300,15 +300,15 @@ export default function AdminJurorsPage() {
               </thead>
               <tbody>
                 {jurorCases.map((item) => (
-                  <tr key={item._id} className="border-t border-white/10">
-                    <td className="p-3 font-medium text-white">
+                  <tr key={item._id} className="border-t border-[var(--color-border-subtle)]">
+                    <td className="p-3 font-medium text-[var(--color-text-primary)]">
                       {item.caseId}
                     </td>
-                    <td className="p-3 text-slate-300">{item.title}</td>
-                    <td className="p-3 capitalize text-slate-300">
+                    <td className="p-3 text-[var(--color-text-secondary)]">{item.title}</td>
+                    <td className="p-3 capitalize text-[var(--color-text-secondary)]">
                       {item.status?.replace("_", " ")}
                     </td>
-                    <td className="p-3 capitalize text-slate-300">
+                    <td className="p-3 capitalize text-[var(--color-text-secondary)]">
                       {item.decision ?? "pending"}
                     </td>
                   </tr>

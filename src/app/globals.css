@@ -79,6 +79,54 @@ h3 {
   animation: terminal-blink 1s steps(2, start) infinite;
 }
 
+.mc-card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
+}
+
+.mc-panel {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: rgba(17, 17, 24, 0.82);
+}
+
+.mc-input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.mc-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.mc-input:focus {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+.mc-label {
+  margin-bottom: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mc-muted {
+  color: var(--color-text-secondary);
+}
+
+.mc-subtle {
+  color: var(--color-text-muted);
+}
+
 @keyframes case-float {
   from {
     transform: translateY(0);

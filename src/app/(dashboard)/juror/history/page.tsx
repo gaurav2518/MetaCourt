@@ -33,7 +33,7 @@ export default function JurorHistoryPage() {
       />
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading voting history...</p>
+        <p className="text-sm text-[var(--color-text-muted)]">Loading voting history...</p>
       ) : (
         <VotingHistory votes={votes} />
       )}

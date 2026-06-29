@@ -42,8 +42,8 @@ export default function ComplainantDashboardPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">My Cases</h1>
-          <p className="mt-1 text-sm text-slate-400">Manage complaints you have filed as a complainant.</p>
+          <h1 className="font-display text-2xl font-semibold text-[var(--color-text-primary)]">My Cases</h1>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Manage complaints you have filed as a complainant.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -56,35 +56,35 @@ export default function ComplainantDashboardPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <Card className="p-4">
           <Card.Body>
-            <p className="text-sm text-slate-400">Total Filed</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{stats.total}</p>
+            <p className="text-sm text-[var(--color-text-secondary)]">Total Filed</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-[var(--color-text-primary)]">{stats.total}</p>
           </Card.Body>
         </Card>
 
         <Card className="p-4">
           <Card.Body>
-            <p className="text-sm text-slate-400">Under Review</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{stats.underReview}</p>
+            <p className="text-sm text-[var(--color-text-secondary)]">Under Review</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-[var(--color-text-primary)]">{stats.underReview}</p>
           </Card.Body>
         </Card>
 
         <Card className="p-4">
           <Card.Body>
-            <p className="text-sm text-slate-400">In Voting</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{stats.inVoting}</p>
+            <p className="text-sm text-[var(--color-text-secondary)]">In Voting</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-[var(--color-text-primary)]">{stats.inVoting}</p>
           </Card.Body>
         </Card>
 
         <Card className="p-4">
           <Card.Body>
-            <p className="text-sm text-slate-400">Decided</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{stats.decided}</p>
+            <p className="text-sm text-[var(--color-text-secondary)]">Decided</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-[var(--color-text-primary)]">{stats.decided}</p>
           </Card.Body>
         </Card>
       </div>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold text-white">Your complaints</h2>
+        <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">Your complaints</h2>
 
         <ComplaintTable complaints={complaints} isLoading={loading} />
       </section>

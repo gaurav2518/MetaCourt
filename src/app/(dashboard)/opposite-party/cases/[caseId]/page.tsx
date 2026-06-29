@@ -115,15 +115,15 @@ export default function OppositePartyCasePage() {
   }, [caseId]);
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading complaint...</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Loading complaint...</p>;
   }
 
   if (error && !complaint) {
-    return <p className="text-sm text-red-600">{error}</p>;
+    return <p className="text-sm text-[var(--color-danger)]">{error}</p>;
   }
 
   if (!complaint) {
-    return <p className="text-sm text-slate-500">Complaint not found.</p>;
+    return <p className="text-sm text-[var(--color-text-muted)]">Complaint not found.</p>;
   }
 
   const hasResponded = Boolean(complaint.defenseStatement);
@@ -139,7 +139,7 @@ export default function OppositePartyCasePage() {
       />
 
       {!isLinkedToAccount && (
-        <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5 text-cyan-50">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-accent-glow)] p-5 text-[var(--color-text-primary)]">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm">
               This complaint matches your email. Claim it to link it to your
@@ -158,27 +158,27 @@ export default function OppositePartyCasePage() {
         </div>
       )}
 
-      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Complaint Details</h2>
+          <h2 className="font-display text-lg font-semibold">Complaint Details</h2>
           <ComplaintStatus status={complaint.status} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <div>
-            <p className="text-sm text-slate-500">Category</p>
+            <p className="text-sm text-[var(--color-text-muted)]">Category</p>
             <p className="font-medium capitalize">{complaint.category}</p>
           </div>
 
           <div>
-            <p className="text-sm text-slate-500">Filed On</p>
+            <p className="text-sm text-[var(--color-text-muted)]">Filed On</p>
             <p className="font-medium">
               {new Date(complaint.createdAt).toLocaleDateString()}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-slate-500">Status</p>
+            <p className="text-sm text-[var(--color-text-muted)]">Status</p>
             <p className="font-medium capitalize">
               {complaint.status.replace("_", " ")}
             </p>
@@ -186,30 +186,30 @@ export default function OppositePartyCasePage() {
         </div>
 
         <div className="mt-5">
-          <p className="text-sm text-slate-500">Description</p>
-          <p className="mt-1 leading-7 text-slate-700">
+          <p className="text-sm text-[var(--color-text-muted)]">Description</p>
+          <p className="mt-1 leading-7 text-[var(--color-text-secondary)]">
             {complaint.description}
           </p>
         </div>
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Complainant Evidence</h2>
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+        <h2 className="mb-4 font-display text-lg font-semibold">Complainant Evidence</h2>
         <EvidenceViewer files={complainantEvidence} />
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-        <h2 className="text-lg font-semibold">Defense Response</h2>
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+        <h2 className="font-display text-lg font-semibold">Defense Response</h2>
 
         {hasResponded ? (
           <div className="mt-4 space-y-4">
-            <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+            <div className="rounded-lg border border-[rgba(16,185,129,0.25)] bg-[rgba(16,185,129,0.12)] p-4 text-sm text-[var(--color-success)]">
               Response submitted and locked. You cannot edit it now.
             </div>
 
             <div>
-              <p className="text-sm text-slate-500">Your Defense Statement</p>
-              <p className="mt-2 rounded-xl bg-slate-50 p-4 leading-7 text-slate-700">
+              <p className="text-sm text-[var(--color-text-muted)]">Your Defense Statement</p>
+              <p className="mt-2 rounded-lg bg-[var(--color-bg-secondary)] p-4 leading-7 text-[var(--color-text-secondary)]">
                 {complaint.defenseStatement}
               </p>
             </div>
@@ -226,14 +226,14 @@ export default function OppositePartyCasePage() {
         ) : (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-medium">
+              <label className="mc-label mb-2 block">
                 Defense Statement
               </label>
               <textarea
                 value={defenseStatement}
                 onChange={(e) => setDefenseStatement(e.target.value)}
                 rows={6}
-                className="w-full rounded-xl border px-4 py-3 outline-none focus:border-black"
+                className="mc-input w-full"
                 placeholder="Write your response to this complaint..."
               />
             </div>
@@ -246,7 +246,7 @@ export default function OppositePartyCasePage() {
               <EvidenceViewer files={counterEvidence} />
             )}
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-[var(--color-danger)]">{error}</p>}
 
             <Button
               type="button"
@@ -264,8 +264,8 @@ export default function OppositePartyCasePage() {
         )}
       </div>
 
-      <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Status Timeline</h2>
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+        <h2 className="mb-4 font-display text-lg font-semibold">Status Timeline</h2>
         <TimelineTracker
           events={
             (complaint.history && complaint.history.length > 0)
@@ -279,9 +279,9 @@ export default function OppositePartyCasePage() {
       </div>
       <HashProof caseId={complaint.caseId} complaintHash={complaint.complaintHash} blockchainTxHash={complaint.blockchainTxHash} />
       {complaint.status === "decided" && (
-        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-          <h2 className="text-lg font-semibold">Final Decision</h2>
-          <p className="mt-2 text-slate-700 capitalize">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+          <h2 className="font-display text-lg font-semibold">Final Decision</h2>
+          <p className="mt-2 text-[var(--color-text-secondary)] capitalize">
             Decision: {complaint.decision?.replace("_", " ")}
           </p>
         </div>

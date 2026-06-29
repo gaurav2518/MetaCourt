@@ -8,13 +8,13 @@ type PageHeaderProps = {
 
 export default function PageHeader({ title, subtitle, action }: PageHeaderProps) {
 	return (
-		<div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+		<div className="mb-8 flex flex-col gap-4 border-b border-[var(--color-border-subtle)] pb-6 sm:flex-row sm:items-center sm:justify-between">
 			<div className="space-y-1">
-				<h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+				<h1 className="font-display text-2xl font-bold tracking-normal text-[var(--color-text-primary)] sm:text-3xl">
 					{title}
 				</h1>
 				{subtitle && (
-					<p className="text-sm text-slate-400 sm:text-base">
+					<p className="text-sm text-[var(--color-text-secondary)] sm:text-base">
 						{subtitle}
 					</p>
 				)}

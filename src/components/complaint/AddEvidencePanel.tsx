@@ -67,13 +67,13 @@ export default function AddEvidencePanel({
       />
 
       {error && (
-        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        <div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] px-4 py-3 text-sm text-[var(--color-danger)]">
           {error}
         </div>
       )}
 
       {message && (
-        <div className="rounded-2xl border border-green-500/20 bg-green-500/10 px-4 py-3 text-sm text-green-200">
+        <div className="rounded-lg border border-[rgba(16,185,129,0.25)] bg-[rgba(16,185,129,0.12)] px-4 py-3 text-sm text-[var(--color-success)]">
           {message}
         </div>
       )}

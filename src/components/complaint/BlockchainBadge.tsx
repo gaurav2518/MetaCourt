@@ -15,8 +15,8 @@ export default function BlockchainBadge({
     <div
       className={`rounded-full px-3 py-1 text-xs font-medium ${
         isRegistered
-          ? "bg-emerald-600/10 text-emerald-300"
-          : "bg-amber-600/10 text-amber-300"
+          ? "bg-[rgba(16,185,129,0.15)] text-[var(--color-success)]"
+          : "bg-[rgba(245,158,11,0.15)] text-[var(--color-warning)]"
       }`}
     >
       {isRegistered ? "Blockchain registered" : "Pending blockchain registration"}

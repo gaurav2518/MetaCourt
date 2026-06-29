@@ -41,22 +41,22 @@ export default function Modal({
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 			{/* Backdrop overlay */}
 			<div
-				className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
+				className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
 				onClick={onClose}
 			/>
 
 			{/* Modal Card content wrapper */}
 			<div className={`relative w-full max-w-lg z-10 transform scale-100 transition-all duration-300 ${className}`}>
-				<Card variant="glass" className="!p-0 border border-white/10 shadow-2xl shadow-black/80">
+				<Card variant="glass" className="!p-0 border border-[var(--color-border)]">
 					{/* Modal Header */}
-					<div className="flex items-center justify-between border-b border-white/10 px-6 py-4.5 bg-white/2">
-						<h3 className="text-lg font-bold text-white tracking-tight">
+					<div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-secondary)] px-6 py-4.5">
+						<h3 className="font-display text-lg font-bold tracking-tight text-[var(--color-text-primary)]">
 							{title}
 						</h3>
 						<button
 							type="button"
 							onClick={onClose}
-							className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+							className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-2 text-[var(--color-text-muted)] transition hover:border-[var(--color-accent-primary)] hover:text-[var(--color-text-primary)]"
 							aria-label="Close dialog"
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">

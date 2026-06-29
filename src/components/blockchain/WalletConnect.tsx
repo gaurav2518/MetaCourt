@@ -12,15 +12,15 @@ export default function WalletConnect() {
 
   if (walletAddress) {
     return (
-      <div className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-sm text-slate-900">
-        <span className="font-mono text-slate-700">
+      <div className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-2 text-sm text-[var(--color-text-primary)]">
+        <span className="font-mono text-[var(--color-text-secondary)]">
           {truncateAddress(walletAddress)}
         </span>
 
         <button
           type="button"
           onClick={disconnectWallet}
-          className="text-red-600"
+          className="text-[var(--color-danger)]"
         >
           Disconnect
         </button>
@@ -33,7 +33,7 @@ export default function WalletConnect() {
       type="button"
       onClick={connectWallet}
       disabled={connecting}
-      className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+      className="rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--color-accent-hover)] disabled:opacity-60"
     >
       {connecting ? "Connecting..." : "Connect Wallet"}
     </button>

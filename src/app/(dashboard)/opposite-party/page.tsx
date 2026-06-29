@@ -81,27 +81,27 @@ export default function OppositePartyDashboardPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-          <p className="text-sm text-slate-500">Cases Against Me</p>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+          <p className="text-sm text-[var(--color-text-secondary)]">Cases Against Me</p>
           <p className="mt-2 text-3xl font-semibold">{totalCases}</p>
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-          <p className="text-sm text-slate-500">Responded</p>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+          <p className="text-sm text-[var(--color-text-secondary)]">Responded</p>
           <p className="mt-2 text-3xl font-semibold">{responded}</p>
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-          <p className="text-sm text-slate-500">Pending Response</p>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+          <p className="text-sm text-[var(--color-text-secondary)]">Pending Response</p>
           <p className="mt-2 text-3xl font-semibold">{pendingResponse}</p>
         </div>
       </div>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-5 text-white shadow-sm">
+      <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h2 className="text-base font-semibold">Claim a Case</h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <h2 className="font-display text-base font-semibold">Claim a Case</h2>
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
               Enter a case ID if it was filed against your email but is not
               visible yet.
             </p>
@@ -112,7 +112,7 @@ export default function OppositePartyDashboardPage() {
               value={claimCaseId}
               onChange={(event) => setClaimCaseId(event.target.value)}
               placeholder="MC-2026-0001"
-              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-400"
+              className="mc-input min-w-0 flex-1"
             />
             <Button
               type="button"
@@ -126,17 +126,17 @@ export default function OppositePartyDashboardPage() {
         </div>
 
         {claimMessage && (
-          <p className="mt-3 text-sm text-green-300">{claimMessage}</p>
+          <p className="mt-3 text-sm text-[var(--color-success)]">{claimMessage}</p>
         )}
 
         {claimError && (
-          <p className="mt-3 text-sm text-rose-300">{claimError}</p>
+          <p className="mt-3 text-sm text-[var(--color-danger)]">{claimError}</p>
         )}
       </section>
 
-      {loading && <p className="text-sm text-slate-500">Loading complaints...</p>}
+      {loading && <p className="text-sm text-[var(--color-text-muted)]">Loading complaints...</p>}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-[var(--color-danger)]">{error}</p>}
 
       {!loading && !error && (
         <ComplaintTable

@@ -27,36 +27,36 @@ export default function CaseQueue({ cases }: CaseQueueProps) {
 
   if (sortedCases.length === 0) {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-slate-500">
+      <div className="mc-card p-6 text-sm text-[var(--color-text-secondary)]">
         No assigned voting cases right now.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border bg-white text-slate-900 shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
       {sortedCases.map((item) => (
         <div
           key={item.caseId}
-          className="grid gap-4 border-b p-4 last:border-b-0 md:grid-cols-6 md:items-center"
+          className="grid gap-4 border-b border-[var(--color-border-subtle)] p-4 transition duration-100 last:border-b-0 hover:bg-[var(--color-bg-elevated)] md:grid-cols-6 md:items-center"
         >
           <div>
-            <p className="text-xs text-slate-500">Case ID</p>
-            <p className="font-medium">{item.caseId}</p>
+            <p className="mc-label">Case ID</p>
+            <p className="font-medium text-[var(--color-text-primary)]">{item.caseId}</p>
           </div>
 
           <div>
-            <p className="text-xs text-slate-500">Category</p>
-            <p className="capitalize">{item.category}</p>
+            <p className="mc-label">Category</p>
+            <p className="capitalize text-[var(--color-text-secondary)]">{item.category}</p>
           </div>
 
           <div>
-            <p className="text-xs text-slate-500">Deadline</p>
-            <p>{daysRemaining(item.votingDeadline)}</p>
+            <p className="mc-label">Deadline</p>
+            <p className="text-[var(--color-text-secondary)]">{daysRemaining(item.votingDeadline)}</p>
           </div>
 
           <div>
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium capitalize">
+            <span className="rounded-full bg-[var(--color-gold-subtle)] px-3 py-1 text-xs font-medium capitalize text-[var(--color-gold)]">
               {item.priority}
             </span>
           </div>
@@ -67,7 +67,7 @@ export default function CaseQueue({ cases }: CaseQueueProps) {
 
           <Link
             href={`/juror/cases/${item.caseId}`}
-            className="rounded-xl bg-black px-4 py-2 text-center text-sm font-medium text-white"
+            className="rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-center text-sm font-medium text-white transition hover:bg-[var(--color-accent-hover)]"
           >
             Review
           </Link>

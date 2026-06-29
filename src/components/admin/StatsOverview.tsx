@@ -28,10 +28,10 @@ export default function StatsOverview({
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm"
+          className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]"
         >
-          <p className="text-sm text-slate-500">{stat.label}</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">
+          <p className="text-sm text-[var(--color-text-secondary)]">{stat.label}</p>
+          <p className="mt-2 font-display text-3xl font-semibold text-[var(--color-text-primary)]">
             {stat.value}
           </p>
         </div>

@@ -14,14 +14,14 @@ export default function Card({
 	className = "",
 	...rest
 }: CardProps) {
-	const baseStyles = "rounded-[2rem] border border-white/10 p-5 shadow-2xl transition duration-300 overflow-hidden";
+	const baseStyles = "overflow-hidden rounded-xl border p-6 transition duration-150";
 	
 	const variants = {
-		glass: "bg-white/5 backdrop-blur-xl shadow-black/20",
-		solid: "bg-slate-950/70 shadow-black/30",
+		glass: "border-[var(--color-border)] bg-[var(--color-bg-secondary)]",
+		solid: "border-[var(--color-border)] bg-[var(--color-bg-primary)]",
 	};
 
-	const hoverStyles = hoverable ? "hover:border-cyan-500/30 hover:shadow-cyan-500/5 hover:-translate-y-0.5" : "";
+	const hoverStyles = hoverable ? "hover:border-[var(--color-accent-primary)]" : "";
 
 	return (
 		<div
@@ -40,7 +40,7 @@ Card.Header = function CardHeader({
 	...rest
 }: React.HTMLAttributes<HTMLDivElement>) {
 	return (
-		<div className={`border-b border-white/10 pb-4 mb-4 ${className}`} {...rest}>
+		<div className={`mb-4 border-b border-[var(--color-border-subtle)] pb-4 ${className}`} {...rest}>
 			{children}
 		</div>
 	);
@@ -64,7 +64,7 @@ Card.Footer = function CardFooter({
 	...rest
 }: React.HTMLAttributes<HTMLDivElement>) {
 	return (
-		<div className={`border-t border-white/10 pt-4 mt-4 ${className}`} {...rest}>
+		<div className={`mt-4 border-t border-[var(--color-border-subtle)] pt-4 ${className}`} {...rest}>
 			{children}
 		</div>
 	);

@@ -23,7 +23,7 @@ type CasesChartProps = {
   casesPerDay: CountItem[];
 };
 
-const COLORS = ["#06b6d4", "#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#64748b"];
+const COLORS = ["#7c3aed", "#d4af37", "#10b981", "#f59e0b", "#ef4444", "#64748b"];
 
 export default function CasesChart({
   casesByCategory,
@@ -50,23 +50,23 @@ export default function CasesChart({
   );
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Cases Analytics</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="font-display text-lg font-semibold text-[var(--color-text-primary)]">Cases Analytics</h2>
+          <p className="text-sm text-[var(--color-text-secondary)]">
             Category distribution and 30-day filing trend.
           </p>
         </div>
 
-        <div className="rounded-xl bg-slate-100 p-1">
+        <div className="rounded-lg bg-[var(--color-bg-secondary)] p-1">
           <button
             type="button"
             onClick={() => setActiveTab("category")}
             className={`rounded-lg px-3 py-1.5 text-sm ${
               activeTab === "category"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500"
+                ? "bg-[var(--color-accent-primary)] text-white"
+                : "text-[var(--color-text-muted)]"
             }`}
           >
             Category
@@ -77,8 +77,8 @@ export default function CasesChart({
             onClick={() => setActiveTab("daily")}
             className={`rounded-lg px-3 py-1.5 text-sm ${
               activeTab === "daily"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500"
+                ? "bg-[var(--color-accent-primary)] text-white"
+                : "text-[var(--color-text-muted)]"
             }`}
           >
             Last 30 days
@@ -118,7 +118,7 @@ export default function CasesChart({
               <Line
                 type="monotone"
                 dataKey="count"
-                stroke="#06b6d4"
+                stroke="#7c3aed"
                 strokeWidth={3}
                 dot={{ r: 4 }}
               />
@@ -134,7 +134,7 @@ export default function CasesChart({
 
 function EmptyChart({ message }: { message: string }) {
   return (
-    <div className="flex h-full items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-500">
+    <div className="flex h-full items-center justify-center rounded-lg bg-[var(--color-bg-secondary)] text-sm text-[var(--color-text-muted)]">
       {message}
     </div>
   );

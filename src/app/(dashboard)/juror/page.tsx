@@ -54,7 +54,7 @@ export default function JurorDashboardPage() {
       />
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading assigned cases...</p>
+        <p className="text-sm text-[var(--color-text-muted)]">Loading assigned cases...</p>
       ) : (
         <CaseQueue cases={cases} />
       )}
@@ -64,9 +64,9 @@ export default function JurorDashboardPage() {
 
 function StatCard({ title, value }: { title: string; value: number }) {
   return (
-    <div className="rounded-2xl border bg-white p-5 text-slate-900 shadow-sm">
-      <p className="text-sm text-slate-500">{title}</p>
-      <p className="mt-2 text-3xl font-semibold text-slate-900">{value}</p>
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]">
+      <p className="text-sm text-[var(--color-text-secondary)]">{title}</p>
+      <p className="mt-2 font-display text-3xl font-semibold text-[var(--color-text-primary)]">{value}</p>
     </div>
   );
 }

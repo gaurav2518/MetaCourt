@@ -159,10 +159,10 @@ export default function EvidenceUpload({
 	}
 
 	return (
-		<section className="space-y-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/20 backdrop-blur-xl sm:p-6">
+		<section className="space-y-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 sm:p-6">
 			<div>
-				<h3 className="text-base font-semibold text-white">{label}</h3>
-				<p className="mt-1 text-sm leading-6 text-slate-400">{helperText}</p>
+				<h3 className="font-display text-base font-semibold text-[var(--color-text-primary)]">{label}</h3>
+				<p className="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">{helperText}</p>
 			</div>
 
 			<div
@@ -174,10 +174,10 @@ export default function EvidenceUpload({
 				}}
 				onDragLeave={() => setIsDragging(false)}
 				onDrop={handleDrop}
-				className={`relative rounded-3xl border border-dashed px-5 py-8 text-center transition ${
+				className={`relative rounded-xl border border-dashed px-5 py-8 text-center transition ${
 					isDragging
-						? "border-cyan-400 bg-cyan-400/10"
-						: "border-white/15 bg-slate-950/40 hover:border-white/25 hover:bg-white/5"
+						? "border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)]"
+						: "border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent-primary)]"
 				} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
 				onClick={() => inputRef.current?.click()}
 				role="button"
@@ -200,27 +200,27 @@ export default function EvidenceUpload({
 					aria-label="Upload evidence files"
 				/>
 
-				<div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-cyan-300 shadow-lg shadow-cyan-500/10">
+				<div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]">
 					<Upload className="h-6 w-6" />
 				</div>
 
-				<p className="mt-4 text-sm font-medium text-white">Drop files here or click to upload</p>
-				<p className="mt-2 text-xs leading-5 text-slate-400">
+				<p className="mt-4 text-sm font-medium text-[var(--color-text-primary)]">Drop files here or click to upload</p>
+				<p className="mt-2 text-xs leading-5 text-[var(--color-text-muted)]">
 					Images, PDFs, and document files up to 10MB each.
 				</p>
 			</div>
 
 			{progress && (
-				<div className="rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
+				<div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3 text-sm text-[var(--color-text-secondary)]">
 					Uploading {progress.current} of {progress.total} files...
-					<div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-						<div className="h-full w-1/2 animate-pulse rounded-full bg-linear-to-r from-cyan-400 to-indigo-500" />
+					<div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--color-bg-primary)]">
+						<div className="h-full w-1/2 animate-pulse rounded-full bg-[var(--color-accent-primary)]" />
 					</div>
 				</div>
 			)}
 
 			{displayError && (
-				<div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+				<div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] px-4 py-3 text-sm text-[var(--color-danger)]">
 					{displayError}
 				</div>
 			)}
@@ -228,28 +228,28 @@ export default function EvidenceUpload({
 			{uploadedFiles.length > 0 && (
 				<div className="space-y-3">
 					<div className="flex items-center justify-between gap-3">
-						<h4 className="text-sm font-semibold text-white">Uploaded files</h4>
-						<p className="text-xs text-slate-400">{uploadedFiles.length} file{uploadedFiles.length === 1 ? "" : "s"} ready</p>
+						<h4 className="text-sm font-semibold text-[var(--color-text-primary)]">Uploaded files</h4>
+						<p className="text-xs text-[var(--color-text-muted)]">{uploadedFiles.length} file{uploadedFiles.length === 1 ? "" : "s"} ready</p>
 					</div>
 
 					<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 						{uploadedFiles.map((file) => (
-							<div key={file.publicId} className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
+							<div key={file.publicId} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-3">
 								<div className="flex gap-3">
-									<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5">
+									<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
 										{file.fileType === "image" ? (
 											<img src={file.url} alt={file.fileName} className="h-full w-full object-cover" />
 										) : file.fileType === "pdf" ? (
-											<FileText className="h-7 w-7 text-rose-300" />
+											<FileText className="h-7 w-7 text-[var(--color-danger)]" />
 										) : (
-											<ImageIcon className="h-7 w-7 text-slate-300" />
+											<ImageIcon className="h-7 w-7 text-[var(--color-text-secondary)]" />
 										)}
 									</div>
 
 									<div className="min-w-0 flex-1">
-										<p className="truncate text-sm font-medium text-white">{file.fileName}</p>
-										<p className="mt-1 text-xs text-slate-400">
-											{file.fileType.toUpperCase()} · {formatFileSize(file.fileSize)}
+										<p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{file.fileName}</p>
+										<p className="mt-1 text-xs text-[var(--color-text-muted)]">
+											{file.fileType.toUpperCase()} - {formatFileSize(file.fileSize)}
 										</p>
 									</div>
 								</div>
@@ -260,8 +260,8 @@ export default function EvidenceUpload({
 			)}
 
 			{uploading && (
-				<div className="flex items-center gap-2 text-sm text-slate-300">
-					<Loader2 className="h-4 w-4 animate-spin text-cyan-300" />
+				<div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+					<Loader2 className="h-4 w-4 animate-spin text-[var(--color-accent-primary)]" />
 					Uploading selected evidence...
 				</div>
 			)}

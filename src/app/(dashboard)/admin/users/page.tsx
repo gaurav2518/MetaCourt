@@ -78,18 +78,18 @@ export default function AdminUsersPage() {
         subtitle="Manage users, roles, and account status."
       />
 
-      <div className="flex flex-wrap gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 shadow-sm">
+      <div className="flex flex-wrap gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 text-[var(--color-text-primary)]">
         <input
           type="text"
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border px-4 py-2"
+          className="mc-input flex-1"
         />
 
         <button
           onClick={handleSearch}
-          className="rounded-xl bg-cyan-600 px-5 py-2 text-white"
+          className="rounded-lg bg-[var(--color-accent-primary)] px-5 py-2 text-white transition hover:bg-[var(--color-accent-hover)]"
         >
           Search
         </button>
@@ -98,7 +98,7 @@ export default function AdminUsersPage() {
           aria-label="Filter users by role"
           value={role}
           onChange={(e) => handleRoleChange(e.target.value)}
-          className="rounded-xl border px-4 py-2"
+          className="mc-input"
         >
           <option value="">All Roles</option>
           <option value="user">User</option>
@@ -108,7 +108,7 @@ export default function AdminUsersPage() {
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border bg-white p-8 text-center text-slate-900">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-8 text-center text-[var(--color-text-primary)]">
           Loading users...
         </div>
       ) : (

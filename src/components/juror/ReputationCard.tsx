@@ -9,9 +9,9 @@ type ReputationCardProps = {
 };
 
 const LEVEL_COLORS = {
-  [JUROR_LEVELS.JUNIOR]: "bg-blue-100 text-blue-700",
-  [JUROR_LEVELS.SENIOR]: "bg-amber-100 text-amber-700",
-  [JUROR_LEVELS.MASTER]: "bg-purple-100 text-purple-700",
+  [JUROR_LEVELS.JUNIOR]: "bg-[rgba(59,130,246,0.15)] text-[var(--color-info)]",
+  [JUROR_LEVELS.SENIOR]: "bg-[var(--color-gold-subtle)] text-[var(--color-gold)]",
+  [JUROR_LEVELS.MASTER]: "bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]",
 };
 
 export default function ReputationCard({
@@ -35,12 +35,12 @@ export default function ReputationCard({
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-sm">
+    <div className="mc-card p-6">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500">Reputation Score</p>
+          <p className="mc-label">Reputation Score</p>
 
-          <h2 className="mt-2 text-5xl font-bold text-slate-900">
+          <h2 className="mt-2 font-display text-5xl font-bold text-[var(--color-text-primary)]">
             {reputationScore}
           </h2>
         </div>
@@ -56,34 +56,34 @@ export default function ReputationCard({
 
       <div className="mt-8">
         <div className="mb-2 flex justify-between text-sm">
-          <span className="text-slate-600">
+          <span className="text-[var(--color-text-secondary)]">
             Progress to {nextLevel}
           </span>
 
-          <span className="font-medium text-slate-700">
+          <span className="font-medium text-[var(--color-text-primary)]">
             {Math.round(progress)}%
           </span>
         </div>
 
-        <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+        <div className="h-3 overflow-hidden rounded-full bg-[var(--color-bg-elevated)]">
           <div
-            className="h-full rounded-full bg-cyan-600 transition-all"
+            className="h-full rounded-full bg-[var(--color-accent-primary)] transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
       <div className="mt-8 grid grid-cols-2 gap-4">
-        <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-sm text-slate-500">Correct Votes</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">
+        <div className="rounded-lg bg-[var(--color-bg-primary)] p-4">
+          <p className="text-sm text-[var(--color-text-muted)]">Correct Votes</p>
+          <p className="mt-1 font-display text-2xl font-semibold text-[var(--color-text-primary)]">
             {correctVotes}
           </p>
         </div>
 
-        <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-sm text-slate-500">Accuracy</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">
+        <div className="rounded-lg bg-[var(--color-bg-primary)] p-4">
+          <p className="text-sm text-[var(--color-text-muted)]">Accuracy</p>
+          <p className="mt-1 font-display text-2xl font-semibold text-[var(--color-text-primary)]">
             {accuracy}%
           </p>
         </div>
