@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ROLES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import { Menu } from "lucide-react";
@@ -25,7 +26,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 		: "Guest";
 
 	return (
-		<header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-slate-950/55 px-6 py-4 text-white shadow-sm shadow-black/10 backdrop-blur-xl supports-backdrop-filter:bg-slate-950/45 sm:px-8">
+		<header className="sticky top-0 z-30 flex items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]/85 px-6 py-4 text-[var(--color-text-primary)] backdrop-blur-xl sm:px-8">
 			{user ? (
 				<>
 					<div className="flex items-center gap-3">
@@ -73,10 +74,16 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 			) : (
 				<>
 					<Link href="/" className="flex items-center gap-3">
-						<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
-							M
+						<div className="relative h-10 w-10 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+							<Image
+								src="/favicon_logo.png"
+								alt="MetaCourt"
+								fill
+								sizes="40px"
+								className="object-cover"
+							/>
 						</div>
-						<span className="text-xl font-semibold tracking-tight text-white">
+						<span className="font-display text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
 							MetaCourt
 						</span>
 					</Link>

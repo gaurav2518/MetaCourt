@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { ROLES } from "@/constants";
@@ -66,15 +67,21 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const hasNavItems = navItems.length > 0;
 
   return (
-    <aside className="flex h-full w-72 flex-col border-r border-white/10 bg-slate-950 text-white">
-      <div className="border-b border-white/10 px-6 py-6">
+    <aside className="flex h-full w-72 flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">
+      <div className="border-b border-[var(--color-border)] px-6 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-500 to-indigo-600 font-bold text-white shadow-lg shadow-cyan-500/20">
-              M
+            <div className="relative h-11 w-11 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+              <Image
+                src="/favicon_logo.png"
+                alt="MetaCourt"
+                fill
+                sizes="44px"
+                className="object-cover"
+              />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">MetaCourt</h1>
+              <h1 className="font-display text-lg font-bold tracking-tight">MetaCourt</h1>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
                 {roleLabel}
               </p>
