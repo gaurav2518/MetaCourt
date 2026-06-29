@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -161,7 +161,7 @@ export default function ComplaintForm() {
 		setCurrentStep((step) => Math.max(step - 1, 0) as StepIndex);
 	}
 
-	const onSubmit = handleSubmit(async (values) => {
+	const submitComplaint = handleSubmit(async (values) => {
 		const payload: Parameters<typeof fileComplaint>[0] = {
 			...values,
 			evidence: uploadedEvidence,
@@ -170,6 +170,16 @@ export default function ComplaintForm() {
 		const complaint = await fileComplaint(payload);
 		router.push(`/complainant/cases/${complaint.caseId}`);
 	});
+
+	function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+		if (currentStep < 2) {
+			event.preventDefault();
+			void goNext();
+			return;
+		}
+
+		void submitComplaint(event);
+	}
 
 	const isBusy = loading || isSubmitting;
 
@@ -245,7 +255,7 @@ export default function ComplaintForm() {
 					</div>
 				</div>
 
-				<form onSubmit={onSubmit} className="space-y-6">
+				<form onSubmit={handleFormSubmit} className="space-y-6">
 					{currentStep === 0 && (
 						<div className="grid gap-5">
 							<Input
