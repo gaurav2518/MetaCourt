@@ -122,7 +122,10 @@ export default function CaseDetailPage() {
 
         <div className="flex items-center gap-3">
           <ComplaintStatus status={complaint.status} />
-          <BlockchainBadge />
+          <BlockchainBadge
+            complaintHash={complaint.complaintHash}
+            blockchainTxHash={complaint.blockchainTxHash}
+          />
         </div>
       </header>
 
