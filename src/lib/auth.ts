@@ -9,7 +9,7 @@ if (!JWT_SECRET) {
 
 export type TokenPayload = {
   userId: string;
-  role: "complainant" | "opposite_party" | "juror" | "admin";
+  role: "user" | "juror" | "admin";
 };
 
 export function signToken(payload: TokenPayload) {
