@@ -76,11 +76,11 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
 					<Link href="/" className="flex items-center gap-3">
 						<div className="relative h-10 w-10 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
 							<Image
-								src="/favicon_logo.png"
+								src="/metacourt-logo.png"
 								alt="MetaCourt"
 								fill
 								sizes="40px"
-								className="object-cover"
+								className="object-contain"
 							/>
 						</div>
 						<span className="font-display text-xl font-bold tracking-tight text-[var(--color-text-primary)]">

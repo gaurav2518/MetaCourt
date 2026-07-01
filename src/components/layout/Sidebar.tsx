@@ -73,11 +73,11 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
           <div className="flex items-center gap-3">
             <div className="relative h-11 w-11 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
               <Image
-                src="/favicon_logo.png"
+                src="/metacourt-logo.png"
                 alt="MetaCourt"
                 fill
                 sizes="44px"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
             <div>

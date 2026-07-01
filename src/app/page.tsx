@@ -99,7 +99,7 @@ export default async function Home() {
               <div className="mt-12 grid max-w-xl grid-cols-3 divide-x divide-[var(--color-border)]">
                 <div className="pr-5">
                   <p className="font-display text-2xl font-bold">
-                    {formatCount(stats.totalCasesFiled || 2847)}
+                    {formatCount(stats.totalCasesFiled)}
                   </p>
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                     Cases Filed
@@ -120,7 +120,7 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="floating-case-card rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-6 shadow-[0_0_40px_var(--color-accent-glow)]">
+            <div className="floating-case-card rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-6 shadow-[0_0_40px_rgba(124,58,237,0.12)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-mono text-xs text-[var(--color-gold)]">

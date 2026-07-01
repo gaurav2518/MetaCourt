@@ -94,9 +94,9 @@ export function useNetworkBackground(canvasRef: RefObject<HTMLCanvasElement | nu
 
       activeContext.fillStyle = `rgb(${accent.r}, ${accent.g}, ${accent.b})`;
       for (const node of nodes) {
-        activeContext.globalAlpha = 0.2;
+        activeContext.globalAlpha = 0.15;
         activeContext.beginPath();
-        activeContext.arc(node.x, node.y, 1.8, 0, Math.PI * 2);
+        activeContext.arc(node.x, node.y, 1, 0, Math.PI * 2);
         activeContext.fill();
       }
       activeContext.globalAlpha = 1;

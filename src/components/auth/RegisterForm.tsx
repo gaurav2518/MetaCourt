@@ -67,7 +67,7 @@ export default function RegisterForm({ className = "" }: RegisterFormProps) {
     <section className={`w-full max-w-[420px] rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-10 ${className}`}>
       <div className="mb-8 flex items-center gap-3">
         <div className="relative h-11 w-11 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
-          <Image src="/favicon_logo.png" alt="MetaCourt" fill sizes="44px" className="object-cover" />
+          <Image src="/metacourt-logo.png" alt="MetaCourt" fill sizes="44px" className="object-contain" />
         </div>
         <div>
           <p className="font-display text-xl font-bold">MetaCourt</p>
