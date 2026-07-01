@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LockKeyhole } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -121,8 +122,9 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
           {isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
 
-        <div className="rounded-lg bg-[var(--color-bg-primary)] px-4 py-3 text-xs leading-5 text-[var(--color-text-muted)]">
-          Keep your account secure and never share your MetaCourt password.
+        <div className="flex items-start gap-3 rounded-lg border border-[var(--color-border-subtle)] border-l-[3px] border-l-[var(--color-accent-primary)] bg-transparent px-4 py-3 text-xs leading-5 text-[var(--color-text-muted)]">
+          <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-accent-primary)]" />
+          <p>Keep your account secure and never share your MetaCourt password.</p>
         </div>
       </form>
     </section>
