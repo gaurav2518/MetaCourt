@@ -200,12 +200,12 @@ export default function AdminComplaintsPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
               <tr>
-                <th className="p-4">Case ID</th>
-                <th className="p-4">Title</th>
-                <th className="p-4">Category</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Priority</th>
-                <th className="p-4">Actions</th>
+                <th className="w-[13%] p-4">Case ID</th>
+                <th className="w-[34%] p-4">Title</th>
+                <th className="w-[12%] p-4">Category</th>
+                <th className="w-[12%] p-4">Status</th>
+                <th className="w-[12%] p-4">Priority</th>
+                <th className="w-[17%] p-4">Actions</th>
               </tr>
             </thead>
 
@@ -229,7 +229,7 @@ export default function AdminComplaintsPage() {
                           event.target.value
                         )
                       }
-                      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-1.5 text-xs font-medium capitalize text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="h-9 w-28 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-xs font-medium capitalize text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {Object.values(PRIORITY).map((item) => (
                         <option key={item} value={item}>
@@ -240,50 +240,52 @@ export default function AdminComplaintsPage() {
                   </td>
 
                   <td className="p-4">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-col gap-2">
                       <Link
                         href={`/admin/complaints/${complaint.caseId}`}
-                        className="rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)]"
+                        className="inline-flex h-8 w-full items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-xs font-medium text-[var(--color-text-primary)] transition hover:border-[var(--color-accent-primary)]"
                       >
                         View
                       </Link>
 
-                      {complaint.status === STATUS.PENDING && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateComplaintStatus(
-                              complaint.caseId,
-                              STATUS.UNDER_REVIEW
-                            )
-                          }
-                          className="rounded-lg border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.12)] px-3 py-1.5 text-xs font-medium text-[var(--color-warning)]"
-                        >
-                          Start Review
-                        </button>
-                      )}
+                      <div className="flex gap-2">
+                        {complaint.status === STATUS.PENDING && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateComplaintStatus(
+                                complaint.caseId,
+                                STATUS.UNDER_REVIEW
+                              )
+                            }
+                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.08)] px-2 text-xs font-medium text-[var(--color-warning)] transition hover:bg-[rgba(245,158,11,0.14)]"
+                          >
+                            Review
+                          </button>
+                        )}
 
-                      {[STATUS.PENDING, STATUS.UNDER_REVIEW].includes(
-                        complaint.status
-                      ) && (
-                        <button
-                          type="button"
-                          onClick={() => setSelectedCaseId(complaint.caseId)}
-                          className="rounded-lg bg-[var(--color-accent-primary)] px-3 py-1.5 text-xs font-medium text-white"
-                        >
-                          Assign Jurors
-                        </button>
-                      )}
+                        {[STATUS.PENDING, STATUS.UNDER_REVIEW].includes(
+                          complaint.status
+                        ) && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCaseId(complaint.caseId)}
+                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg border border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] px-2 text-xs font-medium text-[var(--color-accent-primary)] transition hover:bg-[rgba(124,58,237,0.20)]"
+                          >
+                            Jurors
+                          </button>
+                        )}
 
-                      {complaint.status === STATUS.VOTING && (
-                        <button
-                          type="button"
-                          onClick={() => finalizeComplaint(complaint.caseId)}
-                          className="rounded-lg bg-[var(--color-gold)] px-3 py-1.5 text-xs font-medium text-[var(--color-bg-primary)]"
-                        >
-                          Finalize
-                        </button>
-                      )}
+                        {complaint.status === STATUS.VOTING && (
+                          <button
+                            type="button"
+                            onClick={() => finalizeComplaint(complaint.caseId)}
+                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg bg-[var(--color-gold)] px-2 text-xs font-medium text-[var(--color-bg-primary)] transition hover:opacity-90"
+                          >
+                            Finalize
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
