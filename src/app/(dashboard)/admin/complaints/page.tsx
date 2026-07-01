@@ -19,6 +19,7 @@ export default function AdminComplaintsPage() {
   const [search, setSearch] = useState("");
 
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
+  const [updatingPriorityCaseId, setUpdatingPriorityCaseId] = useState<string | null>(null);
 
   async function loadComplaints() {
     try {
@@ -101,6 +102,34 @@ export default function AdminComplaintsPage() {
 
     if (res.ok) {
       loadComplaints();
+    }
+  }
+
+  async function updateComplaintPriority(caseId: string, nextPriority: string) {
+    try {
+      setUpdatingPriorityCaseId(caseId);
+
+      const res = await fetch(`/api/complaints/${caseId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priority: nextPriority,
+        }),
+      });
+
+      if (res.ok) {
+        setComplaints((currentComplaints) =>
+          currentComplaints.map((complaint) =>
+            complaint.caseId === caseId
+              ? { ...complaint, priority: nextPriority }
+              : complaint
+          )
+        );
+      }
+    } finally {
+      setUpdatingPriorityCaseId(null);
     }
   }
 
@@ -189,7 +218,26 @@ export default function AdminComplaintsPage() {
                   <td className="p-4 capitalize">
                     {complaint.status?.replace("_", " ")}
                   </td>
-                  <td className="p-4 capitalize">{complaint.priority}</td>
+                  <td className="p-4">
+                    <select
+                      aria-label={`Change priority for ${complaint.caseId}`}
+                      value={complaint.priority}
+                      disabled={updatingPriorityCaseId === complaint.caseId}
+                      onChange={(event) =>
+                        updateComplaintPriority(
+                          complaint.caseId,
+                          event.target.value
+                        )
+                      }
+                      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-1.5 text-xs font-medium capitalize text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {Object.values(PRIORITY).map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
 
                   <td className="p-4">
                     <div className="flex flex-wrap gap-2">
