@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "MetaCourt",
   description: "Blockchain-backed complaint and dispute resolution.",
   icons: {
-    icon: "/favicon_logo.png",
+    icon: "/metacourt-logo.png",
   },
 };
 

@@ -198,9 +198,6 @@ export default function CaseDetailPage() {
               <h4 className="text-sm font-semibold text-[var(--color-text-primary)]">Case actions</h4>
               <div className="mt-3 flex flex-col gap-2">
                 <Button variant="ghost" onClick={handleShare}>Share</Button>
-                <Button variant="ghost" disabled title="Appeal flow is not wired yet">
-                  Appeal
-                </Button>
               </div>
               {shareMessage && <p className="mt-3 text-xs text-[var(--color-text-muted)]">{shareMessage}</p>}
             </Card.Body>

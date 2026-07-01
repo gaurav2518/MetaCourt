@@ -12,6 +12,7 @@ export async function GET() {
       {
         totalCasesFiled: 0,
         decisionsMade: 0,
+        totalJurors: 0,
       },
       { status: 200 }
     );

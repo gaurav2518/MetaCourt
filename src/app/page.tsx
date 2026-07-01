@@ -49,6 +49,7 @@ export default async function Home() {
   const stats = await getPublicStats().catch(() => ({
     totalCasesFiled: 0,
     decisionsMade: 0,
+    totalJurors: 0,
   }));
 
   return (
@@ -106,13 +107,17 @@ export default async function Home() {
                   </p>
                 </div>
                 <div className="px-5">
-                  <p className="font-display text-2xl font-bold">98.2%</p>
+                  <p className="font-display text-2xl font-bold">
+                    {formatCount(stats.decisionsMade)}
+                  </p>
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                    Tamper-Proof
+                    Decisions Made
                   </p>
                 </div>
                 <div className="pl-5">
-                  <p className="font-display text-2xl font-bold">340</p>
+                  <p className="font-display text-2xl font-bold">
+                    {formatCount(stats.totalJurors)}
+                  </p>
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                     Jurors
                   </p>
