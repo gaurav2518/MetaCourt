@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -38,7 +40,7 @@ export default function ApplyJurorPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/juror/apply", {
+      const response = await fetch(`${API_BASE_URL}/api/juror/apply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

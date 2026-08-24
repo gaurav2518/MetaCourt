@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useMemo, useState } from "react";
 
 import PageHeader from "@/components/layout/PageHeader";
@@ -30,7 +32,7 @@ export default function AdminDashboardPage() {
       setLoading(true);
       setError("");
 
-      const res = await fetch("/api/admin/stats");
+      const res = await fetch(`${API_BASE_URL}/api/admin/stats`);
       const data = await res.json();
 
       if (!res.ok) {

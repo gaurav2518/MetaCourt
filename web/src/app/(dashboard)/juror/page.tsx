@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import ReputationCard from "@/components/juror/ReputationCard";
@@ -14,7 +16,7 @@ export default function JurorDashboardPage() {
   useEffect(() => {
     async function loadCases() {
       try {
-        const res = await fetch("/api/juror/cases");
+        const res = await fetch(`${API_BASE_URL}/api/juror/cases`);
         const data = await res.json();
 
         if (res.ok) {

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useState } from "react";
 import { ROLES } from "@/constants";
 
@@ -24,7 +26,7 @@ export default function UserTable({
     try {
       setLoadingUserId(userId);
 
-      const res = await fetch(`/api/admin/users/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

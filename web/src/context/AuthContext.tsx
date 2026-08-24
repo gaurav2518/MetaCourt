@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import React, { createContext, useState, useEffect } from "react";
 import { JUROR_LEVELS } from "@/constants/jurorLevels";
 
@@ -35,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshUser = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/me");
+      const res = await fetch(`${API_BASE_URL}/api/auth/me`);
       if (res.ok) {
         const data = await res.json();
         setUser(data.user ?? null);
@@ -54,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (creds: LoginCredentials) => {
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(creds),
@@ -72,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch(`${API_BASE_URL}/api/auth/logout`, { method: "POST" });
     } catch (e) {
       // ignore
     }

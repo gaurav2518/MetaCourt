@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -41,7 +43,7 @@ export default function RegisterForm({ className = "" }: RegisterFormProps) {
 
   const submitRegister = async (values: RegisterFormValues) => {
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

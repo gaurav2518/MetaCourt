@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useMemo, useState } from "react";
 
 type Juror = {
@@ -69,8 +71,7 @@ export default function JurorAssignModal({
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `/api/complaints/${caseId}/assign-jurors`,
+      const response = await fetch(`${API_BASE_URL}/api/complaints/${caseId}/assign-jurors`,
         {
           method: "POST",
           headers: {

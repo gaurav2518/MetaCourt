@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useState } from "react";
 
 type HashProofProps = {
@@ -39,7 +41,7 @@ export default function HashProof({
       setVerifyStatus(null);
       setMessage("");
 
-      const res = await fetch(`/api/blockchain/verify?caseId=${caseId}`);
+      const res = await fetch(`${API_BASE_URL}/api/blockchain/verify?caseId=${caseId}`);
       const data = await res.json();
 
       if (!res.ok) {

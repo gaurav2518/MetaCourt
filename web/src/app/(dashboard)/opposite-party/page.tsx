@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 
 import { useComplaints } from "@/hooks/useComplaints";
@@ -35,8 +37,7 @@ export default function OppositePartyDashboardPage() {
       setClaimMessage("");
       setClaimError("");
 
-      const res = await fetch(
-        `/api/complaints/${normalizedCaseId}/link-opposite-party`,
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${normalizedCaseId}/link-opposite-party`,
         { method: "POST" }
       );
       const data = await res.json();

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import Modal from "@/components/ui/Modal";
@@ -27,7 +29,7 @@ export default function AdminJurorsPage() {
   const [casesError, setCasesError] = useState("");
 
   async function loadApplications() {
-    const res = await fetch("/api/admin/jurors?status=pending");
+    const res = await fetch(`${API_BASE_URL}/api/admin/jurors?status=pending`);
     const data = await res.json();
 
     if (res.ok) {
@@ -36,7 +38,7 @@ export default function AdminJurorsPage() {
   }
 
   async function loadJurors() {
-    const res = await fetch("/api/admin/users?role=juror&limit=100");
+    const res = await fetch(`${API_BASE_URL}/api/admin/users?role=juror&limit=100`);
     const data = await res.json();
 
     if (res.ok) {
@@ -54,7 +56,7 @@ export default function AdminJurorsPage() {
   }
 
   async function reviewApplication(userId: string, action: "approve" | "reject") {
-    const res = await fetch(`/api/admin/jurors/${userId}/verify`, {
+    const res = await fetch(`${API_BASE_URL}/api/admin/jurors/${userId}/verify`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +81,7 @@ export default function AdminJurorsPage() {
       setCasesLoading(true);
 
       const jurorId = juror._id || juror.id;
-      const res = await fetch(`/api/admin/jurors/cases?jurorId=${jurorId}`);
+      const res = await fetch(`${API_BASE_URL}/api/admin/jurors/cases?jurorId=${jurorId}`);
       const data = await res.json();
 
       if (!res.ok) {

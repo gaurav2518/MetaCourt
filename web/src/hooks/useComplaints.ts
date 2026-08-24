@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useCallback, useState } from "react";
 import { CATEGORIES, STATUS } from "@/constants";
 
@@ -78,8 +80,7 @@ export function useComplaints() {
         query.set("as", params.as);
       }
 
-      const res = await fetch(
-        `/api/complaints${query.toString() ? `?${query.toString()}` : ""}`
+      const res = await fetch(`${API_BASE_URL}/api/complaints${query.toString() ? `?${query.toString()}` : ""}`
       );
 
       const data = (await res.json()) as ComplaintListResponse;
@@ -107,8 +108,7 @@ export function useComplaints() {
       setLoading(true);
       setError(null);
 
-      const res = await fetch(
-        `/api/complaints/${caseId}`
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`
       );
 
       const data = (await res.json()) as ComplaintDetailResponse;
@@ -136,7 +136,7 @@ export function useComplaints() {
       setLoading(true);
       setError(null);
 
-      const res = await fetch("/api/complaints", {
+      const res = await fetch(`${API_BASE_URL}/api/complaints`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

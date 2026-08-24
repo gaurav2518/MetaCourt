@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { QRCodeCanvas } from "qrcode.react";
@@ -20,7 +22,7 @@ export default function PublicCasePage() {
 
   useEffect(() => {
     async function loadCase() {
-      const res = await fetch(`/api/complaints/${caseId}`);
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`);
       const data = await res.json();
 
       if (res.ok) {

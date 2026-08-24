@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -41,7 +43,7 @@ export default function OppositePartyCasePage() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`/api/complaints/${caseId}`);
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -61,7 +63,7 @@ export default function OppositePartyCasePage() {
       setSubmitting(true);
       setError("");
 
-      const res = await fetch(`/api/complaints/${caseId}/response`, {
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}/response`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +95,7 @@ export default function OppositePartyCasePage() {
       setClaiming(true);
       setError("");
 
-      const res = await fetch(`/api/complaints/${caseId}/link-opposite-party`, {
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}/link-opposite-party`, {
         method: "POST",
       });
       const data = await res.json();

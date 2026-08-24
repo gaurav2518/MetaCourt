@@ -1,0 +1,8 @@
+# Root ignore rules
+plan.md
+/web/node_modules
+/web/.next
+/mobile/node_modules
+/mobile/.expo
+.DS_Store
+*.log

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useCallback, useState } from "react";
 
 import { VOTE_TYPES } from "@/constants";
@@ -16,7 +18,7 @@ export function useVoting() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/votes", {
+        const response = await fetch(`${API_BASE_URL}/api/votes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,7 +54,7 @@ export function useVoting() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/votes/${caseId}`);
+      const response = await fetch(`${API_BASE_URL}/api/votes/${caseId}`);
 
       const data = await response.json();
 

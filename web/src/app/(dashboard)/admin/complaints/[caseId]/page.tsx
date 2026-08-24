@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -50,7 +52,7 @@ export default function AdminComplaintDetailPage() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`/api/complaints/${caseId}`);
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -75,7 +77,7 @@ export default function AdminComplaintDetailPage() {
       setRepairMessage("");
       setRepairError("");
 
-      const res = await fetch("/api/blockchain/store-hash", {
+      const res = await fetch(`${API_BASE_URL}/api/blockchain/store-hash`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

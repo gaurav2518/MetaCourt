@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useState } from "react";
 
 import Button from "@/components/ui/Button";
@@ -31,7 +33,7 @@ export default function AddEvidencePanel({
       setMessage("");
       setError("");
 
-      const res = await fetch(`/api/complaints/${caseId}/evidence`, {
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}/evidence`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

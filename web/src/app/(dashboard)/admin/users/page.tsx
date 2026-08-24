@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 
 import PageHeader from "@/components/layout/PageHeader";
@@ -36,7 +38,7 @@ export default function AdminUsersPage() {
         params.set("role", roleFilter);
       }
 
-      const res = await fetch(`/api/admin/users?${params.toString()}`);
+      const res = await fetch(`${API_BASE_URL}/api/admin/users?${params.toString()}`);
 
       const data = await res.json();
 

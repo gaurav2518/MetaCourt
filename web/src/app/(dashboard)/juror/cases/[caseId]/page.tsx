@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -20,8 +22,8 @@ export default function JurorCasePage() {
       setLoading(true);
 
       const [complaintRes, votesRes] = await Promise.all([
-        fetch(`/api/complaints/${caseId}`),
-        fetch(`/api/votes/${caseId}`),
+        fetch(`${API_BASE_URL}/api/complaints/${caseId}`),
+        fetch(`${API_BASE_URL}/api/votes/${caseId}`),
       ]);
 
       const complaintData = await complaintRes.json();

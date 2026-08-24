@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import VotingHistory from "@/components/voting/VotingHistory";
@@ -11,7 +13,7 @@ export default function JurorHistoryPage() {
   useEffect(() => {
     async function loadHistory() {
       try {
-        const res = await fetch("/api/juror/history");
+        const res = await fetch(`${API_BASE_URL}/api/juror/history`);
         const data = await res.json();
 
         if (res.ok) {

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
@@ -25,7 +27,7 @@ export default function AdminComplaintsPage() {
     try {
       setLoading(true);
 
-      const res = await fetch("/api/complaints");
+      const res = await fetch(`${API_BASE_URL}/api/complaints`);
       const data = await res.json();
 
       if (res.ok) {
@@ -37,7 +39,7 @@ export default function AdminComplaintsPage() {
   }
 
   async function loadJurors() {
-    const res = await fetch("/api/admin/users?role=juror&limit=100");
+    const res = await fetch(`${API_BASE_URL}/api/admin/users?role=juror&limit=100`);
     const data = await res.json();
 
     if (res.ok) {
@@ -80,7 +82,7 @@ export default function AdminComplaintsPage() {
   }, [complaints, status, category, priority, search]);
 
   async function finalizeComplaint(caseId: string) {
-    const res = await fetch(`/api/complaints/${caseId}/finalize`, {
+    const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}/finalize`, {
       method: "POST",
     });
 
@@ -90,7 +92,7 @@ export default function AdminComplaintsPage() {
   }
 
   async function updateComplaintStatus(caseId: string, nextStatus: string) {
-    const res = await fetch(`/api/complaints/${caseId}`, {
+    const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +111,7 @@ export default function AdminComplaintsPage() {
     try {
       setUpdatingPriorityCaseId(caseId);
 
-      const res = await fetch(`/api/complaints/${caseId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
