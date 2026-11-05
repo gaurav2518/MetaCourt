@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { verifyToken, TokenPayload } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
@@ -16,9 +16,37 @@ export interface AuthenticatedUser extends TokenPayload {
   correctVotes: number;
 }
 
-export async function requireAuth(): Promise<AuthenticatedUser> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+export async function requireAuth(req?: Request): Promise<AuthenticatedUser> {
+  let token: string | undefined;
+
+  // 1. Check cookies (standard Web browser flow)
+  try {
+    const cookieStore = await cookies();
+    token = cookieStore.get("token")?.value;
+  } catch {
+    // cookieStore may not be available in some contexts
+  }
+
+  // 2. Check Authorization header via next/headers (Mobile / API flow)
+  if (!token) {
+    try {
+      const headerStore = await headers();
+      const authHeader = headerStore.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.substring(7).trim();
+      }
+    } catch {
+      // headerStore may not be available
+    }
+  }
+
+  // 3. Check direct Request object if passed
+  if (!token && req) {
+    const authHeader = req.headers.get("authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.substring(7).trim();
+    }
+  }
 
   if (!token) {
     throw new Error("UNAUTHORIZED");
@@ -28,7 +56,7 @@ export async function requireAuth(): Promise<AuthenticatedUser> {
 
   try {
     payload = verifyToken(token);
-  } catch {
+  } catch (err) {
     throw new Error("UNAUTHORIZED");
   }
 
@@ -61,7 +89,11 @@ export async function requireAuth(): Promise<AuthenticatedUser> {
       totalVotes: user.totalVotes,
       correctVotes: user.correctVotes,
     };
-  } catch {
-    throw new Error("UNAUTHORIZED");
+  } catch (err: any) {
+    if (err.message === "UNAUTHORIZED") {
+      throw err;
+    }
+    console.error("[requireAuth] Error verifying user from database:", err);
+    throw err;
   }
 }
