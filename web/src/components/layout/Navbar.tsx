@@ -190,15 +190,6 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                         <User className="h-4 w-4 text-[var(--color-accent-primary)]" />
                         <span>Edit Profile & Name</span>
                       </button>
-
-                      <Link
-                        href="/case"
-                        onClick={() => setIsDropdownOpen(false)}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)] transition hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
-                      >
-                        <Scale className="h-4 w-4 text-[var(--color-gold)]" />
-                        <span>Verify a Case On-Chain</span>
-                      </Link>
                     </div>
 
                     {/* Sign Out Divider & Button */}
