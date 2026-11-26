@@ -3,22 +3,37 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, type ElementType } from "react";
 import { ROLES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
-import { X } from "lucide-react";
+import {
+  X,
+  FolderKanban,
+  ShieldAlert,
+  Gavel,
+  History,
+  Award,
+  Scale,
+  Users,
+  BarChart3,
+  UserCheck,
+  Activity,
+  LogOut,
+  ChevronRight,
+} from "lucide-react";
 
 type NavItem = {
   label: string;
   href: string;
+  icon: ElementType;
 };
 
 type RoleValue = (typeof ROLES)[keyof typeof ROLES];
 
 const ROLE_LABELS: Record<RoleValue, string> = {
-  [ROLES.USER]: "User",
-  [ROLES.JUROR]: "Juror",
-  [ROLES.ADMIN]: "Admin",
+  [ROLES.USER]: "Complainant / Respondent",
+  [ROLES.JUROR]: "Community Juror",
+  [ROLES.ADMIN]: "System Administrator",
 };
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
@@ -26,35 +41,34 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const { user, logout } = useAuth();
   const normalizedRole = (user?.role === "complainant" ? ROLES.USER : user?.role) as RoleValue | undefined;
 
-  const navItems = useMemo(() => {
+  const navItems = useMemo<NavItem[]>(() => {
     if (!user) return [];
 
     const role = normalizedRole as RoleValue;
 
     if (role === ROLES.ADMIN) {
       return [
-        { label: "All Complaints", href: "/admin/complaints" },
-        { label: "Users", href: "/admin/users" },
-        { label: "Juror Applications", href: "/admin/jurors" },
-        { label: "Analytics", href: "/admin" },
+        { label: "All Complaints", href: "/admin/complaints", icon: FolderKanban },
+        { label: "Users Directory", href: "/admin/users", icon: Users },
+        { label: "Juror Applications", href: "/admin/jurors", icon: UserCheck },
+        { label: "Platform Analytics", href: "/admin", icon: BarChart3 },
       ];
     }
 
-    // Always show the two base links for complainants/users and jurors.
+    // Base links for regular users and jurors
     const items: NavItem[] = [
-      { label: "My Cases", href: "/complainant" },
-      { label: "Cases Against Me", href: "/opposite-party" },
+      { label: "My Cases", href: "/complainant", icon: FolderKanban },
+      { label: "Cases Against Me", href: "/opposite-party", icon: ShieldAlert },
     ];
 
     if (role === ROLES.JUROR) {
       items.push(
-        { label: "Assigned Cases", href: "/juror" },
-        { label: "Voting History", href: "/juror/history" },
-        { label: "Reputation", href: "/juror/reputation" }
+        { label: "Assigned Cases", href: "/juror", icon: Gavel },
+        { label: "Voting History", href: "/juror/history", icon: History },
+        { label: "Juror Reputation", href: "/juror/reputation", icon: Award }
       );
     } else if (role === ROLES.USER) {
-      // Regular users can apply to be jurors
-      items.push({ label: "Apply for Juror", href: "/complainant/apply-juror" });
+      items.push({ label: "Apply for Juror", href: "/complainant/apply-juror", icon: Scale });
     }
 
     return items;
@@ -64,34 +78,35 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     ? ROLE_LABELS[normalizedRole as RoleValue] ?? normalizedRole.replace("_", " ")
     : "Guest";
 
-  const hasNavItems = navItems.length > 0;
-
   return (
     <aside className="flex h-full w-72 flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">
-      <div className="border-b border-[var(--color-border)] px-6 py-6">
+      {/* Brand Header */}
+      <div className="border-b border-[var(--color-border)] px-6 py-5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative h-11 w-11 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)]">
+          <Link href="/" className="group flex items-center gap-3 transition">
+            <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1 shadow-inner transition group-hover:border-[var(--color-accent-primary)]">
               <Image
                 src="/metacourt-logo.png"
                 alt="MetaCourt"
                 fill
-                sizes="44px"
+                sizes="40px"
                 className="object-contain"
               />
             </div>
             <div>
-              <h1 className="font-display text-lg font-bold tracking-tight">MetaCourt</h1>
-              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
-                {roleLabel}
+              <h1 className="font-display text-lg font-bold tracking-tight text-[var(--color-text-primary)]">
+                MetaCourt
+              </h1>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-gold)]">
+                Decentralized Justice
               </p>
             </div>
-          </div>
+          </Link>
           {onClose && (
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-2 text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)] lg:hidden"
+              className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-2 text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-elevated)] lg:hidden"
               aria-label="Close sidebar menu"
             >
               <X className="h-4 w-4" />
@@ -99,17 +114,23 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
           )}
         </div>
 
-        <p className="mt-4 text-sm leading-6 text-[var(--color-text-secondary)]">
-          Navigate your workspace by role and keep the active section visible at a glance.
-        </p>
+        {/* Role Pill */}
+        <div className="mt-4 flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)]/80 px-3 py-2 text-xs">
+          <span className="text-[var(--color-text-muted)]">Active Role</span>
+          <span className="font-medium text-[var(--color-accent-primary)]">
+            {roleLabel}
+          </span>
+        </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4">
-        <p className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
-          Navigation
+      {/* Navigation Links */}
+      <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-4">
+        <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          Workspace Navigation
         </p>
 
         {navItems.map((item) => {
+          const Icon = item.icon;
           const active =
             item.href === "/admin"
               ? pathname === item.href
@@ -119,39 +140,74 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`mb-1 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium transition duration-100 ${
+              onClick={onClose}
+              className={`group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition duration-150 ${
                 active
-                  ? "border-l-2 border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] text-[var(--color-accent-primary)]"
-                  : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
+                  ? "border border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-glow)] font-semibold text-[var(--color-accent-primary)] shadow-[0_0_15px_rgba(124,58,237,0.15)]"
+                  : "border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {item.label}
+              <div className="flex items-center gap-3">
+                <Icon
+                  className={`h-4 w-4 transition ${
+                    active
+                      ? "text-[var(--color-accent-primary)]"
+                      : "text-[var(--color-text-muted)] group-hover:text-[var(--color-text-primary)]"
+                  }`}
+                />
+                <span>{item.label}</span>
+              </div>
+              {active && (
+                <ChevronRight className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
+              )}
             </Link>
           );
         })}
 
-        {!hasNavItems && (
-          <div className="mx-3 rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 text-sm text-[var(--color-text-secondary)]">
-            No navigation items available for this role yet.
+        {navItems.length === 0 && (
+          <div className="mx-2 rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 text-xs text-[var(--color-text-secondary)]">
+            No active navigation items.
           </div>
         )}
       </nav>
 
-      <div className="border-t border-[var(--color-border)] p-4">
-        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4">
-          <p className="text-sm font-medium text-[var(--color-text-primary)]">
-            {user?.name ?? "Unknown User"}
-          </p>
-          <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-            {user?.email ?? "No email available"}
-          </p>
+      {/* Network & User Footer */}
+      <div className="border-t border-[var(--color-border)] p-4 space-y-3">
+        {/* Blockchain Network Status */}
+        <div className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] px-3 py-2 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-success)] opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-success)]" />
+            </span>
+            <span className="text-[var(--color-text-muted)]">Ethereum Sepolia</span>
+          </div>
+          <span className="text-[10px] font-mono text-[var(--color-success)]">Connected</span>
+        </div>
+
+        {/* User Profile Card */}
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-glow)] font-display text-sm font-bold text-[var(--color-accent-primary)]">
+              {(user?.name?.[0] ?? "U").toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-[var(--color-text-primary)]">
+                {user?.name ?? "Logged In User"}
+              </p>
+              <p className="truncate text-[10px] text-[var(--color-text-muted)]">
+                {user?.email ?? "MetaCourt Member"}
+              </p>
+            </div>
+          </div>
 
           <button
             type="button"
             onClick={logout}
-            className="mt-4 inline-flex w-full items-center justify-center rounded-lg border border-[var(--color-border)] bg-transparent px-4 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition duration-150 hover:bg-[var(--color-bg-elevated)]"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] bg-transparent py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition hover:bg-[rgba(239,68,68,0.12)] hover:border-[rgba(239,68,68,0.3)] hover:text-[var(--color-danger)]"
           >
-            Logout
+            <LogOut className="h-3.5 w-3.5" />
+            Sign Out
           </button>
         </div>
       </div>

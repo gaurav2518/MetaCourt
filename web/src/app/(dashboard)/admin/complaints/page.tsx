@@ -4,9 +4,17 @@ import { API_BASE_URL } from "@/config/api";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  FolderKanban,
+  Search,
+  Filter,
+  Users,
+  CheckCircle2,
+  Clock,
+  ArrowRight,
+  Gavel,
+} from "lucide-react";
 
-import PageHeader from "@/components/layout/PageHeader";
-import ComplaintTable from "@/components/complaint/ComplaintTable";
 import JurorAssignModal from "@/components/admin/JurorAssignModal";
 import { CATEGORIES, PRIORITY, STATUS } from "@/constants";
 
@@ -137,26 +145,47 @@ export default function AdminComplaintsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Complaint Management"
-        subtitle="Review, filter, assign jurors, and finalize complaints."
-      />
+      {/* Header Banner */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-6 backdrop-blur-xl">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-[var(--color-accent-primary)] animate-pulse" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-gold)]">
+              Case Operations
+            </span>
+          </div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Complaint & Dispute Registry
+          </h1>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Search, filter by status, adjust priorities, assign verified jurors, and finalize on-chain verdicts.
+          </p>
+        </div>
 
-      <div className="grid gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 text-[var(--color-text-primary)] md:grid-cols-4">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search title or case ID"
-          className="mc-input"
-        />
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-2 font-mono text-xs text-[var(--color-text-secondary)]">
+          <span>Total: {complaints.length} Records</span>
+        </div>
+      </div>
+
+      {/* Modern Filter Bar */}
+      <div className="grid gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-4 backdrop-blur-xl md:grid-cols-4">
+        <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search title or case ID..."
+            className="mc-input pl-10 pr-4 py-2 text-sm"
+          />
+        </div>
 
         <select
           aria-label="Filter complaints by status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="mc-input"
+          className="mc-input py-2 text-sm"
         >
-          <option value="">All Status</option>
+          <option value="">All Statuses</option>
           {Object.values(STATUS).map((item) => (
             <option key={item} value={item}>
               {item.replace("_", " ")}
@@ -168,12 +197,12 @@ export default function AdminComplaintsPage() {
           aria-label="Filter complaints by category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="mc-input"
+          className="mc-input py-2 text-sm"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map((item) => (
             <option key={item} value={item}>
-              {item}
+              {item.replace("_", " ")}
             </option>
           ))}
         </select>
@@ -182,9 +211,9 @@ export default function AdminComplaintsPage() {
           aria-label="Filter complaints by priority"
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
-          className="mc-input"
+          className="mc-input py-2 text-sm"
         >
-          <option value="">All Priority</option>
+          <option value="">All Priorities</option>
           {Object.values(PRIORITY).map((item) => (
             <option key={item} value={item}>
               {item}
@@ -193,32 +222,41 @@ export default function AdminComplaintsPage() {
         </select>
       </div>
 
+      {/* Main Table */}
       {loading ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-8 text-center text-sm text-[var(--color-text-muted)]">
-          Loading complaints...
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-12 text-center text-sm text-[var(--color-text-muted)]">
+          Loading dispute records...
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
+        <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 backdrop-blur-xl">
+          <table className="w-full text-left text-sm text-[var(--color-text-secondary)]">
+            <thead className="bg-[var(--color-bg-elevated)] text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] border-b border-[var(--color-border-subtle)]">
               <tr>
-                <th className="w-[13%] p-4">Case ID</th>
-                <th className="w-[34%] p-4">Title</th>
-                <th className="w-[12%] p-4">Category</th>
-                <th className="w-[12%] p-4">Status</th>
-                <th className="w-[12%] p-4">Priority</th>
-                <th className="w-[17%] p-4">Actions</th>
+                <th className="p-4">Case ID</th>
+                <th className="p-4">Dispute Title</th>
+                <th className="p-4">Category</th>
+                <th className="p-4">Status</th>
+                <th className="p-4">Priority</th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-[var(--color-border-subtle)]">
               {filteredComplaints.map((complaint) => (
-                <tr key={complaint._id} className="border-t border-[var(--color-border-subtle)]">
-                  <td className="p-4 font-medium">{complaint.caseId}</td>
-                  <td className="p-4">{complaint.title}</td>
-                  <td className="p-4 capitalize">{complaint.category}</td>
-                  <td className="p-4 capitalize">
-                    {complaint.status?.replace("_", " ")}
+                <tr key={complaint._id} className="transition hover:bg-[var(--color-bg-elevated)]">
+                  <td className="p-4 font-mono font-bold text-[var(--color-gold)]">
+                    {complaint.caseId}
+                  </td>
+                  <td className="p-4 font-medium text-[var(--color-text-primary)] max-w-xs truncate">
+                    {complaint.title}
+                  </td>
+                  <td className="p-4 capitalize text-xs">
+                    {complaint.category?.replace("_", " ")}
+                  </td>
+                  <td className="p-4 capitalize text-xs">
+                    <span className="rounded-full bg-[var(--color-bg-primary)] px-2.5 py-1 text-xs border border-[var(--color-border-subtle)] font-medium">
+                      {complaint.status?.replace("_", " ")}
+                    </span>
                   </td>
                   <td className="p-4">
                     <select
@@ -231,7 +269,7 @@ export default function AdminComplaintsPage() {
                           event.target.value
                         )
                       }
-                      className="h-9 w-28 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-xs font-medium capitalize text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="h-8 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-2.5 text-xs font-medium capitalize text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {Object.values(PRIORITY).map((item) => (
                         <option key={item} value={item}>
@@ -241,53 +279,51 @@ export default function AdminComplaintsPage() {
                     </select>
                   </td>
 
-                  <td className="p-4">
-                    <div className="flex flex-col gap-2">
+                  <td className="p-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
                       <Link
                         href={`/admin/complaints/${complaint.caseId}`}
-                        className="inline-flex h-8 w-full items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-xs font-medium text-[var(--color-text-primary)] transition hover:border-[var(--color-accent-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 text-xs font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-elevated)]"
                       >
-                        View
+                        Inspect
                       </Link>
 
-                      <div className="flex gap-2">
-                        {complaint.status === STATUS.PENDING && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateComplaintStatus(
-                                complaint.caseId,
-                                STATUS.UNDER_REVIEW
-                              )
-                            }
-                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg border border-[rgba(245,158,11,0.25)] bg-[rgba(245,158,11,0.08)] px-2 text-xs font-medium text-[var(--color-warning)] transition hover:bg-[rgba(245,158,11,0.14)]"
-                          >
-                            Review
-                          </button>
-                        )}
+                      {complaint.status === STATUS.PENDING && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateComplaintStatus(
+                              complaint.caseId,
+                              STATUS.UNDER_REVIEW
+                            )
+                          }
+                          className="inline-flex h-8 items-center justify-center rounded-lg border border-[rgba(245,158,11,0.3)] bg-[rgba(245,158,11,0.1)] px-3 text-xs font-semibold text-[var(--color-warning)] transition hover:bg-[rgba(245,158,11,0.2)]"
+                        >
+                          Review
+                        </button>
+                      )}
 
-                        {[STATUS.PENDING, STATUS.UNDER_REVIEW].includes(
-                          complaint.status
-                        ) && (
-                          <button
-                            type="button"
-                            onClick={() => setSelectedCaseId(complaint.caseId)}
-                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg border border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] px-2 text-xs font-medium text-[var(--color-accent-primary)] transition hover:bg-[rgba(124,58,237,0.20)]"
-                          >
-                            Jurors
-                          </button>
-                        )}
+                      {[STATUS.PENDING, STATUS.UNDER_REVIEW].includes(
+                        complaint.status
+                      ) && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedCaseId(complaint.caseId)}
+                          className="inline-flex h-8 items-center justify-center rounded-lg bg-[var(--color-accent-primary)] px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[var(--color-accent-hover)]"
+                        >
+                          Assign Jurors
+                        </button>
+                      )}
 
-                        {complaint.status === STATUS.VOTING && (
-                          <button
-                            type="button"
-                            onClick={() => finalizeComplaint(complaint.caseId)}
-                            className="inline-flex h-8 flex-1 items-center justify-center rounded-lg bg-[var(--color-gold)] px-2 text-xs font-medium text-[var(--color-bg-primary)] transition hover:opacity-90"
-                          >
-                            Finalize
-                          </button>
-                        )}
-                      </div>
+                      {complaint.status === STATUS.VOTING && (
+                        <button
+                          type="button"
+                          onClick={() => finalizeComplaint(complaint.caseId)}
+                          className="inline-flex h-8 items-center justify-center rounded-lg bg-[var(--color-gold)] px-3 text-xs font-bold text-black transition hover:opacity-90"
+                        >
+                          Finalize
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -296,8 +332,8 @@ export default function AdminComplaintsPage() {
           </table>
 
           {filteredComplaints.length === 0 && (
-            <div className="p-6 text-center text-sm text-[var(--color-text-muted)]">
-              No complaints found.
+            <div className="p-12 text-center text-sm text-[var(--color-text-muted)]">
+              No matching dispute records found.
             </div>
           )}
         </div>

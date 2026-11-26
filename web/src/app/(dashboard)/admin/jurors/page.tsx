@@ -3,8 +3,18 @@
 import { API_BASE_URL } from "@/config/api";
 
 import { useEffect, useState } from "react";
-import PageHeader from "@/components/layout/PageHeader";
 import Modal from "@/components/ui/Modal";
+import {
+  UserCheck,
+  ShieldCheck,
+  Award,
+  Clock,
+  Check,
+  X,
+  FileText,
+  AlertCircle,
+  Briefcase,
+} from "lucide-react";
 
 type JurorCase = {
   _id: string;
@@ -109,47 +119,84 @@ export default function AdminJurorsPage() {
   }, []);
 
   if (loading) {
-    return <p className="text-sm text-[var(--color-text-muted)]">Loading juror management...</p>;
+    return (
+      <div className="flex min-h-[400px] flex-col items-center justify-center space-y-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-accent-primary)] border-t-transparent" />
+        <p className="text-sm text-[var(--color-text-secondary)]">Loading juror management registry...</p>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Juror Management"
-        subtitle="Review applications and monitor verified jurors."
-      />
+      {/* Header Banner */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-6 backdrop-blur-xl">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-[var(--color-gold)] animate-pulse" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-gold)]">
+              Court Personnel
+            </span>
+          </div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Community Juror Administration
+          </h1>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Vetting incoming juror applications, inspect active juror workloads, and manage dispute review rights.
+          </p>
+        </div>
 
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-2 text-[var(--color-text-primary)]">
+        <div className="flex items-center gap-2">
+          <span className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3.5 py-2 font-mono text-xs text-[var(--color-gold)]">
+            {applications.length} Pending
+          </span>
+          <span className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3.5 py-2 font-mono text-xs text-[var(--color-success)]">
+            {jurors.length} Active Jurors
+          </span>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-1.5 backdrop-blur-xl">
         <button
           type="button"
           onClick={() => setActiveTab("pending")}
-          className={`rounded-xl px-4 py-2 text-sm ${
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition ${
             activeTab === "pending"
-              ? "bg-[var(--color-accent-primary)] text-white"
-              : "text-[var(--color-text-muted)]"
+              ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
           }`}
         >
-          Pending Applications
+          <Clock className="h-3.5 w-3.5" />
+          <span>Pending Applications ({applications.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("active")}
-          className={`rounded-xl px-4 py-2 text-sm ${
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition ${
             activeTab === "active"
-              ? "bg-[var(--color-accent-primary)] text-white"
-              : "text-[var(--color-text-muted)]"
+              ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
           }`}
         >
-          Active Jurors
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>Active Verified Jurors ({jurors.length})</span>
         </button>
       </div>
 
+      {/* Pending Applications Tab */}
       {activeTab === "pending" && (
         <div className="space-y-4">
           {applications.length === 0 && (
-            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6 text-sm text-[var(--color-text-muted)]">
-              No pending juror applications.
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-12 text-center backdrop-blur-xl">
+              <Check className="mx-auto h-10 w-10 text-[var(--color-success)] mb-3" />
+              <h3 className="font-display text-base font-bold text-[var(--color-text-primary)]">
+                All Applications Reviewed
+              </h3>
+              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
+                There are no pending juror applications awaiting administrator review.
+              </p>
             </div>
           )}
 
@@ -159,59 +206,75 @@ export default function AdminJurorsPage() {
             return (
               <div
                 key={application._id}
-                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]"
+                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-6 backdrop-blur-xl transition hover:border-[var(--color-accent-primary)]/40"
               >
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                  <div>
-                    <h3 className="font-semibold text-[var(--color-text-primary)]">
-                      {applicant?.name}
-                    </h3>
-                    <p className="text-sm text-[var(--color-text-muted)]">
-                      {applicant?.email}
-                    </p>
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="space-y-4 flex-1">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display text-lg font-bold text-[var(--color-text-primary)]">
+                          {applicant?.name || "Applicant"}
+                        </h3>
+                        <span className="rounded-full bg-[var(--color-bg-elevated)] px-2.5 py-0.5 text-xs text-[var(--color-text-muted)] font-mono">
+                          {applicant?.email}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                        Applied on {new Date(application.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
 
-                    <div className="mt-4">
-                      <p className="text-sm font-medium">Reason</p>
-                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] p-4 space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-gold)]">
+                        Statement of Purpose & Neutrality
+                      </p>
+                      <p className="text-xs leading-6 text-[var(--color-text-secondary)]">
                         {application.reason}
                       </p>
                     </div>
 
-                    <div className="mt-4">
-                      <p className="text-sm font-medium">Experience</p>
-                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-                        {application.experience || "No experience provided."}
-                      </p>
-                    </div>
+                    {application.experience && (
+                      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] p-4 space-y-1">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                          Relevant Experience / Background
+                        </p>
+                        <p className="text-xs leading-6 text-[var(--color-text-secondary)]">
+                          {application.experience}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="w-full max-w-xs space-y-3">
+                  {/* Review Action Box */}
+                  <div className="w-full lg:max-w-xs rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-4 space-y-3 shrink-0">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                      Admin Decision
+                    </p>
+
                     <textarea
                       value={note}
                       onChange={(e) => setNote(e.target.value)}
-                      placeholder="Optional review note"
-                      className="mc-input w-full"
+                      placeholder="Optional review note (sent to applicant)"
+                      className="mc-input w-full p-2.5 text-xs"
                       rows={3}
                     />
 
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        onClick={() =>
-                          reviewApplication(applicant._id, "approve")
-                        }
-                        className="flex-1 rounded-lg bg-[var(--color-success)] px-4 py-2 text-sm font-medium text-white"
+                        onClick={() => reviewApplication(applicant._id, "approve")}
+                        className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-[var(--color-success)] px-3 py-2 text-xs font-bold text-white transition hover:opacity-90"
                       >
+                        <Check className="h-3.5 w-3.5" />
                         Approve
                       </button>
 
                       <button
                         type="button"
-                        onClick={() =>
-                          reviewApplication(applicant._id, "reject")
-                        }
-                        className="flex-1 rounded-lg bg-[var(--color-danger)] px-4 py-2 text-sm font-medium text-white"
+                        onClick={() => reviewApplication(applicant._id, "reject")}
+                        className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-[var(--color-danger)] px-3 py-2 text-xs font-bold text-white transition hover:opacity-90"
                       >
+                        <X className="h-3.5 w-3.5" />
                         Reject
                       </button>
                     </div>
@@ -223,35 +286,51 @@ export default function AdminJurorsPage() {
         </div>
       )}
 
+      {/* Active Jurors Tab */}
       {activeTab === "active" && (
-        <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
+        <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 backdrop-blur-xl">
+          <table className="w-full text-left text-sm text-[var(--color-text-secondary)]">
+            <thead className="bg-[var(--color-bg-elevated)] text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] border-b border-[var(--color-border-subtle)]">
               <tr>
-                <th className="p-4">Name</th>
+                <th className="p-4">Juror Name</th>
                 <th className="p-4">Email</th>
-                <th className="p-4">Reputation</th>
-                <th className="p-4">Level</th>
-                <th className="p-4">Case Count</th>
-                <th className="p-4">Actions</th>
+                <th className="p-4">Reputation Score</th>
+                <th className="p-4">Tier Level</th>
+                <th className="p-4">Vote Accuracy</th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-[var(--color-border-subtle)]">
               {jurors.map((juror) => (
-                <tr key={juror._id} className="border-t border-[var(--color-border-subtle)]">
-                  <td className="p-4 font-medium">{juror.name}</td>
-                  <td className="p-4 text-[var(--color-text-secondary)]">{juror.email}</td>
-                  <td className="p-4">{juror.reputationScore ?? 100}</td>
-                  <td className="p-4 capitalize">{juror.jurorLevel}</td>
-                  <td className="p-4">{juror.activeCaseCount ?? "-"}</td>
-                  <td className="p-4">
+                <tr key={juror._id} className="transition hover:bg-[var(--color-bg-elevated)]">
+                  <td className="p-4 font-semibold text-[var(--color-text-primary)]">
+                    {juror.name}
+                  </td>
+                  <td className="p-4 font-mono text-xs text-[var(--color-text-muted)]">
+                    {juror.email}
+                  </td>
+                  <td className="p-4 font-mono font-bold text-[var(--color-gold)]">
+                    {juror.reputationScore ?? 100} pts
+                  </td>
+                  <td className="p-4 capitalize">
+                    <span className="rounded-full bg-[var(--color-accent-glow)] px-2.5 py-0.5 text-xs font-semibold text-[var(--color-accent-primary)]">
+                      {juror.jurorLevel ?? "Junior"}
+                    </span>
+                  </td>
+                  <td className="p-4 font-medium text-[var(--color-text-primary)]">
+                    {juror.totalVotes > 0
+                      ? `${Math.round((juror.correctVotes / juror.totalVotes) * 100)}% (${juror.correctVotes}/${juror.totalVotes})`
+                      : "New Juror"}
+                  </td>
+                  <td className="p-4 text-right">
                     <button
                       type="button"
                       onClick={() => openJurorCases(juror)}
-                      className="rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)]"
+                      className="inline-flex items-center gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-elevated)]"
                     >
-                      View Cases
+                      <Briefcase className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
+                      <span>Assigned Cases</span>
                     </button>
                   </td>
                 </tr>
@@ -260,66 +339,45 @@ export default function AdminJurorsPage() {
           </table>
 
           {jurors.length === 0 && (
-            <div className="p-6 text-center text-sm text-[var(--color-text-muted)]">
-              No active jurors found.
+            <div className="p-12 text-center text-sm text-[var(--color-text-muted)]">
+              No active jurors enrolled in the platform.
             </div>
           )}
         </div>
       )}
 
-      <Modal
-        isOpen={Boolean(selectedJuror)}
-        onClose={closeJurorCases}
-        title={selectedJuror ? `${selectedJuror.name}'s Cases` : "Juror Cases"}
-        className="max-w-3xl"
-      >
-        {casesLoading && (
-          <p className="text-sm text-[var(--color-text-muted)]">Loading assigned cases...</p>
-        )}
-
-        {casesError && (
-          <div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] p-4 text-sm text-[var(--color-danger)]">
-            {casesError}
-          </div>
-        )}
-
-        {!casesLoading && !casesError && jurorCases.length === 0 && (
-          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-5 text-sm text-[var(--color-text-muted)]">
-            No assigned cases found for this juror.
-          </div>
-        )}
-
-        {!casesLoading && jurorCases.length > 0 && (
-          <div className="overflow-hidden rounded-lg border border-[var(--color-border)]">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
-                <tr>
-                  <th className="p-3">Case</th>
-                  <th className="p-3">Title</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Decision</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jurorCases.map((item) => (
-                  <tr key={item._id} className="border-t border-[var(--color-border-subtle)]">
-                    <td className="p-3 font-medium text-[var(--color-text-primary)]">
-                      {item.caseId}
-                    </td>
-                    <td className="p-3 text-[var(--color-text-secondary)]">{item.title}</td>
-                    <td className="p-3 capitalize text-[var(--color-text-secondary)]">
-                      {item.status?.replace("_", " ")}
-                    </td>
-                    <td className="p-3 capitalize text-[var(--color-text-secondary)]">
-                      {item.decision ?? "pending"}
-                    </td>
-                  </tr>
+      {/* Juror Cases Modal */}
+      {selectedJuror && (
+        <Modal
+          isOpen={Boolean(selectedJuror)}
+          onClose={closeJurorCases}
+          title={`Assigned Cases: ${selectedJuror.name}`}
+        >
+          <div className="space-y-4">
+            {casesLoading ? (
+              <p className="text-xs text-[var(--color-text-muted)]">Loading juror cases...</p>
+            ) : casesError ? (
+              <p className="text-xs text-[var(--color-danger)]">{casesError}</p>
+            ) : jurorCases.length === 0 ? (
+              <p className="text-xs text-[var(--color-text-muted)]">No cases currently assigned to this juror.</p>
+            ) : (
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {jurorCases.map((c) => (
+                  <div key={c._id} className="rounded-lg border border-[var(--color-border)] p-3 text-xs flex justify-between items-center">
+                    <div>
+                      <p className="font-mono font-bold text-[var(--color-gold)]">{c.caseId}</p>
+                      <p className="text-[var(--color-text-primary)] font-medium mt-0.5">{c.title}</p>
+                    </div>
+                    <span className="rounded-full bg-[var(--color-bg-elevated)] px-2.5 py-0.5 capitalize">
+                      {c.status}
+                    </span>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            )}
           </div>
-        )}
-      </Modal>
+        </Modal>
+      )}
     </div>
   );
 }

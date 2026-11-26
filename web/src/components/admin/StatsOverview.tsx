@@ -1,5 +1,8 @@
 "use client";
 
+import StatCard from "@/components/ui/StatCard";
+import { FolderKanban, Clock, Vote, CheckCircle2, Users } from "lucide-react";
+
 type StatsOverviewProps = {
   totalCases: number;
   pendingReview: number;
@@ -15,27 +18,47 @@ export default function StatsOverview({
   decided,
   totalUsers,
 }: StatsOverviewProps) {
-  const stats = [
-    { label: "Total Cases", value: totalCases },
-    { label: "Pending Review", value: pendingReview },
-    { label: "Active Voting", value: activeVoting },
-    { label: "Decided", value: decided },
-    { label: "Total Users", value: totalUsers },
-  ];
-
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-text-primary)]"
-        >
-          <p className="text-sm text-[var(--color-text-secondary)]">{stat.label}</p>
-          <p className="mt-2 font-display text-3xl font-semibold text-[var(--color-text-primary)]">
-            {stat.value}
-          </p>
-        </div>
-      ))}
+      <StatCard
+        label="Total Cases"
+        value={totalCases}
+        icon={FolderKanban}
+        iconColor="accent"
+        description="All filed disputes"
+      />
+
+      <StatCard
+        label="Pending Review"
+        value={pendingReview}
+        icon={Clock}
+        iconColor="info"
+        description="Awaiting juror allocation"
+      />
+
+      <StatCard
+        label="Active Voting"
+        value={activeVoting}
+        icon={Vote}
+        iconColor="gold"
+        description="In jury deliberation"
+      />
+
+      <StatCard
+        label="Decided Cases"
+        value={decided}
+        icon={CheckCircle2}
+        iconColor="success"
+        description="Verdicts locked on-chain"
+      />
+
+      <StatCard
+        label="Registered Users"
+        value={totalUsers}
+        icon={Users}
+        iconColor="indigo"
+        description="Complainants & Jurors"
+      />
     </div>
   );
 }
