@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { ROLES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
+import { useDisputeNotifications } from "@/context/NotificationContext";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import {
   Menu,
@@ -17,6 +18,9 @@ import {
   Award,
   Settings,
   ExternalLink,
+  Bell,
+  ShieldAlert,
+  CheckCircle2,
 } from "lucide-react";
 
 type RoleValue = (typeof ROLES)[keyof typeof ROLES];
@@ -33,29 +37,35 @@ interface NavbarProps {
 
 export default function Navbar({ onToggleSidebar }: NavbarProps) {
   const { user, logout } = useAuth();
+  const { notifications, unreadCount } = useDisputeNotifications();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   const roleLabel = user?.role
     ? ROLE_LABELS[user.role as RoleValue] ?? user.role.replace("_", " ")
     : "Guest";
 
-  // Close dropdown on click outside
+  // Close dropdowns on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setIsNotifOpen(false);
+      }
     }
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isNotifOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isNotifOpen]);
 
   return (
     <>
@@ -111,6 +121,117 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                 <Scale className="h-3.5 w-3.5 text-[var(--color-gold)]" />
                 <span>Verify Case</span>
               </Link>
+
+              {/* Notification Bell Button & Dropdown */}
+              <div className="relative" ref={notifRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsNotifOpen((prev) => !prev)}
+                  className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
+                  aria-label="View notifications"
+                >
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-danger)] px-1 text-[9px] font-bold text-white shadow-md ring-2 ring-[var(--color-bg-secondary)] animate-pulse">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Floating Notification Panel */}
+                {isNotifOpen && (
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 origin-top-right rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-3 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150 z-50">
+                    <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2.5 px-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-display text-sm font-bold text-[var(--color-text-primary)]">
+                          Dispute Notices
+                        </span>
+                        {unreadCount > 0 && (
+                          <span className="rounded-full bg-[rgba(239,68,68,0.2)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
+                            {unreadCount} Action Required
+                          </span>
+                        )}
+                      </div>
+                      <Link
+                        href="/opposite-party"
+                        onClick={() => setIsNotifOpen(false)}
+                        className="text-[11px] font-semibold text-[var(--color-accent-primary)] hover:underline"
+                      >
+                        All Cases
+                      </Link>
+                    </div>
+
+                    <div className="max-h-72 overflow-y-auto py-2 space-y-2">
+                      {notifications.length === 0 ? (
+                        <div className="py-6 text-center text-xs text-[var(--color-text-muted)] space-y-1">
+                          <CheckCircle2 className="mx-auto h-6 w-6 text-[var(--color-success)] opacity-70" />
+                          <p className="font-semibold text-[var(--color-text-primary)]">No Active Disputes</p>
+                          <p>There are no complaints filed against your account.</p>
+                        </div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <div
+                            key={notif.id}
+                            className={`rounded-xl border p-3 transition ${
+                              notif.needsResponse
+                                ? "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.12)]"
+                                : "border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] hover:bg-[var(--color-bg-elevated)]"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-mono text-xs font-bold text-[var(--color-gold)]">
+                                {notif.caseId}
+                              </span>
+                              {notif.needsResponse ? (
+                                <span className="flex items-center gap-1 rounded-full bg-[rgba(239,68,68,0.25)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
+                                  <ShieldAlert className="h-3 w-3" />
+                                  Response Needed
+                                </span>
+                              ) : (
+                                <span className="rounded-full bg-[rgba(92,90,122,0.2)] px-2 py-0.5 text-[10px] capitalize text-[var(--color-text-secondary)]">
+                                  {notif.status.replace("_", " ")}
+                                </span>
+                              )}
+                            </div>
+
+                            <p className="mt-1 line-clamp-1 text-xs font-semibold text-[var(--color-text-primary)]">
+                              {notif.title}
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">
+                              {notif.message}
+                            </p>
+
+                            <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[var(--color-border-subtle)]/50">
+                              <span className="text-[10px] text-[var(--color-text-muted)]">
+                                {new Date(notif.createdAt).toLocaleDateString()}
+                              </span>
+                              <Link
+                                href={notif.actionUrl}
+                                onClick={() => setIsNotifOpen(false)}
+                                className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--color-accent-primary)] hover:underline"
+                              >
+                                <span>{notif.needsResponse ? "Submit Defense" : "View Details"}</span>
+                                <ArrowRight className="h-3 w-3" />
+                              </Link>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="border-t border-[var(--color-border-subtle)] pt-2 text-center">
+                      <Link
+                        href="/opposite-party"
+                        onClick={() => setIsNotifOpen(false)}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                      >
+                        <ShieldAlert className="h-3.5 w-3.5 text-[var(--color-gold)]" />
+                        <span>Manage Cases Filed Against You</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Elegant Vertical Divider */}
               <div className="hidden h-6 w-px bg-[var(--color-border)] sm:block" />

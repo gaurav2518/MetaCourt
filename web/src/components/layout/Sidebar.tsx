@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState, type ElementType } from "react";
 import { ROLES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
+import { useDisputeNotifications } from "@/context/NotificationContext";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import {
   X,
@@ -64,6 +65,7 @@ function isRouteActive(itemHref: string, currentPath: string): boolean {
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { unreadCount } = useDisputeNotifications();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const normalizedRole = (user?.role === "complainant" ? ROLES.USER : user?.role) as RoleValue | undefined;
 
@@ -181,9 +183,16 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   />
                   <span>{item.label}</span>
                 </div>
-                {active && (
-                  <ChevronRight className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
-                )}
+                <div className="flex items-center gap-1.5">
+                  {item.href === "/opposite-party" && unreadCount > 0 && (
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--color-danger)] px-1.5 text-[10px] font-bold text-white shadow-sm animate-pulse">
+                      {unreadCount}
+                    </span>
+                  )}
+                  {active && (
+                    <ChevronRight className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
+                  )}
+                </div>
               </Link>
             );
           })}

@@ -64,6 +64,11 @@ export async function POST(req: Request) {
 
     const caseId = generateCaseId(totalComplaints + 1);
 
+    // Auto-link registered user if an account exists for oppositeParty email
+    const emailRegex = new RegExp(`^${escapeRegex(validatedData.oppositeParty.email)}$`, "i");
+    const existingOppositeUser = await User.findOne({ email: emailRegex }).select("_id").lean();
+    const oppositePartyUserId = validatedData.oppositeParty.userId || existingOppositeUser?._id || null;
+
     const complaint = await Complaint.create({
       caseId,
       title: validatedData.title,
@@ -78,7 +83,7 @@ export async function POST(req: Request) {
         email: validatedData.oppositeParty.email,
         organization: validatedData.oppositeParty.organization || "",
         description: validatedData.oppositeParty.description || "",
-        userId: validatedData.oppositeParty.userId || null,
+        userId: oppositePartyUserId,
       },
 
       evidence: [],
