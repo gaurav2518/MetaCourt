@@ -130,7 +130,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
               {user?.role === "user" ? "Complainant / Respondent" : user?.role}
             </span>
           </div>
-          {user?.reputationScore !== undefined && (
+          {user?.role === "juror" && user?.reputationScore !== undefined && (
             <div className="flex items-center justify-between">
               <span className="text-[var(--color-text-muted)]">Juror Reputation Score:</span>
               <span className="font-mono font-bold text-[var(--color-gold)]">

@@ -167,7 +167,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                         </span>
                       </div>
 
-                      {user.reputationScore !== undefined && (
+                      {user.role === "juror" && user.reputationScore !== undefined && (
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="text-[var(--color-text-muted)]">Reputation:</span>
                           <span className="font-mono font-bold text-[var(--color-gold)]">
