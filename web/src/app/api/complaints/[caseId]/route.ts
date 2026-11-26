@@ -6,6 +6,8 @@ import { requireRole } from "@/middleware/roleGuard";
 import { requireAuth } from "@/middleware/auth";
 
 import Complaint from "@/models/Complaint";
+import Evidence from "@/models/Evidence";
+import User from "@/models/User";
 
 import { ROLES, STATUS, PRIORITY } from "@/constants";
 
@@ -17,6 +19,32 @@ export async function GET(
     await connectDB();
 
     const { caseId } = await params;
+    const { searchParams } = new URL(req.url);
+    const isPublic = searchParams.get("public") === "true";
+
+    if (isPublic) {
+      const publicComplaint = await Complaint.findOne({ caseId })
+        .select(
+          "caseId title category status decision complaintHash blockchainTxHash decidedAt createdAt"
+        )
+        .lean();
+
+      if (!publicComplaint) {
+        return NextResponse.json(
+          { message: "Complaint not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          complaint: publicComplaint,
+          relationship: "public",
+        },
+        { status: 200 }
+      );
+    }
+
     let user: any = null;
 
     try {
@@ -119,6 +147,7 @@ export async function GET(
       { status: 200 }
     );
   } catch (error) {
+    console.error("Failed to fetch complaint [caseId]:", error);
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return NextResponse.json(
         { message: "Unauthorized" },
@@ -127,7 +156,7 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { message: "Failed to fetch complaint" },
+      { message: "Failed to fetch complaint", error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

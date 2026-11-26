@@ -38,7 +38,7 @@ export default function PublicCasePage() {
   useEffect(() => {
     async function loadCase() {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`);
+        const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}?public=true`);
         const data = await res.json();
 
         if (res.ok) {
