@@ -4,31 +4,58 @@ import { Contract, JsonRpcProvider, Wallet } from "ethers";
 import { CONTRACT } from "@/constants/contract";
 
 let contractInstance: Contract | null = null;
+let readOnlyContractInstance: Contract | null = null;
 
-export function getContract() {
+const DEFAULT_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com";
+const DEFAULT_CONTRACT_ADDRESS = "0x2EEF0E99D24bD1529508607580B7ED1954C771cb";
+
+export function getRpcUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_RPC_URL ||
+    process.env.SEPOLIA_RPC_URL ||
+    DEFAULT_RPC_URL
+  );
+}
+
+export function getContractAddress(): string {
+  return (
+    CONTRACT.CONTRACT_ADDRESS ||
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+    DEFAULT_CONTRACT_ADDRESS
+  );
+}
+
+// Read-only contract instance for verification / view calls (does NOT require PRIVATE_KEY)
+export function getReadOnlyContract(): Contract {
+  if (readOnlyContractInstance) {
+    return readOnlyContractInstance;
+  }
+
+  const rpcUrl = getRpcUrl();
+  const address = getContractAddress();
+  const provider = new JsonRpcProvider(rpcUrl);
+
+  readOnlyContractInstance = new Contract(address, CONTRACT.CONTRACT_ABI, provider);
+  return readOnlyContractInstance;
+}
+
+// Full contract instance with signer (for write transactions: fileCase, castVote, finalizeDecision)
+export function getContract(): Contract {
   if (contractInstance) {
     return contractInstance;
   }
 
-  const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+  const rpcUrl = getRpcUrl();
   const privateKey = process.env.PRIVATE_KEY;
-
-  if (!rpcUrl) {
-    throw new Error("NEXT_PUBLIC_RPC_URL is missing");
-  }
+  const address = getContractAddress();
 
   if (!privateKey) {
-    throw new Error("PRIVATE_KEY is missing");
-  }
-
-  if (!CONTRACT.CONTRACT_ADDRESS) {
-    throw new Error("NEXT_PUBLIC_CONTRACT_ADDRESS is missing");
+    throw new Error("PRIVATE_KEY is missing in environment variables");
   }
 
   const provider = new JsonRpcProvider(rpcUrl);
   const wallet = new Wallet(privateKey, provider);
 
-  contractInstance = new Contract(CONTRACT.CONTRACT_ADDRESS, CONTRACT.CONTRACT_ABI, wallet);
-
+  contractInstance = new Contract(address, CONTRACT.CONTRACT_ABI, wallet);
   return contractInstance;
 }
