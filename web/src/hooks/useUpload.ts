@@ -60,6 +60,7 @@ export function useUpload() {
 
 			const response = await fetch(`${API_BASE_URL}/api/upload`, {
 				method: "POST",
+				credentials: "include",
 				body: formData,
 			});
 

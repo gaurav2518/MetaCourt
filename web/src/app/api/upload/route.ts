@@ -16,7 +16,7 @@ const ALLOWED_TYPES = [
 
 export async function POST(req: Request) {
     try{
-        await requireAuth();
+        await requireAuth(req);
 
         const formData = await req.formData();
 

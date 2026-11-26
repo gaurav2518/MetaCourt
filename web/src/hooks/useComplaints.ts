@@ -80,7 +80,9 @@ export function useComplaints() {
         query.set("as", params.as);
       }
 
-      const res = await fetch(`${API_BASE_URL}/api/complaints${query.toString() ? `?${query.toString()}` : ""}`
+      const res = await fetch(
+        `${API_BASE_URL}/api/complaints${query.toString() ? `?${query.toString()}` : ""}`,
+        { credentials: "include" }
       );
 
       const data = (await res.json()) as ComplaintListResponse;
@@ -108,8 +110,9 @@ export function useComplaints() {
       setLoading(true);
       setError(null);
 
-      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`
-      );
+      const res = await fetch(`${API_BASE_URL}/api/complaints/${caseId}`, {
+        credentials: "include",
+      });
 
       const data = (await res.json()) as ComplaintDetailResponse;
 
@@ -141,6 +144,7 @@ export function useComplaints() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 

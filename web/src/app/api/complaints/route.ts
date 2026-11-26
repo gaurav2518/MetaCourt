@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const user = await requireAuth();
+    const user = await requireAuth(req);
 
     const body = await req.json();
 
@@ -178,7 +178,7 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
-    const user = await requireAuth();
+    const user = await requireAuth(req);
     const userId = user.userId;
 
     const { searchParams } = new URL(req.url);
