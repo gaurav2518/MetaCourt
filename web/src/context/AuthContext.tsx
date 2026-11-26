@@ -5,7 +5,7 @@ import { API_BASE_URL } from "@/config/api";
 import React, { createContext, useState, useEffect } from "react";
 import { JUROR_LEVELS } from "@/constants/jurorLevels";
 
-type AuthUser = {
+export type AuthUser = {
   id: string;
   _id?: string;
   name: string;
@@ -26,6 +26,7 @@ type AuthContextValue = {
   login: (creds: LoginCredentials) => Promise<AuthUser>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  updateProfile: (data: { name: string }) => Promise<AuthUser>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -81,8 +82,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const updateProfile = async (data: { name: string }) => {
+    const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(body?.message || "Failed to update profile");
+    }
+
+    setUser(body.user);
+    return body.user as AuthUser;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
