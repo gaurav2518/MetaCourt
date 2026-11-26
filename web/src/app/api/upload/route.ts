@@ -47,15 +47,24 @@ export async function POST(req: Request) {
 
         const buffer = Buffer.from(bytes);
 
+        const fileKind = file.type === "application/pdf"
+            ? "pdf"
+            : file.type.startsWith("image/")
+            ? "image"
+            : "document";
+
         const uploadedFile = await uploadFile(buffer, {
             folder: 'metacourt/evidence',
+            fileName: file.name,
+            fileType: fileKind,
         });
 
         return NextResponse.json(
-            {message: 'File uploaded successfully', file: uploadedFile },
+            { message: 'File uploaded successfully', file: uploadedFile },
             { status: 201 }
         );
     }catch(error){
+        console.error("Upload error:", error);
         return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
     }
 }

@@ -8,7 +8,9 @@ cloudinary.config({
 
 type UploadOptions = {
     folder?: string;
-}
+    fileName?: string;
+    fileType?: string;
+};
 
 export async function uploadFile(
     buffer: Buffer,
@@ -30,13 +32,24 @@ export async function uploadFile(
                 if(error || !result){
                     return reject(error || new Error('Upload failed'));
                 }
-            resolve({
-                url: result.secure_url,
-                public_id: result.public_id,
-                fileType: result.resource_type,
-                fileName: result.original_filename,
-                fileSize: result.bytes,
-            });
+
+                const isPdf =
+                    result.format === 'pdf' ||
+                    options.fileType === 'pdf' ||
+                    (options.fileName && options.fileName.toLowerCase().endsWith('.pdf')) ||
+                    (result.secure_url && result.secure_url.toLowerCase().endsWith('.pdf'));
+
+                const resolvedType = isPdf
+                    ? 'pdf'
+                    : (options.fileType || result.resource_type || 'document');
+
+                resolve({
+                    url: result.secure_url,
+                    public_id: result.public_id,
+                    fileType: resolvedType,
+                    fileName: options.fileName || result.original_filename || 'uploaded-file',
+                    fileSize: result.bytes,
+                });
             }
         );
         uploadStream.end(buffer);

@@ -100,17 +100,24 @@ export async function POST(req: Request) {
     });
 
     const evidenceDocs = await Evidence.insertMany(
-      validatedData.evidence.map((file) => ({
-        complaintId: complaint._id,
-        uploadedBy: user.userId,
-        uploadedByRole: "complainant",
-        fileUrl: file.url,
-        publicId: file.publicId,
-        fileType: file.fileType || "document",
-        fileName: file.fileName || "uploaded-file",
-        fileSize: file.fileSize || 0,
-        ipfsHash: null,
-      }))
+      validatedData.evidence.map((file) => {
+        const isPdf =
+          file.fileType === "pdf" ||
+          (file.url && file.url.toLowerCase().endsWith(".pdf")) ||
+          (file.fileName && file.fileName.toLowerCase().endsWith(".pdf"));
+
+        return {
+          complaintId: complaint._id,
+          uploadedBy: user.userId,
+          uploadedByRole: "complainant",
+          fileUrl: file.url,
+          publicId: file.publicId,
+          fileType: isPdf ? "pdf" : file.fileType || "document",
+          fileName: file.fileName && file.fileName !== "file" ? file.fileName : (isPdf ? "Evidence-Document.pdf" : "uploaded-file"),
+          fileSize: file.fileSize || 0,
+          ipfsHash: null,
+        };
+      })
     );
 
     complaint.evidence = evidenceDocs.map((evidence) => evidence._id);
