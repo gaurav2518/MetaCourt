@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldPath, useForm } from "react-hook-form";
-import { Check, ChevronLeft, ChevronRight, FileText, Loader2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, FileText, Loader2, Sparkles } from "lucide-react";
 
 import { CATEGORIES } from "@/constants";
 import { useComplaints } from "@/hooks/useComplaints";
@@ -25,8 +25,8 @@ const evidenceFileSchema = z.object({
 });
 
 const stepOneSchema = z.object({
-	title: z.string().min(3, "Title is required").max(200, "Title must be at most 200 characters"),
-	description: z.string().min(10, "Description is required").max(5000, "Description must be at most 5000 characters"),
+	title: z.string().min(3, "Title is required (minimum 3 characters)").max(200, "Title must be at most 200 characters"),
+	description: z.string().min(10, "Description is required (minimum 10 characters)").max(5000, "Description must be at most 5000 characters"),
 	category: z.enum(CATEGORIES),
 });
 
@@ -126,7 +126,13 @@ export default function ComplaintForm() {
 		mode: "onTouched",
 	});
 
-	const stepProgress = useMemo(() => ((currentStep + 1) / STEPS.length) * 100, [currentStep]);
+	// Accurate step progress:
+	// When starting Step 1, 0 steps are completed (0%)
+	// When advancing to Step 2, 1 step is completed (33%)
+	// When advancing to Step 3, 2 steps are completed (66%)
+	const stepProgress = useMemo(() => {
+		return Math.round((currentStep / STEPS.length) * 100);
+	}, [currentStep]);
 
 	function syncEvidence(files: UploadedEvidenceFile[]) {
 		setUploadedEvidence(files);
@@ -174,216 +180,222 @@ export default function ComplaintForm() {
 	const isBusy = loading || isSubmitting;
 
 	return (
-		<section className="mx-auto w-full max-w-4xl rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4 sm:p-6 lg:p-8">
-			<div className="space-y-6 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-secondary)] p-5 sm:p-6 lg:p-8">
-				<div className="space-y-3">
-					<div className="flex items-center justify-between gap-4">
-						<div>
-							<p className="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-primary)]">File a complaint</p>
-							<h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-3xl">
-								Start a new case
-							</h1>
-						</div>
-
-						<div className="hidden items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--color-text-secondary)] sm:flex">
-							<FileText className="h-4 w-4 text-[var(--color-accent-primary)]" />
-							Step {currentStep + 1} of {STEPS.length}
-						</div>
+		<div className="w-full space-y-6">
+			{/* Top Step Counter & Header */}
+			<div className="space-y-4">
+				<div className="flex items-center justify-between gap-4">
+					<div>
+						<p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[var(--color-gold)]">
+							Dispute Filing Wizard
+						</p>
+						<h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+							Start a New Case
+						</h2>
 					</div>
 
-					<div className="space-y-3">
-						<div className="flex items-center justify-between gap-3 text-xs font-medium text-[var(--color-text-muted)]">
-							<span>{STEPS[currentStep].title}</span>
-							<span>{Math.round(stepProgress)}% complete</span>
-						</div>
-							<div className="h-2 overflow-hidden rounded-full bg-[var(--color-bg-primary)]">
-							<div
-								className={`h-full rounded-full bg-[var(--color-accent-primary)] transition-all ${
-									currentStep === 0 ? "w-1/3" : currentStep === 1 ? "w-2/3" : "w-full"
-								}`}
-							/>
-						</div>
-					</div>
-
-					<div className="grid gap-3 sm:grid-cols-3">
-						{STEPS.map((step, index) => {
-							const active = index === currentStep;
-							const completed = index < currentStep;
-
-							return (
-								<div
-									key={step.id}
-									className={`rounded-lg border px-4 py-3 transition ${
-										active
-											? "border-[var(--color-accent-primary)] bg-[var(--color-accent-glow)] text-[var(--color-text-primary)]"
-											: completed
-											? "border-[rgba(16,185,129,0.30)] bg-[rgba(16,185,129,0.10)] text-[var(--color-success)]"
-											: "border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]"
-									}`}
-								>
-									<div className="flex items-center gap-3">
-										<div
-											className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
-												active
-													? "bg-[var(--color-accent-primary)] text-white"
-													: completed
-													? "bg-[var(--color-success)] text-white"
-													: "bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)]"
-											}`}
-										>
-											{completed ? <Check className="h-4 w-4" /> : step.id}
-										</div>
-
-										<div>
-											<p className="text-sm font-medium">{step.title}</p>
-											<p className="text-xs opacity-80">{step.description}</p>
-										</div>
-									</div>
-								</div>
-							);
-						})}
+					<div className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3.5 py-1.5 text-xs font-semibold text-[var(--color-text-secondary)]">
+						<FileText className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
+						<span>Step {currentStep + 1} of {STEPS.length}</span>
 					</div>
 				</div>
 
-				<form onSubmit={(event) => event.preventDefault()} className="space-y-6">
-					{currentStep === 0 && (
-						<div className="grid gap-5">
+				{/* Progress Indicator */}
+				<div className="space-y-2">
+					<div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-medium">
+						<span className="font-semibold text-[var(--color-text-secondary)]">{STEPS[currentStep].title}</span>
+						<span className="font-mono">{stepProgress === 0 ? "0% completed" : `${stepProgress}% completed`}</span>
+					</div>
+					<div className="h-2 overflow-hidden rounded-full bg-[var(--color-bg-primary)]">
+						<div
+							className="h-full rounded-full bg-[var(--color-accent-primary)] transition-all duration-300"
+							style={{ width: `${stepProgress}%` }}
+						/>
+					</div>
+				</div>
+
+				{/* Step Cards Grid */}
+				<div className="grid gap-3 sm:grid-cols-3">
+					{STEPS.map((step, index) => {
+						const active = index === currentStep;
+						const completed = index < currentStep;
+
+						return (
+							<div
+								key={step.id}
+								className={`rounded-xl border px-4 py-3 transition duration-150 ${
+									active
+										? "border-[var(--color-accent-primary)]/50 bg-[var(--color-accent-glow)] text-[var(--color-text-primary)] shadow-sm"
+										: completed
+										? "border-[rgba(16,185,129,0.30)] bg-[rgba(16,185,129,0.08)] text-[var(--color-success)]"
+										: "border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)]/60 text-[var(--color-text-muted)]"
+								}`}
+							>
+								<div className="flex items-center gap-3">
+									<div
+										className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
+											active
+												? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+												: completed
+												? "bg-[var(--color-success)] text-white"
+												: "bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]"
+										}`}
+									>
+										{completed ? <Check className="h-4 w-4" /> : step.id}
+									</div>
+
+									<div className="min-w-0">
+										<p className="text-xs font-bold truncate">{step.title}</p>
+										<p className="text-[11px] opacity-75 truncate">{step.description}</p>
+									</div>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+
+			{/* Form Inputs by Step */}
+			<form onSubmit={(event) => event.preventDefault()} className="space-y-6 pt-2">
+				{currentStep === 0 && (
+					<div className="grid gap-5">
+						<Input
+							id="title"
+							label="Case Title"
+							placeholder="Briefly describe the dispute (e.g. Unauthorized Account Debit)"
+							error={errors.title?.message}
+							{...register("title")}
+						/>
+
+						<Textarea
+							id="description"
+							label="Detailed Description of Facts"
+							placeholder="Explain what happened in detail. Include dates, transaction amounts, agreed terms, and attempts to resolve."
+							helperText="Minimum 10 characters. Include clear facts to help community jurors review your claim."
+							error={errors.description?.message}
+							rows={6}
+							{...register("description")}
+						/>
+
+						<Select
+							id="category"
+							label="Dispute Category"
+							helperText="Choose the category that best matches your dispute claim."
+							error={errors.category?.message}
+							options={CATEGORIES.map((category) => ({
+								value: category,
+								label: formatCategoryLabel(category),
+							}))}
+							{...register("category")}
+						/>
+					</div>
+				)}
+
+				{currentStep === 1 && (
+					<div className="space-y-5">
+						<div className="rounded-xl border border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-glow)] px-4 py-3 text-xs leading-5 text-[var(--color-text-secondary)]">
+							<span className="font-semibold text-[var(--color-accent-primary)]">Notice:</span> The respondent will receive a formal notification to inspect these facts and submit their defense statement and counter-evidence.
+						</div>
+
+						<div className="grid gap-5 md:grid-cols-2">
 							<Input
-								id="title"
-								label="Title"
-								placeholder="Briefly describe the dispute"
-								error={errors.title?.message}
-								{...register("title")}
+								id="oppositeParty.name"
+								label="Respondent / Opposite Party Name"
+								placeholder="Full name or company name"
+								error={errors.oppositeParty?.name?.message}
+								{...register("oppositeParty.name")}
+							/>
+
+							<Input
+								id="oppositeParty.email"
+								label="Respondent Email Address"
+								type="email"
+								placeholder="respondent@example.com"
+								error={errors.oppositeParty?.email?.message}
+								{...register("oppositeParty.email")}
+							/>
+
+							<Input
+								id="oppositeParty.organization"
+								label="Organization / Company (Optional)"
+								placeholder="Company, platform, or service provider"
+								helperText="Optional"
+								error={errors.oppositeParty?.organization?.message}
+								{...register("oppositeParty.organization")}
 							/>
 
 							<Textarea
-								id="description"
-								label="Description"
-								placeholder="Explain what happened in detail"
-								helperText="Include dates, locations, and the key facts that support your complaint."
-								error={errors.description?.message}
-								{...register("description")}
+								id="oppositeParty.description"
+								label="Additional Identification Notes (Optional)"
+								placeholder="Any extra details to identify this party (account ID, invoice number, etc.)"
+								helperText="Optional"
+								error={errors.oppositeParty?.description?.message}
+								className="md:col-span-2"
+								rows={3}
+								{...register("oppositeParty.description")}
 							/>
-
-							<Select
-								id="category"
-								label="Category"
-								helperText="Choose the closest fit for this complaint."
-								error={errors.category?.message}
-								options={CATEGORIES.map((category) => ({
-									value: category,
-									label: formatCategoryLabel(category),
-								}))}
-								{...register("category")}
-							/>
-						</div>
-					)}
-
-					{currentStep === 1 && (
-						<div className="space-y-5">
-							<div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-glow)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]">
-								This person will be notified and can respond.
-							</div>
-
-							<div className="grid gap-5 md:grid-cols-2">
-								<Input
-									id="oppositeParty.name"
-									label="Name"
-									placeholder="Full name or organization contact"
-									error={errors.oppositeParty?.name?.message}
-									{...register("oppositeParty.name")}
-								/>
-
-								<Input
-									id="oppositeParty.email"
-									label="Email"
-									type="email"
-									placeholder="contact@example.com"
-									error={errors.oppositeParty?.email?.message}
-									{...register("oppositeParty.email")}
-								/>
-
-								<Input
-									id="oppositeParty.organization"
-									label="Organization"
-									placeholder="Company, institution, or department"
-									helperText="Optional"
-									error={errors.oppositeParty?.organization?.message}
-									{...register("oppositeParty.organization")}
-								/>
-
-								<Textarea
-									id="oppositeParty.description"
-									label="Additional notes"
-									placeholder="Anything useful to identify or contact this party"
-									helperText="Optional"
-									error={errors.oppositeParty?.description?.message}
-									className="md:col-span-2"
-									{...register("oppositeParty.description")}
-								/>
-							</div>
-						</div>
-					)}
-
-					{currentStep === 2 && (
-						<div className="space-y-5">
-							<div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]">
-								Optional but recommended. Upload documents, screenshots, or PDFs that support your complaint.
-							</div>
-
-							<EvidenceUpload
-								onChange={syncEvidence}
-								initialFiles={uploadedEvidence}
-								label="Evidence files"
-								helperText="Upload up to 10 files. Accepted: images, PDFs, and documents."
-							/>
-
-							{errors.evidence && (
-								<p className="text-sm text-[var(--color-danger)]">{errors.evidence.message}</p>
-							)}
-						</div>
-					)}
-
-					{(complaintError || Object.keys(errors).length > 0) && currentStep === 2 && (
-						<div className="rounded-lg border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.12)] px-4 py-3 text-sm text-[var(--color-danger)]">
-							{complaintError || "Please review the highlighted fields before submitting."}
-						</div>
-					)}
-
-					<div className="flex flex-col gap-3 border-t border-[var(--color-border)] pt-5 sm:flex-row sm:items-center sm:justify-between">
-						<div className="text-xs leading-5 text-[var(--color-text-muted)]">
-							{currentStep === 2
-								? "Review the uploaded evidence and submit the complaint to create a new case."
-								: "Use Back and Next to move through the complaint details."}
-						</div>
-
-						<div className="flex flex-col gap-3 sm:flex-row">
-							{currentStep > 0 ? (
-								<Button type="button" variant="secondary" onClick={goBack} disabled={isBusy}>
-									<ChevronLeft className="mr-2 h-4 w-4" />
-									Back
-								</Button>
-							) : null}
-
-							{currentStep < 2 ? (
-								<Button type="button" onClick={goNext} disabled={isBusy}>
-									Next
-									<ChevronRight className="ml-2 h-4 w-4" />
-								</Button>
-							) : (
-								<Button
-									type="button"
-									onClick={() => void submitComplaint()}
-									isLoading={isBusy}
-									disabled={isBusy}
-								>
-									Submit complaint
-								</Button>
-							)}
 						</div>
 					</div>
-				</form>
-			</div>
-		</section>
+				)}
+
+				{currentStep === 2 && (
+					<div className="space-y-5">
+						<div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] px-4 py-3 text-xs leading-5 text-[var(--color-text-secondary)]">
+							Upload receipts, contracts, communication logs, or PDFs. Files are hashed to establish proof on Ethereum Sepolia.
+						</div>
+
+						<EvidenceUpload
+							onChange={syncEvidence}
+							initialFiles={uploadedEvidence}
+							label="Supporting Evidence Files"
+							helperText="Upload up to 10 files (Images, PDFs, Documents up to 10MB each)."
+						/>
+
+						{errors.evidence && (
+							<p className="text-xs text-[var(--color-danger)]">{errors.evidence.message}</p>
+						)}
+					</div>
+				)}
+
+				{(complaintError || Object.keys(errors).length > 0) && currentStep === 2 && (
+					<div className="rounded-xl border border-[rgba(239,68,68,0.3)] bg-[rgba(239,68,68,0.1)] px-4 py-3 text-xs text-[var(--color-danger)]">
+						{complaintError || "Please review the highlighted fields before submitting."}
+					</div>
+				)}
+
+				{/* Wizard Navigation Buttons */}
+				<div className="flex flex-col gap-3 border-t border-[var(--color-border-subtle)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+					<div className="text-xs text-[var(--color-text-muted)]">
+						{currentStep === 2
+							? "Review attached evidence and submit to seal the case record on-chain."
+							: "Click Next to proceed to the next step of the filing wizard."}
+					</div>
+
+					<div className="flex items-center gap-3">
+						{currentStep > 0 && (
+							<Button type="button" variant="secondary" onClick={goBack} disabled={isBusy}>
+								<ChevronLeft className="mr-1.5 h-4 w-4" />
+								<span>Back</span>
+							</Button>
+						)}
+
+						{currentStep < 2 ? (
+							<Button type="button" onClick={goNext} disabled={isBusy}>
+								<span>Next Step</span>
+								<ChevronRight className="ml-1.5 h-4 w-4" />
+							</Button>
+						) : (
+							<Button
+								type="button"
+								onClick={() => void submitComplaint()}
+								isLoading={isBusy}
+								disabled={isBusy}
+							>
+								Submit Complaint & Anchor Hash
+							</Button>
+						)}
+					</div>
+				</div>
+			</form>
+		</div>
 	);
 }
