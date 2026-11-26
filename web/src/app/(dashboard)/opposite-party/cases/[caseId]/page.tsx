@@ -61,7 +61,12 @@ export default function OppositePartyCasePage() {
         throw new Error(data.message || "Failed to fetch complaint");
       }
 
-      setComplaint(data.complaint);
+      if (data.relationship !== "opposite_party" && data.relationship !== "admin") {
+        setError("You are not the designated opposite party for this dispute.");
+        setComplaint(null);
+      } else {
+        setComplaint(data.complaint);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
     } finally {

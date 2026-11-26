@@ -56,7 +56,11 @@ export default function CaseDetailPage() {
 
     try {
       const res = await fetchComplaint(caseId);
-      setComplaint(res.complaint ?? null);
+      if (res.relationship !== "complainant" && res.relationship !== "admin") {
+        setComplaint(null);
+      } else {
+        setComplaint(res.complaint ?? null);
+      }
     } catch {
       setComplaint(null);
     } finally {

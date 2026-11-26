@@ -5,7 +5,7 @@ import { API_BASE_URL } from "@/config/api";
 import { useCallback, useState } from "react";
 import { CATEGORIES, STATUS } from "@/constants";
 
-type ComplaintRelationship = "complainant" | "opposite_party" | "juror" | "admin";
+type ComplaintRelationship = "complainant" | "opposite_party" | "juror" | "admin" | "public";
 
 type ComplaintCategory = (typeof CATEGORIES)[number];
 type ComplaintStatus = (typeof STATUS)[keyof typeof STATUS];

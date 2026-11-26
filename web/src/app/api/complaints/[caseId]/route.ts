@@ -20,9 +20,9 @@ export async function GET(
     let user: any = null;
 
     try {
-      user = await requireAuth();
-    }catch(error) {
-      if (error instanceof Error && error.message !== "UNAUTHORIZED"){
+      user = await requireAuth(req);
+    } catch (error) {
+      if (error instanceof Error && error.message !== "UNAUTHORIZED") {
         throw error;
       }
     }
@@ -87,8 +87,21 @@ export async function GET(
 
     if (!hasAccess) {
       return NextResponse.json(
-        { message: "Forbidden" },
-        { status: 403 }
+        {
+          complaint: {
+            caseId: complaint.caseId,
+            title: complaint.title,
+            category: complaint.category,
+            status: complaint.status,
+            decision: complaint.decision,
+            complaintHash: complaint.complaintHash,
+            blockchainTxHash: complaint.blockchainTxHash,
+            decidedAt: complaint.decidedAt,
+            createdAt: complaint.createdAt,
+          },
+          relationship: "public",
+        },
+        { status: 200 }
       );
     }
 

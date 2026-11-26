@@ -31,7 +31,11 @@ export default function JurorCasePage() {
       const votesData = await votesRes.json();
 
       if (complaintRes.ok) {
-        setComplaint(complaintData.complaint);
+        if (complaintData.relationship !== "juror" && complaintData.relationship !== "admin") {
+          setComplaint(null);
+        } else {
+          setComplaint(complaintData.complaint);
+        }
       }
 
       if (votesRes.ok) {
