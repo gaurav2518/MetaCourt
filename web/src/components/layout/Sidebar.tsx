@@ -65,7 +65,7 @@ function isRouteActive(itemHref: string, currentPath: string): boolean {
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { unreadCount } = useDisputeNotifications();
+  const { unreadCount, pendingJurorVotesCount } = useDisputeNotifications();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const normalizedRole = (user?.role === "complainant" ? ROLES.USER : user?.role) as RoleValue | undefined;
 
@@ -187,6 +187,11 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   {item.href === "/opposite-party" && unreadCount > 0 && (
                     <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--color-danger)] px-1.5 text-[10px] font-bold text-white shadow-sm animate-pulse">
                       {unreadCount}
+                    </span>
+                  )}
+                  {item.href === "/juror" && pendingJurorVotesCount > 0 && (
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--color-accent-primary)] px-1.5 text-[10px] font-bold text-white shadow-sm animate-pulse" title={`${pendingJurorVotesCount} case(s) awaiting your vote`}>
+                      {pendingJurorVotesCount}
                     </span>
                   )}
                   {active && (

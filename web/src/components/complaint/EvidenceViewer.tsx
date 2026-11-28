@@ -144,52 +144,79 @@ export default function EvidenceViewer({
 					{files.map((file) => {
 						const computedType = resolveFileType(file);
 						const displayName = getDisplayFileName(file, computedType);
+						const isPdf = computedType === "pdf" && (file.url?.toLowerCase().includes(".pdf") || (file.fileType || "").toLowerCase() === "pdf");
+						
+						// Cloudinary URL helpers
+						const isCloudinary = file.url?.includes("res.cloudinary.com");
+						const downloadUrl = isCloudinary && file.url.includes("/image/upload/")
+							? file.url.replace("/image/upload/", "/image/upload/fl_attachment/")
+							: file.url;
+						const jpgPreviewUrl = isCloudinary && isPdf
+							? file.url.replace(/\.pdf$/i, ".jpg")
+							: null;
 
 						return (
-							<a
+							<div
 								key={file.publicId}
-								href={file.url}
-								target="_blank"
-								rel="noreferrer"
-								download={displayName}
-								className="group flex items-start gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3 transition duration-150 hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-bg-elevated)]"
+								className="group flex flex-col justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-3 transition duration-150 hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-bg-elevated)]"
 							>
-								<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]">
-									<ThumbnailPreview file={file} computedType={computedType} />
-								</div>
+								<div className="flex items-start gap-3">
+									<a
+										href={file.url}
+										target="_blank"
+										rel="noreferrer"
+										className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] transition hover:opacity-80"
+										title="Click to view file"
+									>
+										<ThumbnailPreview file={file} computedType={computedType} />
+									</a>
 
-								<div className="min-w-0 flex-1">
-									<div className="flex items-start justify-between gap-3">
-										<div className="min-w-0">
-											<p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{displayName}</p>
-											<p className="mt-1 text-xs text-[var(--color-text-muted)]">
-												{computedType.toUpperCase()} - {formatFileSize(file.fileSize)}
-											</p>
-										</div>
-
-										<Download className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition group-hover:text-[var(--color-accent-primary)]" />
-									</div>
-
-									<div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-										<span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)] flex items-center gap-1">
-											<span>Open file</span>
-											<ExternalLink className="h-3 w-3" />
-										</span>
-										{computedType === "pdf" && file.url?.toLowerCase().endsWith(".pdf") && (
-											<a
-												href={file.url.replace(/\.pdf$/i, ".jpg")}
-												target="_blank"
-												rel="noreferrer"
-												onClick={(e) => e.stopPropagation()}
-												className="rounded bg-[var(--color-bg-secondary)] px-1.5 py-0.5 text-[10px] text-[var(--color-accent-primary)] hover:underline"
-												title="View converted image preview if direct PDF is restricted"
-											>
-												View Image Preview
-											</a>
-										)}
+									<div className="min-w-0 flex-1">
+										<p className="truncate text-sm font-medium text-[var(--color-text-primary)]" title={displayName}>
+											{displayName}
+										</p>
+										<p className="mt-1 text-xs text-[var(--color-text-muted)]">
+											{computedType.toUpperCase()} • {formatFileSize(file.fileSize)}
+										</p>
 									</div>
 								</div>
-							</a>
+
+								<div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[var(--color-border)]/50 pt-2.5 text-xs">
+									<a
+										href={file.url}
+										target="_blank"
+										rel="noreferrer"
+										className="inline-flex items-center gap-1 text-[var(--color-text-secondary)] hover:text-[var(--color-accent-primary)] transition"
+									>
+										<span>View</span>
+										<ExternalLink className="h-3 w-3" />
+									</a>
+
+									{jpgPreviewUrl && (
+										<a
+											href={jpgPreviewUrl}
+											target="_blank"
+											rel="noreferrer"
+											className="rounded bg-[var(--color-bg-secondary)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-accent-primary)] hover:underline"
+											title="View high-resolution page 1 image preview"
+										>
+											Image Preview
+										</a>
+									)}
+
+									<a
+										href={downloadUrl}
+										target="_blank"
+										rel="noreferrer"
+										download={displayName}
+										className="ml-auto inline-flex items-center gap-1 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-[11px] font-medium text-[var(--color-text-primary)] transition hover:bg-[var(--color-accent-primary)] hover:text-white"
+										title="Download file directly"
+									>
+										<Download className="h-3 w-3" />
+										<span>Download</span>
+									</a>
+								</div>
+							</div>
 						);
 					})}
 				</div>

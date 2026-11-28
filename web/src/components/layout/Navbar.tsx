@@ -21,6 +21,7 @@ import {
   Bell,
   ShieldAlert,
   CheckCircle2,
+  Gavel,
 } from "lucide-react";
 
 type RoleValue = (typeof ROLES)[keyof typeof ROLES];
@@ -144,7 +145,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                     <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2.5 px-1">
                       <div className="flex items-center gap-2">
                         <span className="font-display text-sm font-bold text-[var(--color-text-primary)]">
-                          Dispute Notices
+                          Dispute & Voting Notices
                         </span>
                         {unreadCount > 0 && (
                           <span className="rounded-full bg-[rgba(239,68,68,0.2)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
@@ -153,11 +154,11 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                         )}
                       </div>
                       <Link
-                        href="/opposite-party"
+                        href={user?.role === "juror" ? "/juror" : "/opposite-party"}
                         onClick={() => setIsNotifOpen(false)}
                         className="text-[11px] font-semibold text-[var(--color-accent-primary)] hover:underline"
                       >
-                        All Cases
+                        {user?.role === "juror" ? "Assigned Cases" : "All Cases"}
                       </Link>
                     </div>
 
@@ -165,57 +166,74 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                       {notifications.length === 0 ? (
                         <div className="py-6 text-center text-xs text-[var(--color-text-muted)] space-y-1">
                           <CheckCircle2 className="mx-auto h-6 w-6 text-[var(--color-success)] opacity-70" />
-                          <p className="font-semibold text-[var(--color-text-primary)]">No Active Disputes</p>
-                          <p>There are no complaints filed against your account.</p>
+                          <p className="font-semibold text-[var(--color-text-primary)]">All Caught Up</p>
+                          <p>There are no active disputes or voting ballots requiring your attention.</p>
                         </div>
                       ) : (
-                        notifications.map((notif) => (
-                          <div
-                            key={notif.id}
-                            className={`rounded-xl border p-3 transition ${
-                              notif.needsResponse
-                                ? "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.12)]"
-                                : "border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] hover:bg-[var(--color-bg-elevated)]"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="font-mono text-xs font-bold text-[var(--color-gold)]">
-                                {notif.caseId}
-                              </span>
-                              {notif.needsResponse ? (
-                                <span className="flex items-center gap-1 rounded-full bg-[rgba(239,68,68,0.25)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
-                                  <ShieldAlert className="h-3 w-3" />
-                                  Response Needed
-                                </span>
-                              ) : (
-                                <span className="rounded-full bg-[rgba(92,90,122,0.2)] px-2 py-0.5 text-[10px] capitalize text-[var(--color-text-secondary)]">
-                                  {notif.status.replace("_", " ")}
-                                </span>
-                              )}
-                            </div>
+                        notifications.map((notif) => {
+                          const isJurorVote = notif.type === "juror_vote";
 
-                            <p className="mt-1 line-clamp-1 text-xs font-semibold text-[var(--color-text-primary)]">
-                              {notif.title}
-                            </p>
-                            <p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">
-                              {notif.message}
-                            </p>
+                          return (
+                            <div
+                              key={notif.id}
+                              className={`rounded-xl border p-3 transition ${
+                                isJurorVote
+                                  ? "border-[rgba(124,58,237,0.35)] bg-[rgba(124,58,237,0.08)] hover:bg-[rgba(124,58,237,0.13)]"
+                                  : notif.needsResponse
+                                  ? "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.12)]"
+                                  : "border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] hover:bg-[var(--color-bg-elevated)]"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-mono text-xs font-bold text-[var(--color-gold)]">
+                                  {notif.caseId}
+                                </span>
+                                {isJurorVote ? (
+                                  <span className="flex items-center gap-1 rounded-full bg-[rgba(124,58,237,0.25)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-accent-primary)]">
+                                    <Gavel className="h-3 w-3" />
+                                    Ballot Awaiting Vote
+                                  </span>
+                                ) : notif.needsResponse ? (
+                                  <span className="flex items-center gap-1 rounded-full bg-[rgba(239,68,68,0.25)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
+                                    <ShieldAlert className="h-3 w-3" />
+                                    Response Needed
+                                  </span>
+                                ) : (
+                                  <span className="rounded-full bg-[rgba(92,90,122,0.2)] px-2 py-0.5 text-[10px] capitalize text-[var(--color-text-secondary)]">
+                                    {notif.status.replace("_", " ")}
+                                  </span>
+                                )}
+                              </div>
 
-                            <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[var(--color-border-subtle)]/50">
-                              <span className="text-[10px] text-[var(--color-text-muted)]">
-                                {new Date(notif.createdAt).toLocaleDateString()}
-                              </span>
-                              <Link
-                                href={notif.actionUrl}
-                                onClick={() => setIsNotifOpen(false)}
-                                className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--color-accent-primary)] hover:underline"
-                              >
-                                <span>{notif.needsResponse ? "Submit Defense" : "View Details"}</span>
-                                <ArrowRight className="h-3 w-3" />
-                              </Link>
+                              <p className="mt-1 line-clamp-1 text-xs font-semibold text-[var(--color-text-primary)]">
+                                {notif.title}
+                              </p>
+                              <p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">
+                                {notif.message}
+                              </p>
+
+                              <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[var(--color-border-subtle)]/50">
+                                <span className="text-[10px] text-[var(--color-text-muted)]">
+                                  {new Date(notif.createdAt).toLocaleDateString()}
+                                </span>
+                                <Link
+                                  href={notif.actionUrl}
+                                  onClick={() => setIsNotifOpen(false)}
+                                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--color-accent-primary)] hover:underline"
+                                >
+                                  <span>
+                                    {isJurorVote
+                                      ? "Cast Ballot"
+                                      : notif.needsResponse
+                                      ? "Submit Defense"
+                                      : "View Details"}
+                                  </span>
+                                  <ArrowRight className="h-3 w-3" />
+                                </Link>
+                              </div>
                             </div>
-                          </div>
-                        ))
+                          );
+                        })
                       )}
                     </div>
 

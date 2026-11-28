@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import { requireAuth } from "@/middleware/auth";
 import Complaint from "@/models/Complaint";
 import User from "@/models/User";
+import Vote from "@/models/Vote";
 
 function escapeRegex(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -41,7 +42,7 @@ export async function GET(req: Request) {
       }
     );
 
-    // Fetch complaints where this user is the opposite party
+    // 1. Fetch complaints where this user is the opposite party
     const complaints = await Complaint.find({
       $or: [
         { "oppositeParty.userId": userId },
@@ -52,17 +53,18 @@ export async function GET(req: Request) {
       .select("caseId title category status defenseStatement createdAt votingDeadline")
       .lean();
 
-    const notifications = complaints.map((item: any) => {
+    const respondentNotifs = complaints.map((item: any) => {
       const needsResponse =
         !item.defenseStatement &&
         ["pending", "under_review", "voting"].includes(item.status);
 
       return {
-        id: `notif-${item.caseId}`,
+        id: `notif-resp-${item.caseId}`,
         caseId: item.caseId,
         title: item.title,
         category: item.category,
         status: item.status,
+        type: "opposite_party",
         hasResponded: Boolean(item.defenseStatement),
         needsResponse,
         createdAt: item.createdAt,
@@ -74,13 +76,62 @@ export async function GET(req: Request) {
       };
     });
 
-    const pendingDefenseCount = notifications.filter((n: any) => n.needsResponse).length;
+    // 2. Fetch active deliberation cases where user is an assigned juror
+    let jurorNotifs: any[] = [];
+    let pendingJurorVotesCount = 0;
+
+    const assignedCases = await Complaint.find({
+      assignedJurors: userId,
+      status: "voting",
+    })
+      .sort({ votingDeadline: 1 })
+      .select("caseId title category status createdAt votingDeadline")
+      .lean();
+
+    if (assignedCases.length > 0) {
+      const caseIds = assignedCases.map((c) => c._id);
+      const castVotes = await Vote.find({
+        jurorId: userId,
+        complaintId: { $in: caseIds },
+      })
+        .select("complaintId")
+        .lean();
+
+      const votedCaseIds = new Set(castVotes.map((v) => v.complaintId.toString()));
+
+      jurorNotifs = assignedCases.map((item: any) => {
+        const hasVoted = votedCaseIds.has(item._id.toString());
+        return {
+          id: `notif-juror-${item.caseId}`,
+          caseId: item.caseId,
+          title: item.title,
+          category: item.category,
+          status: item.status,
+          type: "juror_vote",
+          hasResponded: hasVoted,
+          needsResponse: !hasVoted,
+          createdAt: item.createdAt,
+          votingDeadline: item.votingDeadline,
+          message: !hasVoted
+            ? "Active Jury Deliberation: Case waiting for your anonymous ballot."
+            : "Your anonymous juror ballot has been sealed.",
+          actionUrl: `/juror/cases/${item.caseId}`,
+        };
+      });
+
+      pendingJurorVotesCount = jurorNotifs.filter((n) => n.needsResponse).length;
+    }
+
+    const allNotifications = [...jurorNotifs.filter((n) => n.needsResponse), ...respondentNotifs];
+    const pendingDefenseCount = respondentNotifs.filter((n: any) => n.needsResponse).length;
+    const totalUnread = pendingDefenseCount + pendingJurorVotesCount;
 
     return NextResponse.json(
       {
-        notifications,
-        unreadCount: pendingDefenseCount,
+        notifications: allNotifications,
+        unreadCount: totalUnread,
         pendingDefenseCount,
+        pendingJurorVotesCount,
       },
       { status: 200 }
     );

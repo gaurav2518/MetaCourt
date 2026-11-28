@@ -20,6 +20,9 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
+  Gavel,
+  Award,
+  Clock,
 } from "lucide-react";
 
 type TimelineEvent = {
@@ -243,6 +246,79 @@ export default function AdminComplaintDetailPage() {
             ) : (
               <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] p-6 text-center text-xs text-[var(--color-text-muted)]">
                 No defense statement has been submitted by the opposite party yet.
+              </div>
+            )}
+          </div>
+
+          {/* Assigned Community Jurors Section */}
+          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/90 p-6 backdrop-blur-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[var(--color-border-subtle)] pb-3">
+              <div className="flex items-center gap-2">
+                <Gavel className="h-5 w-5 text-[var(--color-accent-primary)]" />
+                <h3 className="font-display text-base font-bold text-[var(--color-text-primary)]">
+                  Assigned Community Jurors ({complaint.assignedJurors?.length || 0})
+                </h3>
+              </div>
+
+              {complaint.assignedJurors?.length > 0 && (
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="rounded-full bg-[rgba(124,58,237,0.15)] px-2.5 py-0.5 font-bold text-[var(--color-accent-primary)] border border-[rgba(124,58,237,0.3)]">
+                    {complaint.assignedJurors.length === 3 ? "Standard Panel (3 Jurors)" : `${complaint.assignedJurors.length} Juror Panel`}
+                  </span>
+                  {complaint.votingDeadline && (
+                    <span className="flex items-center gap-1 text-[var(--color-text-muted)]">
+                      <Clock className="h-3 w-3 text-[var(--color-gold)]" />
+                      Deadline: {new Date(complaint.votingDeadline).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {complaint.assignedJurors && complaint.assignedJurors.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {complaint.assignedJurors.map((juror: any, idx: number) => {
+                  const jurorName = typeof juror === "object" ? juror.name : `Juror #${idx + 1}`;
+                  const jurorEmail = typeof juror === "object" ? juror.email : "Email unavailable";
+                  const repScore = typeof juror === "object" ? juror.reputationScore ?? 100 : 100;
+                  const level = typeof juror === "object" ? juror.jurorLevel ?? 1 : 1;
+
+                  return (
+                    <div
+                      key={typeof juror === "object" ? juror._id || idx : idx}
+                      className="flex flex-col justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] p-4 transition hover:border-[var(--color-accent-primary)]/40 hover:bg-[var(--color-bg-elevated)]"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <p className="font-semibold text-sm text-[var(--color-text-primary)] truncate" title={jurorName}>
+                            {jurorName}
+                          </p>
+                          <span className="rounded bg-[var(--color-accent-primary)]/20 px-1.5 py-0.5 text-[10px] font-bold text-[var(--color-accent-primary)]">
+                            Lvl {level}
+                          </span>
+                        </div>
+                        <p className="font-mono text-xs text-[var(--color-text-muted)] truncate" title={jurorEmail}>
+                          {jurorEmail}
+                        </p>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between border-t border-[var(--color-border-subtle)]/50 pt-2 text-xs">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-gold)] flex items-center gap-1">
+                          <Award className="h-3 w-3" />
+                          Rep: {repScore}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[10px] text-[var(--color-success)] font-medium">
+                          <CheckCircle2 className="h-3 w-3" />
+                          Active Juror
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-bg-primary)] p-6 text-center text-xs text-[var(--color-text-muted)]">
+                No jurors have been assigned to this case yet. Jurors can be assigned by admin once respondent submits defense or deadline expires.
               </div>
             )}
           </div>

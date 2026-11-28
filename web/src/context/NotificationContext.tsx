@@ -17,6 +17,7 @@ export type DisputeNotification = {
   title: string;
   category: string;
   status: string;
+  type?: "opposite_party" | "juror_vote";
   hasResponded: boolean;
   needsResponse: boolean;
   createdAt: string;
@@ -29,6 +30,7 @@ type NotificationContextValue = {
   notifications: DisputeNotification[];
   unreadCount: number;
   pendingDefenseCount: number;
+  pendingJurorVotesCount: number;
   loading: boolean;
   refreshNotifications: () => Promise<void>;
   dismissAlert: (caseId?: string) => void;
@@ -46,6 +48,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<DisputeNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [pendingDefenseCount, setPendingDefenseCount] = useState(0);
+  const [pendingJurorVotesCount, setPendingJurorVotesCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [dismissedIds, setDismissedIds] = useState<string[]>([]);
 
@@ -101,6 +104,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
         setNotifications(data.notifications || []);
         setUnreadCount(data.unreadCount || 0);
         setPendingDefenseCount(data.pendingDefenseCount || 0);
+        setPendingJurorVotesCount(data.pendingJurorVotesCount || 0);
       }
     } catch (err) {
       console.error("Failed to fetch dispute notifications:", err);
@@ -134,6 +138,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       notifications,
       unreadCount,
       pendingDefenseCount,
+      pendingJurorVotesCount,
       loading,
       refreshNotifications,
       dismissAlert,
@@ -143,6 +148,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       notifications,
       unreadCount,
       pendingDefenseCount,
+      pendingJurorVotesCount,
       loading,
       refreshNotifications,
       dismissAlert,
