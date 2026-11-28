@@ -15,7 +15,9 @@ export default function JurorHistoryPage() {
   useEffect(() => {
     async function loadHistory() {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/juror/history`);
+        const res = await fetch(`${API_BASE_URL}/api/juror/history`, {
+          credentials: "include",
+        });
         const data = await res.json();
 
         if (res.ok) {

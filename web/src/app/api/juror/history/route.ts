@@ -14,7 +14,7 @@ export async function GET() {
     await connectDB();
 
     const user = await requireAuth();
-    requireRole(user, [ROLES.JUROR]);
+    requireRole(user, [ROLES.JUROR, ROLES.ADMIN]);
 
     const votes = await Vote.find({ jurorId: user.userId })
       .sort({ createdAt: -1 })
@@ -34,7 +34,7 @@ export async function GET() {
         title: complaint?.title ?? "Unknown case",
         vote: vote.vote,
         finalDecision,
-        reputationChange: isDecided ? (matchedDecision ? 2 : -1) : 0,
+        reputationChange: isDecided ? (matchedDecision ? 10 : -5) : 0,
         txHash: vote.blockchainTxHash,
         createdAt: vote.createdAt,
       };
