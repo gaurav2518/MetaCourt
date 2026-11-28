@@ -111,13 +111,13 @@ export async function POST(
         juror.totalVotes = (juror.totalVotes ?? 0) + 1;
 
         if (jurorVote.vote === finalDecision) {
-          newScore += 2;
+          newScore += 10;
           juror.correctVotes = (juror.correctVotes ?? 0) + 1;
         } else {
-          newScore -= 1;
+          newScore -= 5;
         }
       } else {
-        newScore -= 5;
+        newScore -= 2;
       }
 
       if (newScore < 0) newScore = 0;
