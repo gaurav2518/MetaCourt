@@ -38,6 +38,22 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
+button,
+[role="button"],
+a,
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
 h1,
 h2,
 h3 {

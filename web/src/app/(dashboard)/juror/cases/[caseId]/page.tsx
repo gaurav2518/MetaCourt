@@ -33,20 +33,7 @@ export default function JurorCasePage() {
       const votesData = await votesRes.json();
 
       if (complaintRes.ok && complaintData.complaint) {
-        const currentUserId = user?.id || user?._id || (user as any)?.userId;
-        const isAssigned =
-          complaintData.complaint?.assignedJurors?.some(
-            (j: any) =>
-              (j?._id || j)?.toString() === currentUserId
-          );
-
-        if (
-          complaintData.relationship === "juror" ||
-          complaintData.relationship === "admin" ||
-          user?.role === "admin" ||
-          user?.role === "juror" ||
-          isAssigned
-        ) {
+        if (complaintData.relationship !== "public") {
           setComplaint(complaintData.complaint);
         } else {
           setComplaint(null);
@@ -65,7 +52,7 @@ export default function JurorCasePage() {
 
   useEffect(() => {
     if (caseId) loadData();
-  }, [caseId]);
+  }, [caseId, user?.id]);
 
   if (loading) {
     return (

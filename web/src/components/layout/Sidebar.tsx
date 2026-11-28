@@ -65,7 +65,7 @@ function isRouteActive(itemHref: string, currentPath: string): boolean {
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { unreadCount, pendingJurorVotesCount } = useDisputeNotifications();
+  const { pendingDefenseCount, pendingJurorVotesCount } = useDisputeNotifications();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const normalizedRole = (user?.role === "complainant" ? ROLES.USER : user?.role) as RoleValue | undefined;
 
@@ -184,9 +184,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   <span>{item.label}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  {item.href === "/opposite-party" && unreadCount > 0 && (
+                  {item.href === "/opposite-party" && pendingDefenseCount > 0 && (
                     <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--color-danger)] px-1.5 text-[10px] font-bold text-white shadow-sm animate-pulse">
-                      {unreadCount}
+                      {pendingDefenseCount}
                     </span>
                   )}
                   {item.href === "/juror" && pendingJurorVotesCount > 0 && (

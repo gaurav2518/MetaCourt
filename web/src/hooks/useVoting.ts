@@ -23,6 +23,7 @@ export function useVoting() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             caseId,
             vote,
@@ -54,7 +55,9 @@ export function useVoting() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_BASE_URL}/api/votes/${caseId}`);
+      const response = await fetch(`${API_BASE_URL}/api/votes/${caseId}`, {
+        credentials: "include",
+      });
 
       const data = await response.json();
 
