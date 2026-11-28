@@ -96,7 +96,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         { label: "Juror Reputation", href: "/juror/reputation", icon: Award }
       );
     } else if (role === ROLES.USER) {
-      items.push({ label: "Apply for Juror", href: "/complainant/apply-juror", icon: Scale });
+      items.push({ label: "Juror Application", href: "/complainant/apply-juror", icon: Scale });
     }
 
     return items;
