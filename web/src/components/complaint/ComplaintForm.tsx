@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldPath, useForm } from "react-hook-form";
-import { Check, ChevronLeft, ChevronRight, FileText, Loader2, Sparkles } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, FileText, Loader2, Sparkles, AlertTriangle, CheckCircle2 } from "lucide-react";
 
+import { API_BASE_URL } from "@/config/api";
 import { CATEGORIES } from "@/constants";
 import { useComplaints } from "@/hooks/useComplaints";
 import { type UploadedEvidenceFile } from "@/hooks/useUpload";
@@ -100,12 +101,15 @@ export default function ComplaintForm() {
 	const { fileComplaint, loading, error: complaintError } = useComplaints();
 	const [currentStep, setCurrentStep] = useState<StepIndex>(0);
 	const [uploadedEvidence, setUploadedEvidence] = useState<UploadedEvidenceFile[]>([]);
+	const [lookupLoading, setLookupLoading] = useState(false);
+	const [lookupResult, setLookupResult] = useState<{ exists: boolean; name?: string } | null>(null);
 
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		getValues,
+		watch,
 		clearErrors,
 		setError,
 		formState: { errors, isSubmitting },
@@ -125,6 +129,48 @@ export default function ComplaintForm() {
 		},
 		mode: "onTouched",
 	});
+
+	const oppositePartyEmail = watch("oppositeParty.email");
+
+	useEffect(() => {
+		const trimmed = (oppositePartyEmail || "").trim();
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+		if (!trimmed || !emailRegex.test(trimmed)) {
+			setLookupResult(null);
+			setLookupLoading(false);
+			return;
+		}
+
+		setLookupLoading(true);
+		const timer = setTimeout(async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}/api/users/lookup?email=${encodeURIComponent(trimmed)}`, {
+					credentials: "include",
+				});
+				if (res.ok) {
+					const data = await res.json();
+					if (data.exists) {
+						setLookupResult({ exists: true, name: data.user?.name });
+						const currentName = getValues("oppositeParty.name");
+						if (!currentName && data.user?.name) {
+							setValue("oppositeParty.name", data.user.name, { shouldValidate: true });
+						}
+					} else {
+						setLookupResult({ exists: false });
+					}
+				} else {
+					setLookupResult(null);
+				}
+			} catch {
+				setLookupResult(null);
+			} finally {
+				setLookupLoading(false);
+			}
+		}, 400);
+
+		return () => clearTimeout(timer);
+	}, [oppositePartyEmail, getValues, setValue]);
 
 	// Accurate step progress:
 	// When starting Step 1, 0 steps are completed (0%)
@@ -305,14 +351,41 @@ export default function ComplaintForm() {
 								{...register("oppositeParty.name")}
 							/>
 
-							<Input
-								id="oppositeParty.email"
-								label="Respondent Email Address"
-								type="email"
-								placeholder="respondent@example.com"
-								error={errors.oppositeParty?.email?.message}
-								{...register("oppositeParty.email")}
-							/>
+							<div className="space-y-1.5">
+								<Input
+									id="oppositeParty.email"
+									label="Respondent Email Address"
+									type="email"
+									placeholder="respondent@example.com"
+									error={errors.oppositeParty?.email?.message}
+									{...register("oppositeParty.email")}
+								/>
+
+								{lookupLoading && (
+									<div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)] animate-in fade-in">
+										<Loader2 className="h-3.5 w-3.5 animate-spin text-[var(--color-accent-primary)]" />
+										<span>Checking user database...</span>
+									</div>
+								)}
+
+								{!lookupLoading && lookupResult && lookupResult.exists && (
+									<div className="flex items-center gap-2 rounded-xl border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.1)] px-3 py-2 text-xs text-[var(--color-success)] animate-in fade-in">
+										<CheckCircle2 className="h-4 w-4 shrink-0" />
+										<span>
+											<strong>✓ Registered User:</strong> {lookupResult.name || "MetaCourt Member"}
+										</span>
+									</div>
+								)}
+
+								{!lookupLoading && lookupResult && !lookupResult.exists && (
+									<div className="flex items-start gap-2 rounded-xl border border-[rgba(245,158,11,0.35)] bg-[rgba(245,158,11,0.1)] px-3 py-2 text-xs text-[var(--color-gold)] animate-in fade-in">
+										<AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+										<span>
+											<strong>⚠️ This email is not registered yet.</strong> They will need to register with this email to respond.
+										</span>
+									</div>
+								)}
+							</div>
 
 							<Input
 								id="oppositeParty.organization"

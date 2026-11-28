@@ -69,6 +69,23 @@ function ThumbnailPreview({
 	const [imageError, setImageError] = useState(false);
 
 	if (computedType === "pdf") {
+		const jpgPreview = file.url?.replace(/\.pdf$/i, ".jpg");
+		if (!imageError && jpgPreview && jpgPreview !== file.url) {
+			return (
+				<div className="relative h-full w-full">
+					<img
+						src={jpgPreview}
+						alt={file.fileName || "PDF thumbnail"}
+						onError={() => setImageError(true)}
+						className="h-full w-full object-cover"
+					/>
+					<div className="absolute bottom-0 inset-x-0 bg-black/75 py-0.5 text-center">
+						<span className="text-[9px] font-bold uppercase tracking-wider text-red-400">PDF</span>
+					</div>
+				</div>
+			);
+		}
+
 		return (
 			<div className="flex flex-col items-center justify-center p-1 text-center">
 				<FileText className="h-6 w-6 text-red-500" />
@@ -153,10 +170,24 @@ export default function EvidenceViewer({
 										<Download className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition group-hover:text-[var(--color-accent-primary)]" />
 									</div>
 
-									<p className="mt-2.5 text-xs leading-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)] flex items-center gap-1">
-										<span>Click to open or download</span>
-										<ExternalLink className="h-3 w-3" />
-									</p>
+									<div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
+										<span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)] flex items-center gap-1">
+											<span>Open file</span>
+											<ExternalLink className="h-3 w-3" />
+										</span>
+										{computedType === "pdf" && file.url?.toLowerCase().endsWith(".pdf") && (
+											<a
+												href={file.url.replace(/\.pdf$/i, ".jpg")}
+												target="_blank"
+												rel="noreferrer"
+												onClick={(e) => e.stopPropagation()}
+												className="rounded bg-[var(--color-bg-secondary)] px-1.5 py-0.5 text-[10px] text-[var(--color-accent-primary)] hover:underline"
+												title="View converted image preview if direct PDF is restricted"
+											>
+												View Image Preview
+											</a>
+										)}
+									</div>
 								</div>
 							</a>
 						);
