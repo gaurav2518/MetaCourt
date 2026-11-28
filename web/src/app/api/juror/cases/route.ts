@@ -16,12 +16,17 @@ export async function GET() {
     await connectDB();
 
     const user = await requireAuth();
-    requireRole(user, [ROLES.JUROR]);
+    requireRole(user, [ROLES.JUROR, ROLES.ADMIN]);
 
-    const complaints = await Complaint.find({
-      assignedJurors: user.userId,
+    const filter: any = {
       status: STATUS.VOTING,
-    })
+    };
+
+    if (user.role !== ROLES.ADMIN) {
+      filter.assignedJurors = user.userId;
+    }
+
+    const complaints = await Complaint.find(filter)
       .sort({ votingDeadline: 1 })
       .populate("complainantId", "name")
       .populate("evidence")

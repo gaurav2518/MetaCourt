@@ -148,17 +148,17 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                           Dispute & Voting Notices
                         </span>
                         {unreadCount > 0 && (
-                          <span className="rounded-full bg-[rgba(239,68,68,0.2)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)]">
+                          <span className="rounded-full bg-[rgba(239,68,68,0.2)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-danger)] shrink-0">
                             {unreadCount} Action Required
                           </span>
                         )}
                       </div>
                       <Link
-                        href={user?.role === "juror" ? "/juror" : "/opposite-party"}
+                        href={notifications.some((n) => n.type === "juror_vote") || user?.role === "juror" ? "/juror" : "/opposite-party"}
                         onClick={() => setIsNotifOpen(false)}
-                        className="text-[11px] font-semibold text-[var(--color-accent-primary)] hover:underline"
+                        className="text-[11px] font-semibold text-[var(--color-accent-primary)] hover:underline shrink-0"
                       >
-                        {user?.role === "juror" ? "Assigned Cases" : "All Cases"}
+                        {notifications.some((n) => n.type === "juror_vote") || user?.role === "juror" ? "Assigned Cases" : "All Cases"}
                       </Link>
                     </div>
 
@@ -174,13 +174,15 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                           const isJurorVote = notif.type === "juror_vote";
 
                           return (
-                            <div
+                            <Link
                               key={notif.id}
-                              className={`rounded-xl border p-3 transition ${
+                              href={notif.actionUrl}
+                              onClick={() => setIsNotifOpen(false)}
+                              className={`block rounded-xl border p-3 transition ${
                                 isJurorVote
-                                  ? "border-[rgba(124,58,237,0.35)] bg-[rgba(124,58,237,0.08)] hover:bg-[rgba(124,58,237,0.13)]"
+                                  ? "border-[rgba(124,58,237,0.35)] bg-[rgba(124,58,237,0.08)] hover:bg-[rgba(124,58,237,0.16)] hover:border-[var(--color-accent-primary)]"
                                   : notif.needsResponse
-                                  ? "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.12)]"
+                                  ? "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.14)]"
                                   : "border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] hover:bg-[var(--color-bg-elevated)]"
                               }`}
                             >
@@ -216,11 +218,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                                 <span className="text-[10px] text-[var(--color-text-muted)]">
                                   {new Date(notif.createdAt).toLocaleDateString()}
                                 </span>
-                                <Link
-                                  href={notif.actionUrl}
-                                  onClick={() => setIsNotifOpen(false)}
-                                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--color-accent-primary)] hover:underline"
-                                >
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--color-accent-primary)] group-hover:underline">
                                   <span>
                                     {isJurorVote
                                       ? "Cast Ballot"
@@ -229,9 +227,9 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
                                       : "View Details"}
                                   </span>
                                   <ArrowRight className="h-3 w-3" />
-                                </Link>
+                                </span>
                               </div>
-                            </div>
+                            </Link>
                           );
                         })
                       )}

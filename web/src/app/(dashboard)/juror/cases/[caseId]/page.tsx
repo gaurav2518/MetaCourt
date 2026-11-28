@@ -5,6 +5,7 @@ import { API_BASE_URL } from "@/config/api";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 import VotingPanel from "@/components/voting/VotingPanel";
 import VoteResult from "@/components/voting/VoteResult";
@@ -13,6 +14,7 @@ import { ArrowLeft, Gavel, CheckCircle2, ShieldCheck, Scale, AlertCircle } from 
 export default function JurorCasePage() {
   const params = useParams();
   const caseId = params.caseId as string;
+  const { user } = useAuth();
 
   const [complaint, setComplaint] = useState<any>(null);
   const [votes, setVotes] = useState<any>(null);
@@ -23,19 +25,34 @@ export default function JurorCasePage() {
       setLoading(true);
 
       const [complaintRes, votesRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/complaints/${caseId}`),
-        fetch(`${API_BASE_URL}/api/votes/${caseId}`),
+        fetch(`${API_BASE_URL}/api/complaints/${caseId}`, { credentials: "include" }),
+        fetch(`${API_BASE_URL}/api/votes/${caseId}`, { credentials: "include" }),
       ]);
 
       const complaintData = await complaintRes.json();
       const votesData = await votesRes.json();
 
-      if (complaintRes.ok) {
-        if (complaintData.relationship !== "juror" && complaintData.relationship !== "admin") {
-          setComplaint(null);
-        } else {
+      if (complaintRes.ok && complaintData.complaint) {
+        const currentUserId = user?.id || user?._id || (user as any)?.userId;
+        const isAssigned =
+          complaintData.complaint?.assignedJurors?.some(
+            (j: any) =>
+              (j?._id || j)?.toString() === currentUserId
+          );
+
+        if (
+          complaintData.relationship === "juror" ||
+          complaintData.relationship === "admin" ||
+          user?.role === "admin" ||
+          user?.role === "juror" ||
+          isAssigned
+        ) {
           setComplaint(complaintData.complaint);
+        } else {
+          setComplaint(null);
         }
+      } else {
+        setComplaint(null);
       }
 
       if (votesRes.ok) {

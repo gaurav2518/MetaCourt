@@ -27,7 +27,9 @@ export default function JurorDashboardPage() {
   useEffect(() => {
     async function loadCases() {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/juror/cases`);
+        const res = await fetch(`${API_BASE_URL}/api/juror/cases`, {
+          credentials: "include",
+        });
         const data = await res.json();
 
         if (res.ok) {
