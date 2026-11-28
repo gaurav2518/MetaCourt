@@ -23,10 +23,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
 	return (
 		<div className="dashboard-grid-bg min-h-screen text-[var(--color-text-primary)]">
 			<div className="flex min-h-screen">
-				{/* Desktop Sidebar */}
-				<aside className="hidden lg:block">
+				{/* Desktop Sticky Sidebar */}
+				<div className="hidden lg:block shrink-0 sticky top-0 h-screen z-20">
 					<Sidebar />
-				</aside>
+				</div>
 
 				{/* Mobile Sidebar Overlay Backdrop */}
 				{isMobileSidebarOpen && (

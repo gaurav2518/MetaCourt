@@ -110,7 +110,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     <>
       <aside className="flex h-full w-72 flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">
         {/* Brand Header */}
-        <div className="border-b border-[var(--color-border)] px-6 py-5">
+        <div className="border-b border-[var(--color-border)] px-6 py-5 shrink-0">
           <div className="flex items-center justify-between">
             <Link href="/" className="group flex items-center gap-3 transition">
               <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1 shadow-inner transition group-hover:border-[var(--color-accent-primary)]">
@@ -210,7 +210,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         </nav>
 
         {/* Network & User Footer */}
-        <div className="border-t border-[var(--color-border)] p-4 space-y-3">
+        <div className="border-t border-[var(--color-border)] p-4 space-y-3 shrink-0">
           {/* Blockchain Network Status */}
           <div className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-primary)] px-3 py-2 text-xs">
             <div className="flex items-center gap-2">
