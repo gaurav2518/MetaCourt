@@ -6,6 +6,7 @@ import { requireAuth } from "@/middleware/auth";
 import { requireRole } from "@/middleware/roleGuard";
 
 import Complaint from "@/models/Complaint";
+import Evidence from "@/models/Evidence";
 import User from "@/models/User";
 
 import { ROLES, STATUS } from "@/constants";

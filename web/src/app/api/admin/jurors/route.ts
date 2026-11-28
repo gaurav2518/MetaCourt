@@ -5,6 +5,7 @@ import { requireAuth } from "@/middleware/auth";
 import { requireRole } from "@/middleware/roleGuard";
 
 import JurorApplication from "@/models/JurorApplication";
+import User from "@/models/User";
 
 import { ROLES } from "@/constants";
 

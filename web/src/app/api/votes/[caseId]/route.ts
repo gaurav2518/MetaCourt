@@ -5,6 +5,7 @@ import { requireAuth } from "@/middleware/auth";
 
 import Complaint from "@/models/Complaint";
 import Vote from "@/models/Vote";
+import User from "@/models/User";
 
 import { ROLES } from "@/constants";
 
